@@ -1,0 +1,100 @@
+/* ==========================================
+   IN-APP OFFLINE READER
+========================================== */
+
+.reader {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  background: #111014;
+  color: #f4f1ea;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.reader__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.35);
+  font-size: 13px;
+}
+
+.reader__bar button {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.reader__title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  opacity: 0.85;
+}
+
+.reader__stage {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 14px;
+}
+
+.reader__canvas {
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+}
+
+.reader__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 10px 14px 14px;
+  background: rgba(0, 0, 0, 0.35);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+}
+
+.reader__nav button {
+  min-width: 92px;
+  padding: 9px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reader__nav button:disabled {
+  opacity: 0.35;
+}
+
+.reader__msg {
+  margin: auto;
+  text-align: center;
+  padding: 30px;
+  opacity: 0.8;
+  line-height: 1.6;
+}

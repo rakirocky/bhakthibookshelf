@@ -1,6 +1,7 @@
 import { Book } from "@/app/lib/types/book";
 
 import AddToCartButton from "../cart/AddToCartButton";
+import OfflineSaveButton from "../books/OfflineSaveButton";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 
 type Props = {
@@ -23,13 +24,17 @@ export default function BookActions({
       }}
     >
       {hasAccess ? (
-        <a
-          href={`/api/customer/download/${book.id}`}
-          className="btn btn-primary"
-          style={{ textDecoration: "none" }}
-        >
-          ✓ Download Full Book
-        </a>
+        <>
+          <a
+            href={`/api/customer/download/${book.id}`}
+            className="btn btn-primary"
+            style={{ textDecoration: "none" }}
+          >
+            ✓ Download Full Book
+          </a>
+
+          <OfflineSaveButton bookId={book.id} />
+        </>
       ) : (
         <AddToCartButton
           book={book}
