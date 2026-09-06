@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
 import { CustomerRepository } from "@/app/lib/repositories/customerRepository";
+import { LoginRateLimitService } from "@/app/lib/services/loginRateLimitService";
 import {
   CUSTOMER_SESSION_COOKIE,
   CUSTOMER_SESSION_MAX_AGE,
@@ -23,8 +24,25 @@ export async function POST(request: Request) {
       );
     }
 
+    const cleanPhone = String(phone).trim();
+
+    const lockout = await LoginRateLimitService.checkLockout(
+      cleanPhone,
+      "customer"
+    );
+
+    if (lockout.locked) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Too many failed attempts. Try again in ${lockout.retryAfterMinutes} minute${lockout.retryAfterMinutes === 1 ? "" : "s"}.`,
+        },
+        { status: 429 }
+      );
+    }
+
     const customer = await CustomerRepository.getByPhone(
-      String(phone).trim()
+      cleanPhone
     );
 
     const invalidCredentials = NextResponse.json(
@@ -40,6 +58,11 @@ export async function POST(request: Request) {
         `[customer login] failed — no active account for phone ${phone}`
       );
 
+      await LoginRateLimitService.recordFailure(
+        cleanPhone,
+        "customer"
+      );
+
       return invalidCredentials;
     }
 
@@ -53,11 +76,21 @@ export async function POST(request: Request) {
         `[customer login] failed — wrong password for phone ${phone}`
       );
 
+      await LoginRateLimitService.recordFailure(
+        cleanPhone,
+        "customer"
+      );
+
       return invalidCredentials;
     }
 
     console.log(
       `[customer login] success — customer #${customer.id} (${customer.phone})`
+    );
+
+    await LoginRateLimitService.recordSuccess(
+      cleanPhone,
+      "customer"
     );
 
     const token = await signCustomerSession({

@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
 import { AdminUserRepository } from "@/app/lib/repositories/adminUserRepository";
+import { LoginRateLimitService } from "@/app/lib/services/loginRateLimitService";
 import {
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_MAX_AGE,
@@ -22,8 +23,25 @@ export async function POST(request: Request) {
       );
     }
 
+    const cleanPhone = String(phone).trim();
+
+    const lockout = await LoginRateLimitService.checkLockout(
+      cleanPhone,
+      "admin"
+    );
+
+    if (lockout.locked) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Too many failed attempts. Try again in ${lockout.retryAfterMinutes} minute${lockout.retryAfterMinutes === 1 ? "" : "s"}.`,
+        },
+        { status: 429 }
+      );
+    }
+
     const admin = await AdminUserRepository.getByPhone(
-      String(phone).trim()
+      cleanPhone
     );
 
     // Same generic message whether the phone isn't registered, the
@@ -38,6 +56,11 @@ export async function POST(request: Request) {
     );
 
     if (!admin || !admin.is_active) {
+      await LoginRateLimitService.recordFailure(
+        cleanPhone,
+        "admin"
+      );
+
       return invalidCredentials;
     }
 
@@ -47,8 +70,18 @@ export async function POST(request: Request) {
     );
 
     if (!passwordMatches) {
+      await LoginRateLimitService.recordFailure(
+        cleanPhone,
+        "admin"
+      );
+
       return invalidCredentials;
     }
+
+    await LoginRateLimitService.recordSuccess(
+      cleanPhone,
+      "admin"
+    );
 
     const token = await signAdminSession({
       adminId: admin.id,
