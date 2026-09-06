@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 
 import OrderStatusForm from "@/app/components/admin/OrderStatusForm";
 import StatusBadge from "@/app/components/admin/StatusBadge";
+import EmailInvoiceButton from "@/app/components/admin/EmailInvoiceButton";
 import { OrderService } from "@/app/lib/services/orderService";
 
 export default async function AdminOrderDetailPage({
@@ -34,16 +35,26 @@ export default async function AdminOrderDetailPage({
           Order {order.order_number}
         </h1>
 
-        <a
-          href={`/api/admin/orders/${order.id}/invoice`}
-          className="btn btn-outline"
+        <div
           style={{
-            textDecoration: "none",
-            fontSize: 14,
+            display: "flex",
+            gap: 10,
+            flexWrap: "wrap",
           }}
         >
-          📄 Download Invoice
-        </a>
+          <a
+            href={`/api/admin/orders/${order.id}/invoice`}
+            className="btn btn-outline"
+            style={{
+              textDecoration: "none",
+              fontSize: 14,
+            }}
+          >
+            📄 Download Invoice
+          </a>
+
+          <EmailInvoiceButton orderId={order.id} />
+        </div>
       </div>
 
       <p
