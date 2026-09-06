@@ -3,10 +3,9 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.bhakthibookshelf.app',
   appName: 'Bhakthi Bookshelf',
-  webDir: 'public',
+  webDir: 'capacitor/www',
   server: {
-    url: 'http://172.25.248.211:3010',
-    cleartext: true
+    url: 'https://bhakthibookshelf.in'
   }
 };
 

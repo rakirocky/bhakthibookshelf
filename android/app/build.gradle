@@ -40,6 +40,15 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+
+    // Kotlin 1.8+ merged the jdk7/jdk8 stdlib artifacts into kotlin-stdlib.
+    // Transitive deps (kotlinx-coroutines 1.6.4 via androidx.lifecycle) still pull
+    // kotlin-stdlib-jdk7/jdk8:1.6.21, which then collide with kotlin-stdlib:1.8.22.
+    // Pin the jdk7/jdk8 artifacts to 1.8.22 so they resolve to empty stubs.
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22")
+    }
 }
 
 apply from: 'capacitor.build.gradle'
