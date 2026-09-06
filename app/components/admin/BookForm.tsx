@@ -123,17 +123,6 @@ export default function BookForm({
     >
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: 20 }}>
-          <label>Slug</label>
-
-          <input
-            required
-            value={form.slug}
-            onChange={(e) => update("slug", e.target.value)}
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={{ marginBottom: 20 }}>
           <label>Title</label>
 
           <input

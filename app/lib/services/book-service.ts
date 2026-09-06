@@ -40,8 +40,33 @@ export async function getAdminBooks() {
   return repository.getAdminBooks();
 }
 
+function slugify(title: string): string {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+async function generateUniqueSlug(title: string) {
+  const base = slugify(title) || "book";
+
+  let candidate = base;
+  let suffix = 2;
+
+  // Keep trying candidate-2, candidate-3, etc. until we find one that's
+  // not already taken — titles like "Bhagavad Gita" repeating across
+  // different editions is a real scenario, not just a hypothetical.
+  while (await repository.findBookBySlug(candidate)) {
+    candidate = `${base}-${suffix}`;
+    suffix++;
+  }
+
+  return candidate;
+}
+
 export async function createBook(book: {
-  slug: string;
+  slug?: string;
   title: string;
   author: string;
   description: string;
@@ -53,7 +78,12 @@ export async function createBook(book: {
   published: boolean;
   language: string;
 }) {
-  return repository.createBook(book);
+  // The admin form no longer asks for a slug at all — generated here,
+  // from the title, guaranteed unique. Whatever the client sends for
+  // `slug` (nothing, now) is ignored on purpose for new books.
+  const slug = await generateUniqueSlug(book.title);
+
+  return repository.createBook({ ...book, slug });
 }
 export async function getBookById(id: number) {
   return repository.getBookById(id);
