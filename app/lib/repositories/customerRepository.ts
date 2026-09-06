@@ -90,4 +90,18 @@ export class CustomerRepository {
       [id, passwordHash]
     );
   }
+
+  static async updateEmail(
+    id: number,
+    email: string
+  ): Promise<void> {
+    await db.query(
+      `
+      UPDATE customers
+      SET email = $2, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+      `,
+      [id, email]
+    );
+  }
 }

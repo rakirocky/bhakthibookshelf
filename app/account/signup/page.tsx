@@ -132,10 +132,11 @@ function SignupForm() {
 
           <div style={{ marginBottom: 18 }}>
             <label style={labelStyle}>
-              Email (optional)
+              Email
             </label>
 
             <input
+              required
               type="email"
               value={email}
               onChange={(e) =>
@@ -143,6 +144,17 @@ function SignupForm() {
               }
               style={inputStyle}
             />
+
+            <p
+              style={{
+                fontSize: 12,
+                color: "var(--color-text-muted)",
+                marginTop: 6,
+              }}
+            >
+              Used to reset your password if you ever forget
+              it — make sure it's one you actually check.
+            </p>
           </div>
 
           <div style={{ marginBottom: 24 }}>

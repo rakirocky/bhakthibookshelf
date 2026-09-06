@@ -24,6 +24,7 @@ function LoginForm() {
 
   const from = searchParams.get("from");
   const notice = noticeForPath(from);
+  const resetSuccess = searchParams.get("reset") === "success";
 
   const signupHref = from
     ? `/account/signup?from=${encodeURIComponent(from)}`
@@ -89,6 +90,18 @@ function LoginForm() {
         {notice && (
           <div style={noticeStyle}>
             {notice}
+          </div>
+        )}
+
+        {resetSuccess && (
+          <div
+            style={{
+              ...noticeStyle,
+              background: "var(--color-success-bg)",
+              color: "var(--color-success-text)",
+            }}
+          >
+            ✓ Password reset — sign in with your new password.
           </div>
         )}
 

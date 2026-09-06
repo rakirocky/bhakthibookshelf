@@ -4,10 +4,16 @@ import Image from "next/image";
 import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
 import { SubscriptionService } from "@/app/lib/services/subscriptionService";
 import { OrderService } from "@/app/lib/services/orderService";
+import { CustomerRepository } from "@/app/lib/repositories/customerRepository";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
+import EmailSettingsCard from "@/app/components/account/EmailSettingsCard";
 
 export default async function AccountPage() {
   const session = await getCustomerSession();
+
+  const customer = session
+    ? await CustomerRepository.getById(session.customerId)
+    : null;
 
   const status = session
     ? await SubscriptionService.getStatusForCustomer(
@@ -41,6 +47,10 @@ export default async function AccountPage() {
         Welcome back
         {session?.name ? `, ${session.name}` : ""}.
       </p>
+
+      <EmailSettingsCard
+        currentEmail={customer?.email ?? null}
+      />
 
       <div
         style={{

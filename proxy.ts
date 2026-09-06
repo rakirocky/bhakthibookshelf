@@ -25,6 +25,7 @@ const PUBLIC_CUSTOMER_PATHS = [
   "/api/customer/login",
   "/api/customer/signup",
   "/api/customer/request-password-reset",
+  "/api/customer/forgot-password",
 ];
 
 async function handleAdminArea(

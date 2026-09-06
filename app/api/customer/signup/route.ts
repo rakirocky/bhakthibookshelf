@@ -9,6 +9,7 @@ import {
 } from "@/app/lib/auth/customerSession";
 
 const PHONE_REGEX = /^[6-9]\d{9}$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
   try {
@@ -16,6 +17,7 @@ export async function POST(request: Request) {
       await request.json();
 
     const cleanPhone = String(phone ?? "").trim();
+    const cleanEmail = String(email ?? "").trim();
 
     if (!PHONE_REGEX.test(cleanPhone)) {
       return NextResponse.json(
@@ -23,6 +25,20 @@ export async function POST(request: Request) {
           success: false,
           message:
             "Enter a valid 10-digit Indian mobile number.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Email is required specifically so every account has a working
+    // password-reset path — without it, a forgotten password has no
+    // way to be recovered short of an admin manually stepping in.
+    if (!EMAIL_REGEX.test(cleanEmail)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "A valid email address is required — this is how you'll reset your password if you ever forget it.",
         },
         { status: 400 }
       );
@@ -63,7 +79,7 @@ export async function POST(request: Request) {
     const customer = await CustomerRepository.create({
       phone: cleanPhone,
       name: name || null,
-      email: email || null,
+      email: cleanEmail,
       passwordHash,
     });
 

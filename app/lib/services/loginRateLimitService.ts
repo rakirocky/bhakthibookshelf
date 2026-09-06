@@ -1,5 +1,7 @@
 import { LoginAttemptRepository } from "../repositories/loginAttemptRepository";
 
+export type LoginScope = "admin" | "customer" | "password-reset";
+
 const MAX_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
 
@@ -13,7 +15,7 @@ export class LoginRateLimitService {
    */
   static async checkLockout(
     identifier: string,
-    scope: "admin" | "customer"
+    scope: LoginScope
   ): Promise<{ locked: boolean; retryAfterMinutes?: number }> {
     const record = await LoginAttemptRepository.get(
       identifier,
@@ -40,7 +42,7 @@ export class LoginRateLimitService {
 
   static async recordFailure(
     identifier: string,
-    scope: "admin" | "customer"
+    scope: LoginScope
   ) {
     const existing = await LoginAttemptRepository.get(
       identifier,
@@ -74,7 +76,7 @@ export class LoginRateLimitService {
 
   static async recordSuccess(
     identifier: string,
-    scope: "admin" | "customer"
+    scope: LoginScope
   ) {
     await LoginAttemptRepository.clear(identifier, scope);
   }

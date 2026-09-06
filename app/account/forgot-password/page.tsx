@@ -1,17 +1,26 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 import Spinner from "@/app/components/ui/Spinner";
 
 export default function ForgotPasswordPage() {
-  const [phone, setPhone] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
+  const router = useRouter();
 
-  async function handleSubmit(e: FormEvent) {
+  const [step, setStep] = useState<"phone" | "reset">("phone");
+  const [phone, setPhone] = useState("");
+
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
+
+  async function handleRequestOtp(e: FormEvent) {
     e.preventDefault();
 
     setLoading(true);
@@ -19,7 +28,7 @@ export default function ForgotPasswordPage() {
 
     try {
       const response = await fetch(
-        "/api/customer/request-password-reset",
+        "/api/customer/forgot-password/request-otp",
         {
           method: "POST",
 
@@ -35,16 +44,72 @@ export default function ForgotPasswordPage() {
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message ?? "Something went wrong."
+          data.message ?? "Something went wrong. Please try again."
         );
       }
 
-      setSubmitted(true);
+      // Only reachable on a genuine success — the message here really
+      // is the generic "if an account exists..." text, not an error
+      // that got mistakenly treated as one.
+      setInfo(data.message);
+      setStep("reset");
     } catch (err) {
       setError(
         err instanceof Error
           ? err.message
-          : "Something went wrong."
+          : "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleResetPassword(e: FormEvent) {
+    e.preventDefault();
+
+    setError("");
+
+    if (newPassword !== confirmPassword) {
+      setError("Passwords don't match.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        "/api/customer/forgot-password/verify-otp",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            phone,
+            otp,
+            newPassword,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message ?? "Unable to reset password."
+        );
+      }
+
+      router.push(
+        "/account/login?reset=success"
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to reset password."
       );
     } finally {
       setLoading(false);
@@ -58,31 +123,15 @@ export default function ForgotPasswordPage() {
           Forgot Your Password?
         </h1>
 
-        {submitted ? (
+        {step === "phone" ? (
           <>
             <p style={textStyle}>
-              Got it. Our team will reset your password
-              shortly and reach out to you at{" "}
-              <strong>{phone}</strong> with your new one.
+              Enter the phone number on your account —
+              we'll email a reset code to the address on
+              file.
             </p>
 
-            <Link
-              href="/account/login"
-              style={backLinkStyle}
-            >
-              ← Back to Sign In
-            </Link>
-          </>
-        ) : (
-          <>
-            <p style={textStyle}>
-              Enter the phone number on your account. Our
-              team will reset your password and reach out
-              to you directly — automatic reset by SMS is
-              coming soon.
-            </p>
-
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleRequestOtp}>
               <label style={labelStyle}>
                 Phone Number
               </label>
@@ -91,8 +140,74 @@ export default function ForgotPasswordPage() {
                 required
                 inputMode="numeric"
                 value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                style={inputStyle}
+              />
+
+              {error && (
+                <p style={errorStyle}>{error}</p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn btn-primary btn-block"
+                style={{ marginTop: 18 }}
+              >
+                {loading && <Spinner />}
+                {loading ? "Sending..." : "Send Reset Code"}
+              </button>
+            </form>
+          </>
+        ) : (
+          <>
+            <p style={textStyle}>{info}</p>
+
+            <form onSubmit={handleResetPassword}>
+              <label style={labelStyle}>
+                6-Digit Code
+              </label>
+
+              <input
+                required
+                inputMode="numeric"
+                maxLength={6}
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                style={{
+                  ...inputStyle,
+                  letterSpacing: 4,
+                  fontSize: 18,
+                  textAlign: "center",
+                }}
+              />
+
+              <label style={{ ...labelStyle, marginTop: 16 }}>
+                New Password
+              </label>
+
+              <input
+                required
+                type="password"
+                minLength={6}
+                value={newPassword}
                 onChange={(e) =>
-                  setPhone(e.target.value)
+                  setNewPassword(e.target.value)
+                }
+                style={inputStyle}
+              />
+
+              <label style={{ ...labelStyle, marginTop: 16 }}>
+                Confirm New Password
+              </label>
+
+              <input
+                required
+                type="password"
+                minLength={6}
+                value={confirmPassword}
+                onChange={(e) =>
+                  setConfirmPassword(e.target.value)
                 }
                 style={inputStyle}
               />
@@ -108,20 +223,61 @@ export default function ForgotPasswordPage() {
                 style={{ marginTop: 18 }}
               >
                 {loading && <Spinner />}
-                {loading
-                  ? "Submitting..."
-                  : "Request Reset"}
+                {loading ? "Resetting..." : "Reset Password"}
               </button>
             </form>
 
-            <Link
-              href="/account/login"
-              style={backLinkStyle}
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: 13,
+                marginTop: 16,
+              }}
             >
-              ← Back to Sign In
-            </Link>
+              Didn't get a code?{" "}
+              <button
+                type="button"
+                onClick={() => setStep("phone")}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "var(--color-primary)",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  padding: 0,
+                }}
+              >
+                Try again
+              </button>
+            </p>
+
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: 12,
+                color: "var(--color-text-muted)",
+                marginTop: 6,
+              }}
+            >
+              Still stuck, or don't have an email on your
+              account?{" "}
+              <Link
+                href="/contact"
+                style={{
+                  color: "var(--color-primary)",
+                  fontWeight: 600,
+                }}
+              >
+                Contact us
+              </Link>{" "}
+              for help.
+            </p>
           </>
         )}
+
+        <Link href="/account/login" style={backLinkStyle}>
+          ← Back to Sign In
+        </Link>
       </div>
     </div>
   );
