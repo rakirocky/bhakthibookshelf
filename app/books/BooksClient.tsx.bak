@@ -1,0 +1,47 @@
+	"use client";
+
+import { useMemo, useState } from "react";
+
+import BookGrid from "@/app/components/books/BookGrid";
+import BookSearch from "@/app/components/books/BookSearch";
+import BookCount from "@/app/components/books/BookCount";
+import LibraryHeader from "@/app/components/books/LibraryHeader";
+import Container from "@/app/components/ui/Container";
+
+type Props = {
+  books: any[];
+};
+
+export default function BooksClient({ books }: Props) {
+  const [search, setSearch] = useState("");
+
+  const filteredBooks = useMemo(() => {
+    const value = search.toLowerCase();
+
+    if (!value) return books;
+
+    return books.filter((book) => {
+      return (
+        book.title.toLowerCase().includes(value) ||
+        book.author.toLowerCase().includes(value)
+      );
+    });
+  }, [books, search]);
+
+  return (
+    <>
+      <LibraryHeader />
+
+      <Container>
+        <BookSearch
+          value={search}
+          onChange={setSearch}
+        />
+
+        <BookCount count={filteredBooks.length} />
+
+        <BookGrid books={filteredBooks} />
+      </Container>
+    </>
+  );
+}

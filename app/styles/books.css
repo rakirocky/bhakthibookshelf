@@ -1,0 +1,249 @@
+/* ==========================================
+   BOOKS PAGE
+========================================== */
+
+.books-page{
+  padding:80px 5%;
+  background:#fff8EC;
+  min-height:100vh;
+}
+
+.page-header{
+  text-align:center;
+  margin-bottom:60px;
+}
+
+.page-header h1{
+  font-size:48px;
+  color:var(--color-navy);
+  margin-bottom:15px;
+}
+
+.page-header p{
+  font-size:20px;
+  color:var(--color-text-secondary);
+}
+
+/* ==========================================
+   BOOK DETAILS PAGE
+========================================== */
+
+.book-details-page{
+  padding:60px 20px;
+}
+
+.book-container{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  gap:50px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.book-cover{
+  width:300px;
+  height:420px;
+  background:#f7f7f7;
+  border-radius:15px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:120px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.book-info{
+  flex:1;
+}
+
+.book-info h1{
+  margin:10px 0;
+}
+
+.book-info h2{
+  color:var(--color-primary);
+  margin:20px 0;
+}
+
+.book-info h3{
+  color:var(--color-text-secondary);
+}
+
+/* ==========================================
+   LIBRARY
+========================================== */
+
+.library-header{
+    background:#fff8EC;
+    padding:80px 20px 40px;
+    text-align:center;
+}
+
+.library-header h1{
+    font-size:52px;
+    color:var(--color-navy);
+    margin-bottom:15px;
+}
+
+.library-header p{
+    color:var(--color-text-secondary);
+    font-size:20px;
+    max-width:700px;
+    margin:auto;
+}
+
+.search-bar{
+    margin:40px auto;
+    max-width:700px;
+}
+
+.search-bar input{
+    width:100%;
+    padding:18px 25px;
+    border-radius:50px;
+    border:1px solid var(--color-border-strong);
+    font-size:18px;
+    outline:none;
+}
+
+.search-bar input:focus{
+    border-color:var(--color-primary);
+}
+
+.empty-state{
+    text-align:center;
+    padding:100px 20px;
+}
+
+/* ==========================================
+   BOOK DETAILS
+========================================== */
+
+.book-details-page {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.book-layout {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.book-image img {
+    width: 250px;
+    border: 1px solid var(--color-border-strong);
+}
+
+.book-info h1 {
+    margin-bottom: 20px;
+}
+
+.book-info p {
+    margin: 10px 0;
+}
+
+.book-actions {
+    margin-top: 25px;
+}
+
+.buy-button,
+.sample-button {
+    display: inline-block;
+    margin-right: 15px;
+    padding: 12px 24px;
+    text-decoration: none;
+    border: none;
+    background: var(--color-primary);
+    color: white;
+    cursor: pointer;
+}
+
+.book-description {
+    margin-top: 50px;
+}
+
+.book-description h2 {
+    margin-bottom: 15px;
+}
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+.book-search {
+    margin: 30px 0;
+}
+
+.book-search input {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border: 1px solid var(--color-border-input);
+    border-radius: 6px;
+}
+
+.book-search input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.book-count {
+    margin-bottom: 20px;
+    font-size: 15px;
+    color: var(--color-text-secondary);
+}
+
+@media(max-width:560px){
+
+.books-page{
+    padding:50px 5%;
+}
+
+.page-header h1{
+    font-size:32px;
+}
+
+.page-header p{
+    font-size:16px;
+}
+
+.library-header{
+    padding:50px 16px 30px;
+}
+
+.library-header h1{
+    font-size:32px;
+}
+
+.library-header p{
+    font-size:16px;
+}
+
+.search-bar input{
+    padding:14px 20px;
+    font-size:16px;
+}
+
+.book-container{
+    gap:30px;
+    justify-content:center;
+}
+
+.book-cover{
+    width:100%;
+    max-width:280px;
+    height:340px;
+}
+
+.book-layout{
+    gap:25px;
+}
+
+.book-image img{
+    max-width:100%;
+}
+
+}

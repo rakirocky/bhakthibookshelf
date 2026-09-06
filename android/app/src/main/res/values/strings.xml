@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Bhakthi Bookshelf</string>
+    <string name="title_activity_main">Bhakthi Bookshelf</string>
+    <string name="package_name">com.bhakthibookshelf.app</string>
+    <string name="custom_url_scheme">com.bhakthibookshelf.app</string>
+</resources>

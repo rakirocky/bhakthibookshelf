@@ -1,0 +1,50 @@
+/* ==========================================
+   DESIGN TOKENS
+   Change a value here, it updates everywhere that references it —
+   instead of hunting through every file for a hardcoded hex code.
+========================================== */
+
+:root {
+  /* Brand */
+  --color-primary: #d97706;
+  --color-primary-dark: #b65f00;
+  --color-accent-gold: #c9a227;
+  --color-navy: #0b1b3b;
+
+  /* Text */
+  --color-white: #ffffff;
+  --color-text: #222222;
+  --color-text-strong: #333333;
+  --color-text-secondary: #666666;
+  --color-text-muted: #999999;
+  --color-text-faint: #bbbbbb;
+  --color-text-on-dark: var(--color-white);
+
+  /* Backgrounds */
+  --color-bg-page: #faf7f2;
+  --color-bg-white: var(--color-white);
+  --color-bg-subtle: #f4f4f4;
+
+  /* Borders */
+  --color-border: #ececec;
+  --color-border-strong: #dddddd;
+  --color-border-input: #cccccc;
+
+  /* Status */
+  --color-success-bg: #dcfce7;
+  --color-success-text: #166534;
+  --color-warning-bg: #fef3c7;
+  --color-warning-text: #92400e;
+  --color-danger-bg: #fee2e2;
+  --color-danger-text: #dc2626;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* Shadow */
+  --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.06);
+  --shadow-lifted: 0 12px 30px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,130 @@
+.hero-button,
+.book-button,
+.buy-button{
+  display:inline-block;
+  padding:16px 35px;
+  border:none;
+  border-radius:50px;
+  cursor:pointer;
+  transition:.3s;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.hero-button{
+  background:var(--color-primary);
+  color:white;
+}
+
+.hero-button:hover{
+  background:var(--color-primary-dark);
+  transform:translateY(-3px);
+}
+
+.book-button{
+  background:var(--color-navy);
+  color:white;
+}
+
+.book-button:hover{
+  background:var(--color-accent-gold);
+  color:var(--color-navy);
+}
+
+.buy-button{
+  background:var(--color-primary);
+  color:white;
+}
+
+.buy-button:hover{
+  opacity:.9;
+}
+
+/* books.css defines a square-cornered .sample-button — this makes it match
+   the pill shape of .buy-button so Add to Cart / Download Sample sit next
+   to each other consistently on the book detail page. */
+.sample-button{
+  border-radius:50px;
+  font-weight:600;
+}
+
+/* ==========================================
+   SHARED BUTTON UTILITIES
+   For plain <button> elements that had no styling at all
+   (cart quantity controls, remove, clear cart, place order).
+========================================== */
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border:none;
+  border-radius:10px;
+  padding:14px 28px;
+  font-weight:600;
+  font-size:16px;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+.btn-primary{
+  background:var(--color-primary);
+  color:white;
+}
+
+.btn-primary:hover:not(:disabled){
+  background:var(--color-primary-dark);
+}
+
+.btn-outline{
+  background:var(--color-white);
+  color:var(--color-text-strong);
+  border:1px solid var(--color-border-input);
+}
+
+.btn-outline:hover:not(:disabled){
+  border-color:var(--color-text-muted);
+}
+
+.btn-danger-text{
+  background:none;
+  border:none;
+  color:var(--color-danger-text);
+  font-weight:600;
+  cursor:pointer;
+  padding:6px 10px;
+}
+
+.btn-danger-text:hover{
+  text-decoration:underline;
+}
+
+.btn-block{
+  width:100%;
+}
+
+.qty-btn{
+  width:36px;
+  height:36px;
+  border:1px solid var(--color-border-input);
+  background:var(--color-white);
+  border-radius:8px;
+  font-size:18px;
+  font-weight:600;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:.2s;
+}
+
+.qty-btn:hover{
+  border-color:var(--color-primary);
+  color:var(--color-primary);
+}

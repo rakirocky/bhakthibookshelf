@@ -1,0 +1,49 @@
+import Image from "next/image";
+import Link from "next/link";
+
+interface BookCardProps {
+  slug: string;
+  title: string;
+  author: string;
+  price: number;
+  cover?: string | null;
+}
+
+export default function BookCard({
+  slug,
+  title,
+  author,
+  price,
+  cover,
+}: BookCardProps) {
+  return (
+    <div className="book-card">
+      <div className="book-image-placeholder">
+        <Image
+          src={cover || "/images/books/bhagavad-gita.jpg"}
+          alt={title}
+          width={220}
+          height={320}
+          className="book-cover-image"
+        />
+      </div>
+
+      <h2>{title}</h2>
+
+      <p>{author}</p>
+
+      <div className="book-rating">
+        ⭐⭐⭐⭐⭐
+      </div>
+
+      <h3>₹ {price}</h3>
+
+      <Link
+        href={`/books/${slug}`}
+        className="book-button"
+      >
+        View Details
+      </Link>
+    </div>
+  );
+}

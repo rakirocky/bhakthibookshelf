@@ -1,0 +1,10 @@
+
+> hindu-religious-books@0.1.0 start
+> next start -p ${PORT:-3010}
+
+▲ Next.js 16.2.12
+- Local:         http://localhost:3010
+- Network:       http://10.10.20.142:3010
+✓ Ready in 183ms
+[middleware] captured referral code "kantha" on /
+[middleware] captured referral code "kantha" on /

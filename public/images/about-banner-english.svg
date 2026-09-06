@@ -1,0 +1,46 @@
+<svg width="1200" height="500" viewBox="0 0 1200 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgEng" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFF8E7"/>
+      <stop offset="100%" stop-color="#FDECC8"/>
+    </linearGradient>
+    <linearGradient id="goldEng" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#B45309"/>
+      <stop offset="50%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="500" fill="url(#bgEng)"/>
+
+  <rect x="24" y="24" width="1152" height="452" fill="none" stroke="#D97706" stroke-width="3"/>
+  <rect x="34" y="34" width="1132" height="432" fill="none" stroke="#D97706" stroke-width="1"/>
+
+  <g stroke="#B45309" stroke-width="2" fill="none">
+    <path d="M24 70 Q24 24 70 24"/>
+    <path d="M1130 24 Q1176 24 1176 70"/>
+    <path d="M1176 430 Q1176 476 1130 476"/>
+    <path d="M70 476 Q24 476 24 430"/>
+  </g>
+  <g fill="#D97706">
+    <circle cx="47" cy="47" r="5"/>
+    <circle cx="1153" cy="47" r="5"/>
+    <circle cx="1153" cy="453" r="5"/>
+    <circle cx="47" cy="453" r="5"/>
+  </g>
+
+  <text x="600" y="130" font-family="Noto Sans, Arial, sans-serif" font-size="72" fill="url(#goldEng)" text-anchor="middle" font-weight="700">ॐ</text>
+
+  <line x1="450" y1="160" x2="750" y2="160" stroke="#D97706" stroke-width="1.5"/>
+  <circle cx="600" cy="160" r="4" fill="#D97706"/>
+
+  <text x="600" y="225" font-family="Georgia, 'Times New Roman', serif" font-size="46" font-weight="700" fill="#7C2D12" text-anchor="middle">Bhakthi Bookshelf</text>
+
+  <text x="600" y="270" font-family="Georgia, 'Times New Roman', serif" font-size="20" fill="#92400E" text-anchor="middle" letter-spacing="2">A HOME FOR DEVOTIONAL READING</text>
+
+  <text x="600" y="340" font-family="Georgia, 'Times New Roman', serif" font-size="23" fill="#57534E" text-anchor="middle" font-style="italic">"Boundless strength lies in devotion —</text>
+  <text x="600" y="378" font-family="Georgia, 'Times New Roman', serif" font-size="23" fill="#57534E" text-anchor="middle" font-style="italic">and from it comes peace of mind..."</text>
+
+  <line x1="450" y1="430" x2="750" y2="430" stroke="#D97706" stroke-width="1.5"/>
+  <circle cx="600" cy="430" r="4" fill="#D97706"/>
+</svg>

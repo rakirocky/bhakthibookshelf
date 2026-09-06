@@ -1,0 +1,97 @@
+.books-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:35px;
+}
+
+.book-card{
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+  text-align:center;
+  transition:.35s;
+}
+
+.book-card:hover{
+  transform:translateY(-8px);
+}
+
+.book-image-placeholder{
+  height:220px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:80px;
+  background:#f7f7f7;
+  border-radius:15px;
+  margin-bottom:20px;
+}
+
+.book-category{
+  display:inline-block;
+  padding:6px 16px;
+  border-radius:30px;
+  background:#F8F1D7;
+  color:var(--color-accent-gold);
+  font-weight:bold;
+  margin-bottom:15px;
+}
+
+.book-rating{
+  margin:15px 0;
+}
+
+.stat-card{
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+
+.book-cover-image{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:12px;
+    transition:.35s;
+}
+
+.book-card:hover .book-cover-image{
+    transform:scale(1.04);
+}
+
+@media(max-width:560px){
+
+.book-card{
+    padding:20px;
+}
+
+.books-grid{
+    gap:22px;
+}
+
+.book-image-placeholder{
+    height:180px;
+}
+
+}
+
+/* ==========================================
+   CONTACT PAGE CARDS
+========================================== */
+
+.contact-card{
+  background: var(--color-bg-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 34px;
+  box-shadow: var(--shadow-card);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.contact-card:hover{
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lifted);
+}

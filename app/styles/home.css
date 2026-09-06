@@ -1,0 +1,286 @@
+/* ==========================================
+   HERO
+========================================== */
+
+.hero{
+    background:linear-gradient(135deg,#fff8EC,#fffDF8);
+    padding:90px 20px;
+}
+
+.hero-wrapper{
+    display:grid;
+    grid-template-columns:1.2fr .8fr;
+    gap:60px;
+    align-items:center;
+}
+
+.hero-left h1{
+    font-size:72px;
+    color:var(--color-navy);
+    margin:20px 0;
+}
+
+.hero-left h1 span{
+    color:var(--color-primary);
+}
+
+.hero-tag{
+    display:inline-block;
+    background:#fff2D9;
+    color:var(--color-primary);
+    padding:10px 18px;
+    border-radius:30px;
+    font-weight:bold;
+}
+
+.hero-description{
+    font-size:21px;
+    color:#555;
+    line-height:1.8;
+    margin:25px 0 40px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.hero-features{
+    margin-top:40px;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.feature-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:18px;
+}
+
+.feature-icon{
+    color:var(--color-primary);
+    font-weight:bold;
+}
+
+.hero-right{
+    display:flex;
+    justify-content:center;
+}
+
+.hero-library{
+    width:360px;
+    height:360px;
+    border-radius:50%;
+    background:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:120px;
+    box-shadow:0 20px 50px rgba(0,0,0,.08);
+}
+
+/* ==========================================
+   HOME SECTIONS
+========================================== */
+
+.featured-books,
+.why-choose,
+.newsletter,
+.statistics{
+    padding:80px 20px;
+}
+
+.section-header{
+    text-align:center;
+    margin-bottom:50px;
+}
+
+.section-header h2{
+    font-size:42px;
+    color:var(--color-navy);
+    margin-bottom:15px;
+}
+
+.section-header p{
+    color:var(--color-text-secondary);
+    font-size:18px;
+    max-width:700px;
+    margin:auto;
+}
+
+.view-all-books{
+    text-align:center;
+    margin-top:50px;
+}
+
+.why-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:30px;
+}
+
+.why-card{
+    background:white;
+    padding:30px;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.why-card:hover{
+    transform:translateY(-8px);
+}
+
+/* ==========================================
+   STATISTICS / PROMISE
+========================================== */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:30px;
+}
+
+.stat-card:hover{
+    transform:translateY(-8px);
+}
+
+.stat-icon{
+    font-size:48px;
+    margin-bottom:15px;
+}
+
+.stat-card h2{
+    color:var(--color-primary);
+    margin-bottom:10px;
+}
+
+/* ==========================================
+   HERO BOOKSHELF
+========================================== */
+
+.hero-bookshelf{
+    position:relative;
+    width:420px;
+    height:430px;
+    margin:auto;
+}
+
+.hero-book{
+    position:absolute;
+    border-radius:16px;
+    box-shadow:0 20px 45px rgba(0,0,0,.18);
+    transition:.35s;
+}
+
+.hero-book:hover{
+    transform:translateY(-12px) scale(1.05);
+    z-index:20;
+}
+
+.hero-book-1{
+    left:0;
+    top:70px;
+    transform:rotate(-12deg);
+}
+
+.hero-book-2{
+    left:95px;
+    top:0;
+    z-index:4;
+}
+
+.hero-book-3{
+    left:210px;
+    top:65px;
+    transform:rotate(12deg);
+}
+
+.hero-book-4{
+    left:115px;
+    top:175px;
+    z-index:5;
+}
+
+@media(max-width:900px){
+
+.hero-wrapper{
+    grid-template-columns:1fr;
+}
+
+.hero-right{
+    margin-top:60px;
+}
+
+.hero-bookshelf{
+    width:320px;
+    height:350px;
+}
+
+.hero-book{
+    width:130px !important;
+    height:auto !important;
+}
+
+}
+
+@media(max-width:560px){
+
+.hero{
+    padding:60px 16px;
+}
+
+.hero-left h1{
+    font-size:40px;
+    margin:14px 0;
+}
+
+.hero-tag{
+    font-size:13px;
+    padding:8px 14px;
+}
+
+.hero-description{
+    font-size:17px;
+    line-height:1.7;
+    margin:18px 0 28px;
+}
+
+.feature-item{
+    font-size:15px;
+}
+
+.hero-buttons a,
+.hero-buttons button{
+    width:100%;
+    text-align:center;
+}
+
+.featured-books,
+.why-choose,
+.newsletter,
+.statistics{
+    padding:50px 16px;
+}
+
+.section-header h2{
+    font-size:28px;
+}
+
+.section-header p{
+    font-size:16px;
+}
+
+.hero-bookshelf{
+    width:240px;
+    height:260px;
+}
+
+.hero-book{
+    width:100px !important;
+}
+
+}
