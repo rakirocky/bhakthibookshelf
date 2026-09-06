@@ -41,3 +41,8 @@ next-env.d.ts
 /android/build/
 /android/.gradle/
 /android/local.properties
+
+# Android release signing
+*.jks
+*.keystore
+android/keystore.properties
