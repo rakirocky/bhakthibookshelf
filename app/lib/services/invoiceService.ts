@@ -1,4 +1,12 @@
-import PDFDocument from "pdfkit";
+// The standalone build embeds pdfkit's standard font metrics directly
+// in the JS bundle, instead of reading them from a separate .afm file
+// on disk at runtime. The regular "pdfkit" entry point does the latter
+// via a path relative to its own location — which breaks under
+// Turbopack's production bundling (the path gets rewritten to an
+// internal virtual location, "/ROOT/...", that doesn't exist on the
+// real filesystem). This avoids the problem instead of working around
+// it with bundler config that Turbopack doesn't fully honor yet.
+import PDFDocument from "pdfkit/js/pdfkit.standalone.js";
 
 import { StoreSettings } from "../types/settings";
 
