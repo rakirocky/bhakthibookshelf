@@ -157,6 +157,157 @@ main {
   .nav-links.open {
     display: flex;
   }
+
+  /* On mobile the bottom tab bar owns navigation — the top bar keeps
+     only the brand, so drop the hamburger and its collapsed menu. */
+  .nav-toggle,
+  .nav-links {
+    display: none !important;
+  }
+}
+
+/* ==========================================
+   BOTTOM NAV (mobile / app shell)
+========================================== */
+
+.bottom-nav-spacer {
+  display: none;
+}
+
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .bottom-nav-spacer {
+    display: block;
+    height: calc(58px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: stretch;
+    background: var(--color-white);
+    border-top: 1px solid var(--color-border);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+  }
+
+  .bottom-nav__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    height: 58px;
+    background: none;
+    border: none;
+    padding: 6px 0 4px;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .bottom-nav__item svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .bottom-nav__item.is-active {
+    color: var(--color-primary);
+  }
+
+  .bottom-nav__icon-wrap {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .bottom-nav__badge {
+    position: absolute;
+    top: -5px;
+    right: -9px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+    color: var(--color-white);
+    font-size: 10px;
+    line-height: 16px;
+    text-align: center;
+    font-weight: 700;
+  }
+}
+
+/* ==========================================
+   MORE SHEET
+========================================== */
+
+.more-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+}
+
+.more-sheet__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  animation: more-fade 0.15s ease;
+}
+
+.more-sheet__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-white);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 10px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  box-shadow: var(--shadow-lifted);
+  animation: more-slide 0.2s ease;
+}
+
+.more-sheet__grip {
+  width: 40px;
+  height: 4px;
+  margin: 4px auto 12px;
+  border-radius: var(--radius-pill);
+  background: var(--color-border-strong);
+}
+
+.more-sheet__links {
+  display: flex;
+  flex-direction: column;
+}
+
+.more-sheet__link {
+  padding: 15px 4px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-strong);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.more-sheet__footer {
+  padding-top: 16px;
+}
+
+@keyframes more-fade {
+  from { opacity: 0; }
+}
+
+@keyframes more-slide {
+  from { transform: translateY(100%); }
 }
 
 /* ==========================================

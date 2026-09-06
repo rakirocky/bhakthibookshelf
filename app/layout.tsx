@@ -3,6 +3,7 @@ import "./styles/globals.css";
 
 import Providers from "./providers";
 import Navbar from "./components/layout/Navbar";
+import BottomNav from "./components/layout/BottomNav";
 import AnnouncementBar from "./components/layout/AnnouncementBar";
 import { AnnouncementService } from "./lib/services/announcementService";
 
@@ -83,6 +84,7 @@ export default async function RootLayout({
           <AnnouncementBar announcements={announcements} />
           <Navbar />
           {children}
+          <BottomNav />
         </Providers>
       </body>
     </html>
