@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Debug-only overlay. Allows cleartext HTTP so a debug APK built with
+  CAP_SERVER_URL=http://<lan-ip>:<port> can reach a local dev server for
+  on-device testing. Never merged into release builds.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application
+        android:usesCleartextTraffic="true"
+        tools:replace="android:usesCleartextTraffic" />
+</manifest>
