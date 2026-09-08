@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Debug-only. Trusts a local dev CA (res/raw/dev_ca.pem) so the app can
+  load the Next dev server over HTTPS at https://<lan-ip>:3010 with a
+  *trusted* cert — which makes the WebView a secure context, so
+  window.crypto.subtle / crypto.randomUUID work (the offline-downloads
+  reader needs WebCrypto). Never merged into release builds.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/dev_ca" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
