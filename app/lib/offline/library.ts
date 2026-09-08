@@ -52,12 +52,17 @@ async function fs() {
 }
 
 async function prefs() {
-  const { Preferences } = await import("@capacitor/preferences");
-  return Preferences;
+  const mod = await import("@capacitor/preferences");
+  // Return the module, not the bare `Preferences` proxy: an async
+  // function returning a Capacitor plugin proxy makes the promise
+  // machinery read `.then` on it, which Capacitor turns into a native
+  // call ("Preferences.then() is not implemented on android").
+  return mod;
 }
 
 async function readIndex(): Promise<LocalBook[]> {
-  const { value } = await (await prefs()).get({ key: INDEX_KEY });
+  const { Preferences } = await prefs();
+  const { value } = await Preferences.get({ key: INDEX_KEY });
   if (!value) return [];
   try {
     return JSON.parse(value) as LocalBook[];
@@ -67,7 +72,8 @@ async function readIndex(): Promise<LocalBook[]> {
 }
 
 async function writeIndex(list: LocalBook[]): Promise<void> {
-  await (await prefs()).set({ key: INDEX_KEY, value: JSON.stringify(list) });
+  const { Preferences } = await prefs();
+  await Preferences.set({ key: INDEX_KEY, value: JSON.stringify(list) });
 }
 
 /* ---------- device registration ---------- */
