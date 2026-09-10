@@ -23,6 +23,9 @@ export default function AnnouncementBar({
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
+    // Read the client-only dismiss flag after mount — the server has no
+    // sessionStorage, so doing this during render would break hydration.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDismissed(
       sessionStorage.getItem(DISMISS_KEY) === "true"
     );

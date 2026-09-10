@@ -110,8 +110,8 @@ export default async function SubscribePage() {
 
             {session && status?.status === "PENDING" && (
               <div style={statusBoxStyle("var(--color-warning-bg)", "var(--color-warning-text)")}>
-                Payment pending — we'll activate your
-                subscription once it's confirmed.
+                Payment pending — we&rsquo;ll activate your
+                subscription once it&rsquo;s confirmed.
               </div>
             )}
 

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
@@ -25,6 +26,47 @@ type Props = {
     slug: string;
   }>;
 };
+
+export async function generateMetadata(
+  { params }: Props
+): Promise<Metadata> {
+  const { slug } = await params;
+  const book = await getBookBySlug(slug);
+
+  if (!book) {
+    return { title: "Book not found | Bhakthi Bookshelf" };
+  }
+
+  const title = `${book.title} | Bhakthi Bookshelf`;
+  const description = (
+    book.subtitle ||
+    book.description ||
+    `${book.title} — read on Bhakthi Bookshelf.`
+  )
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 300);
+  const cover = fileUrl(book.cover_image);
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/books/${book.slug}` },
+    openGraph: {
+      title,
+      description,
+      url: `/books/${book.slug}`,
+      type: "article",
+      ...(cover ? { images: [{ url: cover, alt: book.title }] } : {}),
+    },
+    twitter: {
+      card: cover ? "summary_large_image" : "summary",
+      title,
+      description,
+      ...(cover ? { images: [cover] } : {}),
+    },
+  };
+}
 
 export default async function BookDetailsPage({
   params,

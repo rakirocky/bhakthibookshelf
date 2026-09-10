@@ -32,7 +32,7 @@ async function RequiredNotice({
         <h1 style={titleStyle}>Sign In Required</h1>
 
         <p style={textStyle}>
-          You'll need an account to continue. If you already have
+          You&rsquo;ll need an account to continue. If you already have
           one, sign in below — if not, creating one only takes a
           minute.
         </p>

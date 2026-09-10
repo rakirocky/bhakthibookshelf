@@ -153,7 +153,7 @@ function SignupForm() {
               }}
             >
               Used to reset your password if you ever forget
-              it — make sure it's one you actually check.
+              it — make sure it&rsquo;s one you actually check.
             </p>
           </div>
 

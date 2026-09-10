@@ -6,6 +6,7 @@ import Navbar from "./components/layout/Navbar";
 import BottomNav from "./components/layout/BottomNav";
 import AnnouncementBar from "./components/layout/AnnouncementBar";
 import ServiceWorkerRegister from "./components/layout/ServiceWorkerRegister";
+import ReconcileOnResume from "./components/offline/ReconcileOnResume";
 import { AnnouncementService } from "./lib/services/announcementService";
 
 // Update NEXT_PUBLIC_SITE_URL in your .env once the real domain is live —
@@ -87,6 +88,7 @@ export default async function RootLayout({
           {children}
           <BottomNav />
           <ServiceWorkerRegister />
+          <ReconcileOnResume />
         </Providers>
       </body>
     </html>

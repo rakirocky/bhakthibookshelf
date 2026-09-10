@@ -152,12 +152,16 @@ All under the existing customer-session middleware.
 | Route | Does |
 | --- | --- |
 | `POST /api/customer/devices` | Register this device / touch `last_seen`. Enforces the per-account device cap. |
-| `GET /api/customer/devices` | List activated devices for the "Manage devices" screen. |
-| `DELETE /api/customer/devices/:id` | Deauthorize a device. Frees a slot; its downloads stop at next validation. |
+| `GET /api/customer/devices` | List activated devices for the "Manage devices" screen — each with `deviceId` and `bookCount`. |
+| `DELETE /api/customer/devices/:id` | Deauthorize a device. Frees a slot; copies already on it keep working. |
 | `POST /api/customer/downloads` | Request a book for this device. Checks `AccessService`, records the license, returns the encrypted book + wrapped key. |
-| `GET /api/customer/downloads` | What this device is licensed for — used to reconcile after re-login. |
-| `POST /api/customer/downloads/:id/validate` | The periodic re-check. Returns keep / revoke. |
+| `GET /api/customer/downloads` | What this device is licensed for — drives reconcile. Each book carries `available` (false once unpublished). |
+| `POST /api/customer/downloads/:id/restore` | Re-issue an already-licensed book (re-install / wiped device). **No entitlement re-check** — the existing licence row is authoritative. |
 | `DELETE /api/customer/downloads/:id` | Reader removes a download to free space or a device slot. |
+| `GET` / `DELETE /api/admin/customers/:id/downloads` | Admin: list a customer's downloads / revoke one (`?downloadId=`) after a refund. |
+
+*(The periodic `/validate` re-check from an earlier draft was dropped with the expiry
+decision — downloads are permanent.)*
 
 ## 7. Native pieces
 
@@ -176,16 +180,40 @@ which reach the app the moment they deploy.
 
 Each phase is shippable on its own.
 
-1. **Android + web — the core.** Tables, endpoints, device identity, encrypted download,
-   local encrypted store, in-app PDF reader with watermark, Android `FLAG_SECURE`. The
-   Downloads screen and reader run from the bundled module so they work offline. Ships as
-   an Android APK / AAB.
-2. **Hardening.** "Manage devices" screen, local library reconcile on login (restore
-   after re-install, drop admin-revoked downloads), storage management, graceful handling
-   of a book updated or unpublished after download.
+1. **Android + web — the core.** ✅ *Shipped.* Tables, endpoints, device identity,
+   encrypted download, local encrypted store, in-app PDF reader with watermark, Android
+   `FLAG_SECURE`. The Downloads screen and reader run from the bundled module so they work
+   offline. Ships as an Android APK / AAB.
+2. **Hardening.** ✅ *Built (2026-09-10).*
+   - **"Manage devices" screen** — `/account/devices`
+     (`app/components/account/DevicesClient.tsx`), lists devices with book counts and a
+     "This device" marker, deauthorize frees a slot. `GET /api/customer/devices` now
+     returns `deviceId` + `bookCount` per device.
+   - **Library reconcile** — `reconcileLibrary()` in `app/lib/offline/library.ts`, run on
+     app launch and every foreground (`ReconcileOnResume` via `visibilitychange`). Drops
+     books the server no longer licenses for the device (removed elsewhere, or
+     admin-revoked); restores licensed books whose local file is missing (re-install).
+     Restore goes through **`POST /api/customer/downloads/[id]/restore`**, which
+     re-issues an already-licensed book with **no entitlement re-check** — a book unlocked
+     under a since-lapsed subscription still comes back (§4).
+   - **Storage management** — Downloads screen shows per-book size + total, "Remove all".
+   - **Book unpublished after download** — stays readable on the device forever;
+     `GET /api/customer/downloads` marks it `available: false`; reconcile neither drops nor
+     tries to restore it; restore returns `409`.
+   - **Admin revoke** — `GET`/`DELETE /api/admin/customers/[id]/downloads?downloadId=`
+     sets `book_downloads.revoked_at`; the device drops the local copy on its next
+     reconcile. (Endpoint only — no admin-UI surface yet; a customer-detail admin page
+     doesn't exist.)
 3. **iOS.** Once a Mac or macOS CI exists: add the iOS platform, port the native plugin
    (screenshot detection, secure-field recording block, background cover), test the reader
    in WKWebView, submit through TestFlight.
+
+### Known limitation — updated book files
+
+If an admin replaces a book's PDF *after* a device downloaded it, that device keeps the
+old copy (its encrypted file + key are self-contained; there's no `content_version` to
+compare). A future change would add a version column and let reconcile re-fetch a stale
+book. Out of scope for Phase 2.
 
 ## 9. Decisions needed from you
 

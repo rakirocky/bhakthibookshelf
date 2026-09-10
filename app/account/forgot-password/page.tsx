@@ -127,7 +127,7 @@ export default function ForgotPasswordPage() {
           <>
             <p style={textStyle}>
               Enter the phone number on your account —
-              we'll email a reset code to the address on
+              we&rsquo;ll email a reset code to the address on
               file.
             </p>
 
@@ -234,7 +234,7 @@ export default function ForgotPasswordPage() {
                 marginTop: 16,
               }}
             >
-              Didn't get a code?{" "}
+              Didn&rsquo;t get a code?{" "}
               <button
                 type="button"
                 onClick={() => setStep("phone")}
@@ -259,7 +259,7 @@ export default function ForgotPasswordPage() {
                 marginTop: 6,
               }}
             >
-              Still stuck, or don't have an email on your
+              Still stuck, or don&rsquo;t have an email on your
               account?{" "}
               <Link
                 href="/contact"

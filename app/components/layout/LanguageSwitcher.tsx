@@ -19,6 +19,10 @@ export default function LanguageSwitcher() {
   const [language, setLanguage] = useState("all");
 
   useEffect(() => {
+    // The language cookie is read server-side for the initial render;
+    // this only re-syncs the control after mount (e.g. changed in another
+    // tab). Reading document.cookie during render would break hydration.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLanguage(readCookie(LANGUAGE_COOKIE) ?? "all");
   }, []);
 
@@ -26,7 +30,10 @@ export default function LanguageSwitcher() {
     setLanguage(value);
 
     // 1 year, non-httpOnly — this is just a display preference, not
-    // sensitive, and needs to be settable from client JS.
+    // sensitive, and needs to be settable from client JS. (Assigning
+    // document.cookie is a browser side effect, not a mutation of
+    // module state — the immutability lint misfires here.)
+    // eslint-disable-next-line react-hooks/immutability
     document.cookie = `${LANGUAGE_COOKIE}=${value}; path=/; max-age=31536000; samesite=lax`;
 
     router.refresh();

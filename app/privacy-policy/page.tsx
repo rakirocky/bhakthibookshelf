@@ -30,7 +30,7 @@ export default async function PrivacyPolicyPage() {
           style={{ maxWidth: 780, margin: "0 auto 60px", lineHeight: 1.8 }}
         >
           <p>
-            {storeName} ("we", "us", "our") operates this website to
+            {storeName} (&ldquo;we&rdquo;, &ldquo;us&rdquo;, &ldquo;our&rdquo;) operates this website to
             provide devotional e-books and related digital content. This
             policy explains what information we collect, how we use it,
             and the choices you have.
@@ -56,7 +56,7 @@ export default async function PrivacyPolicyPage() {
           <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
             <li>To create and manage your account</li>
             <li>To process orders and subscriptions, and to send order confirmations and invoices</li>
-            <li>To grant you access to books you've purchased or subscribed to</li>
+            <li>To grant you access to books you&rsquo;ve purchased or subscribed to</li>
             <li>To respond to support requests you send us</li>
             <li>To notify you about new releases or offers, if you have an account with us</li>
             <li>To improve the site and diagnose technical issues</li>
@@ -107,7 +107,7 @@ export default async function PrivacyPolicyPage() {
             your account, contact us using the details below.
           </p>
 
-          <h2>8. Children's Privacy</h2>
+          <h2>8. Children&rsquo;s Privacy</h2>
           <p>
             This service is not directed at children under 13, and we
             do not knowingly collect personal information from children
@@ -116,8 +116,8 @@ export default async function PrivacyPolicyPage() {
 
           <h2>9. Changes to This Policy</h2>
           <p>
-            We may update this policy from time to time. The "Last
-            updated" date at the top of this page reflects the most
+            We may update this policy from time to time. The &ldquo;Last
+            updated&rdquo; date at the top of this page reflects the most
             recent revision.
           </p>
 

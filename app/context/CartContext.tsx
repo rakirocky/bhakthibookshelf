@@ -41,10 +41,21 @@ export function CartProvider({
   const [items, setItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
+    // Hydrate from localStorage *after* mount, not in a lazy useState
+    // initializer: the server renders with an empty cart, so reading
+    // storage during the first client render would desync hydration for
+    // every cart-count consumer. Starting empty and filling in an effect
+    // is the correct SSR pattern here.
     const saved = localStorage.getItem("cart");
 
     if (saved) {
-      setItems(JSON.parse(saved));
+      try {
+        const parsed = JSON.parse(saved);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setItems(parsed);
+      } catch {
+        /* corrupt cart JSON — ignore, start empty */
+      }
     }
   }, []);
 

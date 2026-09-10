@@ -26,6 +26,7 @@ export default function OfflineSaveButton({
   >("idle");
   const [downloadId, setDownloadId] = useState<number | null>(null);
   const [message, setMessage] = useState("");
+  const [atDeviceLimit, setAtDeviceLimit] = useState(false);
 
   useEffect(() => {
     if (!native) return;
@@ -44,12 +45,14 @@ export default function OfflineSaveButton({
   async function save() {
     setState("saving");
     setMessage("");
+    setAtDeviceLimit(false);
     try {
       const book = await downloadBook(bookId);
       setDownloadId(book.downloadId);
       setState("saved");
     } catch (err) {
       setState("error");
+      setAtDeviceLimit(err instanceof DeviceLimitError);
       setMessage(
         err instanceof DeviceLimitError
           ? err.message
@@ -85,6 +88,17 @@ export default function OfflineSaveButton({
       {state === "error" && (
         <span style={{ fontSize: 12, color: "var(--color-danger-text)" }}>
           {message}
+          {atDeviceLimit && (
+            <>
+              {" "}
+              <Link
+                href="/account/devices"
+                style={{ color: "var(--color-primary)", fontWeight: 600 }}
+              >
+                Manage devices
+              </Link>
+            </>
+          )}
         </span>
       )}
     </span>

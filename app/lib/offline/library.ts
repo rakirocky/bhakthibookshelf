@@ -111,27 +111,19 @@ async function registerDevice(deviceId: string): Promise<void> {
 
 /* ---------- download ---------- */
 
-export async function downloadBook(bookId: number): Promise<LocalBook> {
-  if (!isNativeApp()) {
-    throw new Error("Offline downloads are only available in the app.");
-  }
-
-  const deviceId = await getOrCreateDeviceId();
-  await registerDevice(deviceId);
-
-  const res = await fetch("/api/customer/downloads", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ bookId, deviceId }),
-  });
-
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error(body.message ?? "Download failed.");
-  }
-
+/**
+ * Take an encrypted-download response (from POST /downloads or
+ * .../restore — identical wire format), write the ciphertext to
+ * app-private storage, stash the key in the keystore, and upsert the
+ * catalogue entry. Shared by first download and reconcile-restore.
+ */
+async function persistDownloadResponse(
+  res: Response,
+  bookId: number
+): Promise<LocalBook> {
   const h = res.headers;
   const downloadId = Number(h.get("X-Download-Id"));
+
   const book: LocalBook = {
     downloadId,
     bookId,
@@ -172,6 +164,28 @@ export async function downloadBook(bookId: number): Promise<LocalBook> {
   await writeIndex(list);
 
   return book;
+}
+
+export async function downloadBook(bookId: number): Promise<LocalBook> {
+  if (!isNativeApp()) {
+    throw new Error("Offline downloads are only available in the app.");
+  }
+
+  const deviceId = await getOrCreateDeviceId();
+  await registerDevice(deviceId);
+
+  const res = await fetch("/api/customer/downloads", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ bookId, deviceId }),
+  });
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.message ?? "Download failed.");
+  }
+
+  return persistDownloadResponse(res, bookId);
 }
 
 /* ---------- read ---------- */
@@ -228,7 +242,8 @@ export async function listBooks(): Promise<LocalBook[]> {
   return local;
 }
 
-export async function removeBook(downloadId: number): Promise<void> {
+/** Wipe a book's local footprint — file, keystore key, catalogue row. */
+async function removeBookLocal(downloadId: number): Promise<void> {
   const { Filesystem, Directory } = await fs();
   await Filesystem.deleteFile({
     path: filePath(downloadId),
@@ -239,9 +254,187 @@ export async function removeBook(downloadId: number): Promise<void> {
   await writeIndex(
     (await readIndex()).filter((b) => b.downloadId !== downloadId)
   );
+}
 
-  // Best-effort server cleanup; local removal is what matters.
+export interface LocalBookDetail extends LocalBook {
+  /** Encrypted file size on disk, bytes. */
+  sizeBytes: number;
+  /** false once the book is unpublished — readable, but not re-downloadable. */
+  available: boolean;
+}
+
+/**
+ * The Downloads screen view: every book on the device, each with its
+ * on-disk size and whether it's still offered by the store. Availability
+ * comes from the server when reachable; offline, everything is assumed
+ * available (it stays readable regardless).
+ */
+export async function listBooksDetailed(): Promise<{
+  books: LocalBookDetail[];
+  totalBytes: number;
+}> {
+  const books = await listBooks();
+
+  let availability: Map<number, boolean> | null = null;
+  try {
+    const deviceId = await getOrCreateDeviceId();
+    const res = await fetch(
+      `/api/customer/downloads?deviceId=${encodeURIComponent(deviceId)}`
+    );
+    if (res.ok) {
+      const body = await res.json();
+      availability = new Map(
+        (body.books ?? []).map(
+          (b: { downloadId: number; available?: boolean }) => [
+            b.downloadId,
+            b.available !== false,
+          ]
+        )
+      );
+    }
+  } catch {
+    /* offline */
+  }
+
+  const detailed = await Promise.all(
+    books.map(async (b) => ({
+      ...b,
+      sizeBytes: await bookFileSize(b.downloadId),
+      available: availability?.get(b.downloadId) ?? true,
+    }))
+  );
+
+  return {
+    books: detailed,
+    totalBytes: detailed.reduce((sum, b) => sum + b.sizeBytes, 0),
+  };
+}
+
+export async function removeBook(downloadId: number): Promise<void> {
+  await removeBookLocal(downloadId);
+
+  // Best-effort server cleanup — revokes the licence so it isn't restored
+  // on the next reconcile and frees the device's book slot.
   fetch(`/api/customer/downloads/${downloadId}`, { method: "DELETE" }).catch(
     () => undefined
   );
+}
+
+/** On-disk size of one downloaded book's encrypted file, in bytes. */
+export async function bookFileSize(downloadId: number): Promise<number> {
+  try {
+    const { Filesystem, Directory } = await fs();
+    const stat = await Filesystem.stat({
+      path: filePath(downloadId),
+      directory: Directory.Data,
+    });
+    return typeof stat.size === "number" ? stat.size : 0;
+  } catch {
+    return 0;
+  }
+}
+
+async function fileExists(downloadId: number): Promise<boolean> {
+  try {
+    const { Filesystem, Directory } = await fs();
+    await Filesystem.stat({
+      path: filePath(downloadId),
+      directory: Directory.Data,
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/* ---------- reconcile ---------- */
+
+export interface ReconcileResult {
+  dropped: number;
+  restored: number;
+  unavailable: number;
+}
+
+interface LicensedBook {
+  downloadId: number;
+  bookId: number;
+  available: boolean;
+}
+
+/**
+ * Bring the local library in line with the server's record for this
+ * device:
+ *   - drop books the server no longer licenses here (removed on another
+ *     device, or revoked by an admin after a refund),
+ *   - restore books that are licensed but missing locally (the device was
+ *     wiped / the app reinstalled).
+ *
+ * Offline or logged out, the server call fails and this is a no-op —
+ * everything on the device stays exactly as it is.
+ */
+export async function reconcileLibrary(): Promise<ReconcileResult> {
+  const result: ReconcileResult = {
+    dropped: 0,
+    restored: 0,
+    unavailable: 0,
+  };
+
+  if (!isNativeApp()) return result;
+
+  const deviceId = await getOrCreateDeviceId();
+
+  let licensed: LicensedBook[];
+  try {
+    const res = await fetch(
+      `/api/customer/downloads?deviceId=${encodeURIComponent(deviceId)}`
+    );
+    if (!res.ok) return result;
+    const body = await res.json();
+    licensed = (body.books ?? []) as LicensedBook[];
+  } catch {
+    return result; // offline — leave the device untouched
+  }
+
+  const licensedById = new Map(licensed.map((b) => [b.downloadId, b]));
+  const local = await readIndex();
+
+  // Drop anything the server no longer licenses for this device.
+  for (const book of local) {
+    if (!licensedById.has(book.downloadId)) {
+      await removeBookLocal(book.downloadId);
+      result.dropped += 1;
+    }
+  }
+
+  // Restore licensed books whose encrypted file is missing locally.
+  for (const entry of licensed) {
+    if (await fileExists(entry.downloadId)) continue;
+
+    if (!entry.available) {
+      result.unavailable += 1;
+      continue;
+    }
+
+    try {
+      const res = await fetch(
+        `/api/customer/downloads/${entry.downloadId}/restore`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ deviceId }),
+        }
+      );
+
+      if (res.ok) {
+        await persistDownloadResponse(res, entry.bookId);
+        result.restored += 1;
+      } else if (res.status === 409) {
+        result.unavailable += 1;
+      }
+    } catch {
+      /* network dropped mid-reconcile — try again next time */
+    }
+  }
+
+  return result;
 }

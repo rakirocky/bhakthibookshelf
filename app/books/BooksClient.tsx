@@ -28,7 +28,7 @@ export default function BooksClient({ books }: Props) {
   const filteredBooks = useMemo(() => {
     const keyword = search.trim().toLowerCase();
 
-    let result = books.filter((book) => {
+    const result = books.filter((book) => {
       return (
         book.title.toLowerCase().includes(keyword) ||
         book.author.toLowerCase().includes(keyword)

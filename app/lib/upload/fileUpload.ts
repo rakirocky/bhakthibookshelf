@@ -47,8 +47,11 @@ export async function uploadFile(
 
   const fileName = `${uuid()}${ext}`;
 
+  // turbopackIgnore keeps the dynamic folder/filename out of the file
+  // tracer — without it the whole project gets pulled into every route
+  // that can upload (the "Encountered unexpected file in NFT list" warning).
   const destination = path.join(
-    process.cwd(),
+    /*turbopackIgnore: true*/ process.cwd(),
     rule.folder,
     fileName
   );

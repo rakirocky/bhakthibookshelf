@@ -91,7 +91,7 @@ export default async function ContactPage() {
               position: "relative",
             }}
           >
-            We'd love to hear from you — questions, feedback, or just to
+            We&rsquo;d love to hear from you — questions, feedback, or just to
             say namaste.
           </p>
         </section>

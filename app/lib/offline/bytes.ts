@@ -18,6 +18,14 @@ export function bytesToBase64(bytes: Uint8Array): string {
   return btoa(bin);
 }
 
+/** "4.8 MB", "912 KB" — for the Downloads storage readout. */
+export function formatBytes(n: number): string {
+  if (!Number.isFinite(n) || n <= 0) return "0 KB";
+  const mb = n / (1024 * 1024);
+  if (mb >= 1) return `${mb.toFixed(1)} MB`;
+  return `${Math.max(1, Math.round(n / 1024))} KB`;
+}
+
 /**
  * Decrypt a book downloaded from POST /api/customer/downloads.
  *

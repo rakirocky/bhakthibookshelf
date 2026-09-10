@@ -78,7 +78,7 @@ export default function ContactForm() {
             opacity: 0.85,
           }}
         >
-          We'll get back to you soon.
+          We&rsquo;ll get back to you soon.
         </p>
 
         <button

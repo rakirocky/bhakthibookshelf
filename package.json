@@ -6,7 +6,8 @@
     "dev": "next dev -p ${PORT:-3010}",
     "build": "next build",
     "start": "next start -p ${PORT:-3010}",
-    "lint": "eslint"
+    "lint": "eslint",
+    "migrate": "node --env-file-if-exists=.env.local --env-file-if-exists=.env scripts/migrate.mjs"
   },
   "dependencies": {
     "@aparajita/capacitor-secure-storage": "^8.0.0",

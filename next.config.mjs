@@ -1,8 +1,9 @@
 	/** @type {import('next').NextConfig} */
 const nextConfig = {
-  // On-device testing loads the app from http://<lan-ip>:3010 (Capacitor
+  // On-device testing loads the app from https://<lan-ip>:3010 (Capacitor
   // server.url), so dev-only HMR/_next requests come from that origin.
-  allowedDevOrigins: ["192.168.1.150"],
+  // Add whatever LAN IP the dev machine currently has.
+  allowedDevOrigins: ["192.168.1.150", "10.10.20.142"],
 
   // pdfkit loads its standard font metrics (.afm files) dynamically at
   // runtime, not via a normal import — Next.js's production bundler

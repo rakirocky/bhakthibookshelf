@@ -1,11 +1,12 @@
-import fs from "fs/promises";
-import path from "path";
-
 import { NextResponse } from "next/server";
 
 import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
 import { AccessService } from "@/app/lib/services/accessService";
 import { getBookById } from "@/app/lib/services/book-service";
+import {
+  readStorageFile,
+  StorageFileError,
+} from "@/app/lib/upload/readStorageFile";
 
 export async function GET(
   request: Request,
@@ -58,17 +59,10 @@ export async function GET(
     );
   }
 
-  // full_pdf is stored the same way cover images are — a relative path
-  // like "storage/ebooks/xxx.pdf" — read directly here rather than going
-  // through /api/storage, since that route is intentionally public and
-  // full books must not be.
-  const filePath = path.join(
-    process.cwd(),
-    book.full_pdf
-  );
-
+  // full_pdf is read directly here rather than through /api/storage,
+  // since that route is intentionally public and full books must not be.
   try {
-    const fileBuffer = await fs.readFile(filePath);
+    const fileBuffer = await readStorageFile(book.full_pdf);
 
     console.log(
       `[download] granted — customer ${session.phone} downloaded book ${book.id} (${book.title})`
@@ -81,7 +75,9 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error(error);
+    if (!(error instanceof StorageFileError)) {
+      console.error(error);
+    }
 
     return NextResponse.json(
       {

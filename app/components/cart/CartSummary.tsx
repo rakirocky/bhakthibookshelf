@@ -104,7 +104,7 @@ export default function CartSummary() {
           marginTop: 10,
         }}
       >
-        You'll need to sign in or create an account to complete your
+        You&rsquo;ll need to sign in or create an account to complete your
         order.
       </p>
     </aside>

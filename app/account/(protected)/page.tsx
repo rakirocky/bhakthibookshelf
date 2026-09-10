@@ -216,17 +216,30 @@ export default async function AccountPage() {
           Phone: {session?.phone}
         </p>
 
-        <Link
-          href="/account/change-password"
-          className="btn btn-outline"
+        <div
           style={{
-            display: "inline-block",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 12,
             marginTop: 20,
-            textDecoration: "none",
           }}
         >
-          Change Password
-        </Link>
+          <Link
+            href="/account/change-password"
+            className="btn btn-outline"
+            style={{ textDecoration: "none" }}
+          >
+            Change Password
+          </Link>
+
+          <Link
+            href="/account/devices"
+            className="btn btn-outline"
+            style={{ textDecoration: "none" }}
+          >
+            Manage Devices
+          </Link>
+        </div>
 
         <p
           style={{

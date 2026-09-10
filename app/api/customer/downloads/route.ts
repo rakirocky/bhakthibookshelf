@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
+import { encryptedDownloadResponse } from "@/app/lib/http/encryptedDownloadResponse";
 import {
   DownloadError,
   DownloadService,
@@ -56,35 +57,12 @@ export async function POST(request: Request) {
       bookId: Number(body.bookId),
     });
 
-    const { encrypted } = payload;
-
-    const headers = new Headers({
-      "Content-Type": "application/octet-stream",
-      "Cache-Control": "no-store",
-      "X-Download-Id": String(payload.downloadId),
-      "X-Book-Id": String(payload.book.id),
-      "X-Book-Title": encodeURIComponent(payload.book.title),
-      "X-Book-Author": encodeURIComponent(payload.book.author),
-      "X-Content-Key": encrypted.key.toString("base64"),
-      "X-Content-Iv": encrypted.iv.toString("base64"),
-      "X-Content-Tag": encrypted.authTag.toString("base64"),
-      "X-Watermark-Email": encodeURIComponent(
-        payload.watermark.email ?? ""
-      ),
-      "X-Watermark-Phone": encodeURIComponent(
-        payload.watermark.phone
-      ),
-    });
-
     console.log(
       `[download] granted — customer ${session.phone} downloaded book ` +
         `${payload.book.id} (${payload.book.title}) to device`
     );
 
-    return new NextResponse(new Uint8Array(encrypted.ciphertext), {
-      status: 200,
-      headers,
-    });
+    return encryptedDownloadResponse(payload);
   } catch (error) {
     if (error instanceof DownloadError) {
       return NextResponse.json(

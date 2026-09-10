@@ -1,13 +1,14 @@
 import "server-only";
 
-import fs from "fs/promises";
-import path from "path";
-
 import { CustomerRepository } from "../repositories/customerRepository";
 import {
   CustomerDeviceRow,
   DownloadRepository,
 } from "../repositories/downloadRepository";
+import {
+  readStorageFile,
+  StorageFileError,
+} from "../upload/readStorageFile";
 import { AccessService } from "./accessService";
 import { getBookById } from "./book-service";
 import { encryptBook, EncryptedBook } from "./bookCrypto";
@@ -226,6 +227,10 @@ export class DownloadService {
         slug: r.slug,
         author: r.author,
         licensedAt: r.licensed_at,
+        // A book unpublished after it was downloaded stays readable on the
+        // device (downloads are permanent) but can't be re-fetched — the
+        // reconcile uses this to decide restore vs. leave-alone.
+        available: Boolean(r.published),
       })),
     };
   }
@@ -237,44 +242,168 @@ export class DownloadService {
       throw new DownloadError("Download not found.", 404);
     }
   }
+
+  /* ---------- admin ---------- */
+
+  static async adminListDownloads(customerId: number) {
+    const rows =
+      await DownloadRepository.listDownloadsForCustomer(customerId);
+
+    return rows.map((r) => ({
+      downloadId: r.id,
+      bookId: r.book_id,
+      title: r.title,
+      slug: r.slug,
+      device: {
+        id: r.customer_device_id,
+        label: r.device_label,
+        platform: r.device_platform,
+      },
+      licensedAt: r.licensed_at,
+      revoked: Boolean(r.revoked_at),
+      revokedAt: r.revoked_at,
+    }));
+  }
+
+  /**
+   * Admin pulls a specific download after a refund / dispute. The device
+   * drops it on its next reconcile; the local copy is wiped then. Uses the
+   * same customer-scoped revoke as a self-service removal.
+   */
+  static async adminRevokeDownload(customerId: number, id: number) {
+    const ok = await DownloadRepository.revokeDownload(customerId, id);
+
+    if (!ok) {
+      throw new DownloadError(
+        "Download not found or already revoked.",
+        404
+      );
+    }
+  }
+
+  /**
+   * Re-issue an already-licensed download — a device that was wiped /
+   * reinstalled restoring its library. The existing (non-revoked)
+   * book_downloads row IS the entitlement here, so there is deliberately
+   * NO AccessService re-check: a book bought or downloaded under a
+   * since-lapsed subscription still comes back (docs/downloads-drm-design.md
+   * §4, "restore for free").
+   */
+  static async restoreDownload(input: {
+    customerId: number;
+    deviceId: string;
+    downloadId: number;
+  }): Promise<DownloadPayload> {
+    const device = await DownloadRepository.getDevice(
+      input.customerId,
+      (input.deviceId ?? "").trim()
+    );
+
+    if (!device || device.revoked_at) {
+      throw new DownloadError(
+        "This device is not registered for downloads.",
+        403,
+        { reason: "device_not_registered" }
+      );
+    }
+
+    const row = await DownloadRepository.getDownloadWithBook(
+      input.customerId,
+      input.downloadId
+    );
+
+    if (!row || row.revoked_at) {
+      throw new DownloadError("No download to restore.", 404, {
+        reason: "not_licensed",
+      });
+    }
+
+    if (row.customer_device_id !== device.id) {
+      throw new DownloadError(
+        "That download belongs to a different device.",
+        403,
+        { reason: "wrong_device" }
+      );
+    }
+
+    if (!row.published) {
+      throw new DownloadError(
+        "This book is no longer available for download.",
+        409,
+        { reason: "book_unavailable" }
+      );
+    }
+
+    const book = await getBookById(row.book_id);
+
+    if (!book || !book.full_pdf) {
+      throw new DownloadError(
+        "This book is no longer available for download.",
+        409,
+        { reason: "book_unavailable" }
+      );
+    }
+
+    const plaintext = await readBookFile(book.full_pdf);
+    const encrypted = encryptBook(plaintext);
+
+    await DownloadRepository.touchDevice(device.id);
+
+    const customer = await CustomerRepository.getById(
+      input.customerId
+    );
+
+    return {
+      downloadId: row.id,
+      book: {
+        id: book.id,
+        title: book.title,
+        slug: book.slug,
+        author: book.author,
+      },
+      encrypted,
+      watermark: {
+        email: customer?.email ?? null,
+        phone: customer?.phone ?? input.customerId.toString(),
+      },
+    };
+  }
 }
 
-function publicDevice(d: CustomerDeviceRow) {
+function publicDevice(
+  d: CustomerDeviceRow & { book_count?: number }
+) {
   return {
     id: d.id,
+    deviceId: d.device_id,
     label: d.label,
     platform: d.platform,
     addedAt: d.first_seen,
     lastSeen: d.last_seen,
     revoked: Boolean(d.revoked_at),
+    bookCount: d.book_count ?? 0,
   };
 }
 
 /**
  * full_pdf is stored one of three ways (see app/lib/upload/fileUrl.ts):
  * an admin-uploaded relative path under storage/, an old seed path under
- * public/, or an absolute URL. Read the bytes for each.
+ * public/, or an absolute URL. Delegates to the shared reader and maps
+ * its errors onto DownloadError so callers keep one error type.
  */
 async function readBookFile(fullPdf: string): Promise<Buffer> {
-  if (fullPdf.startsWith("http://") || fullPdf.startsWith("https://")) {
-    const res = await fetch(fullPdf);
-
-    if (!res.ok) {
-      throw new DownloadError("Book file could not be read.", 502);
+  try {
+    return await readStorageFile(fullPdf);
+  } catch (error) {
+    if (error instanceof StorageFileError) {
+      throw new DownloadError(
+        error.status === 404
+          ? "Book file not found on server."
+          : "Book file could not be read.",
+        error.status
+      );
     }
 
-    return Buffer.from(await res.arrayBuffer());
-  }
-
-  const base = fullPdf.startsWith("/")
-    ? path.join(process.cwd(), "public")
-    : process.cwd();
-
-  const filePath = path.join(base, fullPdf);
-
-  try {
-    return await fs.readFile(filePath);
-  } catch {
-    throw new DownloadError("Book file not found on server.", 404);
+    throw error;
   }
 }

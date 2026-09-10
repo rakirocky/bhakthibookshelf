@@ -38,7 +38,7 @@ export default async function TermsPage() {
 
           <h2>1. Accounts</h2>
           <p>
-            You need an account to purchase or download books. You're
+            You need an account to purchase or download books. You&rsquo;re
             responsible for keeping your password confidential and for
             all activity under your account. Provide accurate
             information when you register, and let us know right away
@@ -70,7 +70,7 @@ export default async function TermsPage() {
             download or a subscription has been activated</strong>. If
             you believe you were charged in error, or a file is
             corrupted or inaccessible, contact us within 7 days of
-            purchase at the details below and we'll look into it.
+            purchase at the details below and we&rsquo;ll look into it.
           </p>
 
           <h2>5. Subscriptions</h2>
@@ -78,7 +78,7 @@ export default async function TermsPage() {
             A subscription grants access to our full library of books,
             including titles added during your subscription period, for
             the duration stated at the time of purchase. Subscriptions
-            do not renew automatically unless you're told otherwise at
+            do not renew automatically unless you&rsquo;re told otherwise at
             the time of purchase; access ends at the end of the paid
             period.
           </p>
@@ -103,14 +103,14 @@ export default async function TermsPage() {
 
           <h2>8. Availability</h2>
           <p>
-            We aim to keep the site available at all times but don't
+            We aim to keep the site available at all times but don&rsquo;t
             guarantee uninterrupted access. We may update, suspend, or
             discontinue features of the service at any time.
           </p>
 
           <h2>9. Limitation of Liability</h2>
           <p>
-            {storeName} is provided on an "as is" basis. To the fullest
+            {storeName} is provided on an &ldquo;as is&rdquo; basis. To the fullest
             extent permitted by law, we are not liable for indirect or
             consequential losses arising from your use of the site.
           </p>
