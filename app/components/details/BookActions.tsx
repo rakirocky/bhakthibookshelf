@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { Book } from "@/app/lib/types/book";
 
+import AddToCartButton from "../cart/AddToCartButton";
 import OfflineSaveButton from "../books/OfflineSaveButton";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import { useCart } from "@/app/hooks/useCart";
@@ -21,9 +22,9 @@ export default function BookActions({
   const { addItem } = useCart();
 
   // "Download Full Book" always shows. For a book you already own it's a
-  // real download link; for one you don't, clicking it adds the book to
-  // the cart and takes you straight to checkout — download is the CTA
-  // that leads to payment, not a separate "Add to Cart" step.
+  // real download link; for one you don't, it's a "buy now" shortcut —
+  // adds to cart and goes straight to checkout — sitting alongside the
+  // regular "Add To Cart" for anyone who wants to keep browsing first.
   function handleBuyAndCheckout() {
     addItem({
       id: book.id,
@@ -60,14 +61,18 @@ export default function BookActions({
           <OfflineSaveButton bookId={book.id} />
         </>
       ) : (
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={handleBuyAndCheckout}
-        >
-          Download Full Book — ₹
-          {book.discount_price ?? book.price}
-        </button>
+        <>
+          <AddToCartButton book={book} />
+
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleBuyAndCheckout}
+          >
+            Download Full Book — ₹
+            {book.discount_price ?? book.price}
+          </button>
+        </>
       )}
 
       {book.sample_pdf && (
