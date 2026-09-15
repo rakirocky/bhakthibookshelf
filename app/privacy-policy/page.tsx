@@ -52,6 +52,18 @@ export default async function PrivacyPolicyPage() {
             (like your chosen content language) through cookies.
           </p>
 
+          <h2>1a. In the Mobile App</h2>
+          <p>
+            If you download a book for offline reading in the Bhakthi
+            Bookshelf app, your device generates a random device identifier
+            (not derived from any hardware serial number) so we can tell
+            your devices apart and enforce the device limit for downloads.
+            That identifier, and a record of which books are licensed to
+            each device, is stored on our servers. The book file itself is
+            encrypted and stored only on your device — we do not receive a
+            copy of it, and it is never uploaded anywhere.
+          </p>
+
           <h2>2. How We Use Your Information</h2>
           <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
             <li>To create and manage your account</li>
@@ -99,12 +111,15 @@ export default async function PrivacyPolicyPage() {
             against unauthorized access, alteration, or disclosure.
           </p>
 
-          <h2>7. Your Rights</h2>
+          <h2 id="your-rights">7. Your Rights</h2>
           <p>
             You can view and update your account details, and change
             your password, at any time from your account page. To
             request a copy of your data, or to request that we delete
-            your account, contact us using the details below.
+            your account — including any device records and download
+            licences tied to the mobile app — contact us using the
+            details below. We&rsquo;ll confirm the deletion by email once
+            it&rsquo;s done.
           </p>
 
           <h2>8. Children&rsquo;s Privacy</h2>
