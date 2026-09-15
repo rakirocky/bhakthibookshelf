@@ -1,8 +1,12 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 import { Book } from "@/app/lib/types/book";
 
-import AddToCartButton from "../cart/AddToCartButton";
 import OfflineSaveButton from "../books/OfflineSaveButton";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
+import { useCart } from "@/app/hooks/useCart";
 
 type Props = {
   book: Book;
@@ -13,6 +17,26 @@ export default function BookActions({
   book,
   hasAccess,
 }: Props) {
+  const router = useRouter();
+  const { addItem } = useCart();
+
+  // "Download Full Book" always shows. For a book you already own it's a
+  // real download link; for one you don't, clicking it adds the book to
+  // the cart and takes you straight to checkout — download is the CTA
+  // that leads to payment, not a separate "Add to Cart" step.
+  function handleBuyAndCheckout() {
+    addItem({
+      id: book.id,
+      slug: book.slug,
+      title: book.title,
+      author: book.author,
+      cover: book.cover_image,
+      price: Number(book.discount_price ?? book.price),
+    });
+
+    router.push("/checkout");
+  }
+
   return (
     <div
       className="book-actions"
@@ -36,9 +60,14 @@ export default function BookActions({
           <OfflineSaveButton bookId={book.id} />
         </>
       ) : (
-        <AddToCartButton
-          book={book}
-        />
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleBuyAndCheckout}
+        >
+          Download Full Book — ₹
+          {book.discount_price ?? book.price}
+        </button>
       )}
 
       {book.sample_pdf && (
