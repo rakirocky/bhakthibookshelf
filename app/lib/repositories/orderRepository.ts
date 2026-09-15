@@ -181,6 +181,7 @@ export class OrderRepository {
       SELECT
         o.id,
         o.order_number,
+        o.customer_id,
         o.customer_name,
         o.email,
         o.mobile,
@@ -194,6 +195,8 @@ export class OrderRepository {
         o.payment_status,
         o.payment_method,
         o.order_status,
+        o.razorpay_order_id,
+        o.payment_id,
         o.created_at,
         p.name AS promoter_name,
         p.code AS promoter_code
