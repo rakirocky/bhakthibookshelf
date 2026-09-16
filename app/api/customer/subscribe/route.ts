@@ -5,6 +5,7 @@ import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
 import { PromoterRepository } from "@/app/lib/repositories/promoterRepository";
 import { SubscriptionService } from "@/app/lib/services/subscriptionService";
 import { RazorpayService } from "@/app/lib/services/razorpayService";
+import { checkRequestRateLimit } from "@/app/lib/services/requestRateLimitService";
 
 export async function POST(request: Request) {
   try {
@@ -14,6 +15,26 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { success: false, message: "Not authenticated." },
         { status: 401 }
+      );
+    }
+
+    const rateLimit = checkRequestRateLimit(
+      `customer:${session.customerId}`,
+      { max: 5, windowMs: 5 * 60 * 1000 }
+    );
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Too many attempts. Please try again shortly.",
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.retryAfterSeconds),
+          },
+        }
       );
     }
 

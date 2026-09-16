@@ -1,25 +1,39 @@
 import "server-only";
 
+import { revalidateTag, unstable_cache } from "next/cache";
+
 import * as repository from "../repositories/bookRepository";
 
-export async function getAllBooks(language?: string) {
-  return repository.findAllBooks(language);
-}
+// The catalogue is read far more often than it's written, so these wrap
+// the DB reads in Next's data cache — still re-validated instantly on
+// any admin write via revalidateTag("books") below, and on a 5-minute
+// ceiling otherwise. This does NOT change page-level rendering (pages
+// keep whatever `dynamic`/cookie-driven behavior they already have) —
+// it only removes the Postgres round-trip from the hot path.
+export const getAllBooks = unstable_cache(
+  async (language?: string) => repository.findAllBooks(language),
+  ["books", "all"],
+  { tags: ["books"], revalidate: 300 }
+);
 
-export async function getFeaturedBooks(language?: string) {
-  return repository.findFeaturedBooks(language);
-}
+export const getFeaturedBooks = unstable_cache(
+  async (language?: string) => repository.findFeaturedBooks(language),
+  ["books", "featured"],
+  { tags: ["books"], revalidate: 300 }
+);
 
-export async function getBookBySlug(slug: string) {
-  return repository.findBookBySlug(slug);
-}
+export const getBookBySlug = unstable_cache(
+  async (slug: string) => repository.findBookBySlug(slug),
+  ["books", "by-slug"],
+  { tags: ["books"], revalidate: 300 }
+);
 
 export async function getRelatedBooks(
   currentSlug: string,
   limit = 4,
   language?: string
 ) {
-  const books = await repository.findAllBooks(language);
+  const books = await getAllBooks(language);
 
   return books
     .filter((book) => book.slug !== currentSlug)
@@ -83,7 +97,9 @@ export async function createBook(book: {
   // `slug` (nothing, now) is ignored on purpose for new books.
   const slug = await generateUniqueSlug(book.title);
 
-  return repository.createBook({ ...book, slug });
+  const created = await repository.createBook({ ...book, slug });
+  revalidateTag("books", { expire: 0 });
+  return created;
 }
 export async function getBookById(id: number) {
   return repository.getBookById(id);
@@ -93,9 +109,13 @@ export async function updateBook(
   id: number,
   book: any
 ) {
-  return repository.updateBook(id, book);
+  const updated = await repository.updateBook(id, book);
+  revalidateTag("books", { expire: 0 });
+  return updated;
 }
 
 export async function deleteBook(id: number) {
-  return repository.deleteBook(id);
+  const deleted = await repository.deleteBook(id);
+  revalidateTag("books", { expire: 0 });
+  return deleted;
 }

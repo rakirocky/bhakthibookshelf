@@ -5,9 +5,42 @@ import { OrderService } from "@/app/lib/services/orderService";
 import { PromoterRepository } from "@/app/lib/repositories/promoterRepository";
 import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
 import { RazorpayService } from "@/app/lib/services/razorpayService";
+import {
+  checkRequestRateLimit,
+  getClientIp,
+} from "@/app/lib/services/requestRateLimitService";
 
 export async function POST(request: Request) {
   try {
+    // Guest checkout means we can't always key this off a customer id,
+    // so a session (once known below) takes priority and IP is the
+    // fallback — a scripted burst of order-creation requests would
+    // otherwise hit Razorpay's API and the DB with no throttle at all.
+    const preAuthSession = await getCustomerSession();
+    const rateLimitKey = preAuthSession
+      ? `customer:${preAuthSession.customerId}`
+      : `ip:${getClientIp(request)}`;
+
+    const rateLimit = checkRequestRateLimit(rateLimitKey, {
+      max: 10,
+      windowMs: 5 * 60 * 1000,
+    });
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Too many order attempts. Please try again shortly.",
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.retryAfterSeconds),
+          },
+        }
+      );
+    }
+
     const body = await request.json();
 
     const cookieStore = await cookies();
@@ -37,8 +70,7 @@ export async function POST(request: Request) {
     // /api/orders both require a valid session (see proxy.ts) — this
     // fallback to null just means "no order can exist without an
     // account to check it against," not that it currently happens.
-    const customerSession = await getCustomerSession();
-    const customerId = customerSession?.customerId ?? null;
+    const customerId = preAuthSession?.customerId ?? null;
 
     console.log(
       customerId
