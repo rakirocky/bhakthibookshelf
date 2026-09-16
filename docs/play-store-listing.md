@@ -133,6 +133,56 @@ so Play's reviewers can sign in:
    payments policy generally requires to go through Google Play Billing instead. Resolve
    this before submitting; a listing built around this catalogue won't matter if the
    binary gets rejected on the payments policy.
+
+   Two paths, with effort estimates (2026-09-16):
+
+   **Path A — Migrate to Google Play Billing.** ~2–4 weeks dev + ongoing catalog
+   maintenance.
+   - Native bridge (3–5 days): no Play Billing plugin is installed today (checked
+     `package.json` / `android/app/build.gradle`). Need a Capacitor plugin (community or
+     custom) wrapping the Play Billing Library, exposed to the WebView's JS so the site
+     can trigger native purchase UI on Android only.
+   - Product catalog (1–3 days setup + **recurring**): every purchasable SKU must be
+     pre-registered in Play Console. The subscription (single ₹999/yr plan) maps to one
+     SKU — easy. Per-book purchases don't: each book needs its own managed product, so
+     every new book added to the catalogue also needs a matching Play Console SKU created
+     — an ongoing process cost, not one-time.
+   - Server verification (3–5 days): new endpoint using the Google Play Developer API to
+     verify purchase tokens server-side, mirroring `app/api/orders/verify-payment/route.ts`
+     for Razorpay, plus acknowledging purchases (Play auto-refunds if not ack'd within 3
+     days).
+   - Entitlement wiring (2–3 days): mark the existing `orders`/`subscriptions` rows PAID
+     from the Play path so `AccessService.customerHasAccessToBook()` keeps working
+     unchanged — genuinely easy given the current architecture (it's already the single
+     entitlement gate for both purchase types).
+   - Renewal/refund events (2–3 days): Real-time Developer Notifications (Pub/Sub) as the
+     webhook-equivalent backstop, same role as `app/api/webhooks/razorpay/route.ts`.
+   - Testing (3–5 days elapsed): Play Billing sandbox only works against a build uploaded
+     to at least an internal testing track — no local/sideload testing, so iteration is
+     slow (upload → Play processing → test → repeat).
+   - Business cost (ongoing): Google takes a 15–30% cut of Play-billed transactions, on
+     top of whatever Razorpay already costs — and it's Android-app-only revenue, since the
+     website keeps using Razorpay directly.
+
+   **Path B — Keep Razorpay, remove in-app purchase entirely.** ~1–3 days.
+   - Hide the Buy/Subscribe/Checkout entry points when running inside the Capacitor shell
+     (`Capacitor.isNativePlatform()` check), so the app becomes read/library-only —
+     already-owned books and active subscriptions still work via `AccessService` exactly
+     as today, but new purchases can only happen on the website (mobile browser or
+     desktop). Same pattern other read-only content apps use to legitimately sit outside
+     Play's billing-policy scope, since the app never sells digital goods itself.
+   - Work: feature-flag the checkout/subscribe UI on native, add a short "purchase on our
+     website" message, regression-test that downloads/offline-reading for existing
+     entitlements are untouched.
+   - Tradeoff: lower in-app conversion (a user has to leave the app to buy), and some risk
+     a reviewer still flags it if it looks like steering around billing rather than
+     genuinely not selling in-app — lower risk than shipping Razorpay-in-webview as-is,
+     but not zero.
+
+   Path B is the pragmatic short-term unblock (days, not weeks) at the cost of in-app
+   purchase friction. Path A is the "real" fix but is a multi-week project with a
+   recurring product-catalog maintenance tax for every new book, plus Google's revenue
+   cut. This is a business call for the owner.
 2. **Data Safety form** — see `docs/play-store-data-safety.md`, drafted from what the
    code actually collects and sends.
 3. **Data deletion URL** — Play Console → App content → Data safety → "Data deletion"
