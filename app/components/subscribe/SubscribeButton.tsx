@@ -6,6 +6,8 @@ import { useState } from "react";
 import Spinner from "@/app/components/ui/Spinner";
 import { useToast } from "@/app/context/ToastContext";
 import { openRazorpayCheckout } from "@/app/lib/razorpayClient";
+import { useIsNativeApp } from "@/app/lib/offline/useNative";
+import PurchaseOnWebNotice from "@/app/components/native/PurchaseOnWebNotice";
 
 export default function SubscribeButton({
   planId,
@@ -14,6 +16,7 @@ export default function SubscribeButton({
 }) {
   const router = useRouter();
   const { showToast } = useToast();
+  const native = useIsNativeApp();
 
   const [loading, setLoading] = useState(false);
 
@@ -158,6 +161,12 @@ export default function SubscribeButton({
     } finally {
       setLoading(false);
     }
+  }
+
+  if (native) {
+    return (
+      <PurchaseOnWebNotice message="Subscribing isn't available in the app. Please visit bhakthibookshelf.in in your browser to subscribe." />
+    );
   }
 
   if (pendingPayment) {

@@ -6,8 +6,10 @@ import { Book } from "@/app/lib/types/book";
 
 import AddToCartButton from "../cart/AddToCartButton";
 import OfflineSaveButton from "../books/OfflineSaveButton";
+import PurchaseOnWebNotice from "../native/PurchaseOnWebNotice";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import { useCart } from "@/app/hooks/useCart";
+import { useIsNativeApp } from "@/app/lib/offline/useNative";
 
 type Props = {
   book: Book;
@@ -20,6 +22,7 @@ export default function BookActions({
 }: Props) {
   const router = useRouter();
   const { addItem } = useCart();
+  const native = useIsNativeApp();
 
   // "Download Full Book" always shows. For a book you already own it's a
   // real download link; for one you don't, it's a "buy now" shortcut —
@@ -60,6 +63,8 @@ export default function BookActions({
 
           <OfflineSaveButton bookId={book.id} />
         </>
+      ) : native ? (
+        <PurchaseOnWebNotice />
       ) : (
         <>
           <AddToCartButton book={book} />
