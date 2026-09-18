@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
+import { CustomerRepository } from "@/app/lib/repositories/customerRepository";
 import { PromoterRepository } from "@/app/lib/repositories/promoterRepository";
 import { SubscriptionService } from "@/app/lib/services/subscriptionService";
 import { RazorpayService } from "@/app/lib/services/razorpayService";
@@ -40,17 +41,25 @@ export async function POST(request: Request) {
 
     const { planId } = await request.json();
 
-    const cookieStore = await cookies();
-    const refCode = cookieStore.get("promoter_ref")?.value;
-
-    let promoterId: number | null = null;
-
-    if (refCode) {
-      const promoter = await PromoterRepository.getByCode(
-        refCode
+    // Same attribution priority as order creation: the account's
+    // durable referral binding wins, falling back to the promoter_ref
+    // cookie only if the account was never attributed.
+    let promoterId: number | null =
+      await CustomerRepository.getReferralPromoterId(
+        session.customerId
       );
 
-      promoterId = promoter?.id ?? null;
+    if (!promoterId) {
+      const cookieStore = await cookies();
+      const refCode = cookieStore.get("promoter_ref")?.value;
+
+      if (refCode) {
+        const promoter = await PromoterRepository.getByCode(
+          refCode
+        );
+
+        promoterId = promoter?.id ?? null;
+      }
     }
 
     const subscription = await SubscriptionService.purchase(

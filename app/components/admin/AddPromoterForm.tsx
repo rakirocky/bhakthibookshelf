@@ -12,7 +12,6 @@ export default function AddPromoterForm() {
 
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
-  const [code, setCode] = useState("");
   const [phone, setPhone] = useState("");
   const [rate, setRate] = useState("10");
   const [loading, setLoading] = useState(false);
@@ -34,7 +33,6 @@ export default function AddPromoterForm() {
 
           body: JSON.stringify({
             name,
-            code,
             contact_phone: phone,
             commission_rate: Number(rate),
           }),
@@ -49,10 +47,11 @@ export default function AddPromoterForm() {
         );
       }
 
-      showToast("Promoter added.");
+      showToast(
+        `Promoter added — referral code ${data.promoter.code}`
+      );
 
       setName("");
-      setCode("");
       setPhone("");
       setRate("10");
       setOpen(false);
@@ -107,26 +106,17 @@ export default function AddPromoterForm() {
           onChange={(e) => setName(e.target.value)}
           style={inputStyle}
         />
-      </div>
 
-      <div>
-        <label style={labelStyle}>
-          Referral Code
-        </label>
-
-        <input
-          required
-          placeholder="e.g. rahul"
-          value={code}
-          onChange={(e) =>
-            setCode(
-              e.target.value
-                .toLowerCase()
-                .replace(/[^a-z0-9-]/g, "")
-            )
-          }
-          style={inputStyle}
-        />
+        <p
+          style={{
+            fontSize: 11,
+            color: "var(--color-text-muted)",
+            marginTop: 4,
+          }}
+        >
+          Referral code is generated automatically from the name
+          (e.g. &ldquo;Lakshmi&rdquo; → BBLAK).
+        </p>
       </div>
 
       <div>

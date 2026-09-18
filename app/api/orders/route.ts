@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { OrderService } from "@/app/lib/services/orderService";
+import { CustomerRepository } from "@/app/lib/repositories/customerRepository";
 import { PromoterRepository } from "@/app/lib/repositories/promoterRepository";
 import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
 import { RazorpayService } from "@/app/lib/services/razorpayService";
@@ -43,34 +44,49 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    const cookieStore = await cookies();
-    const refCode = cookieStore.get("promoter_ref")?.value;
-
-    let promoterId: number | null = null;
-
-    if (refCode) {
-      const promoter = await PromoterRepository.getByCode(
-        refCode
-      );
-
-      promoterId = promoter?.id ?? null;
-
-      console.log(
-        promoter
-          ? `[order-create] referral code "${refCode}" matched promoter "${promoter.name}" (id ${promoter.id})`
-          : `[order-create] referral code "${refCode}" found in cookie but no active promoter matches it`
-      );
-    } else {
-      console.log(
-        "[order-create] no referral cookie present — direct order"
-      );
-    }
-
     // customerId will always be set in practice, since /checkout and
     // /api/orders both require a valid session (see proxy.ts) — this
     // fallback to null just means "no order can exist without an
     // account to check it against," not that it currently happens.
     const customerId = preAuthSession?.customerId ?? null;
+
+    // The account's own durable referral binding (set at signup/login,
+    // see PromoterService.attributeCustomerReferral) is the primary
+    // source of attribution — it's permanent, unlike the promoter_ref
+    // cookie, which only covers 30 days from the last ?ref= visit. The
+    // cookie is only consulted as a fallback, for an account that was
+    // never attributed (e.g. it predates this feature, or the customer
+    // never typed/clicked a referral code).
+    let promoterId: number | null = customerId
+      ? await CustomerRepository.getReferralPromoterId(customerId)
+      : null;
+
+    if (promoterId) {
+      console.log(
+        `[order-create] customer account already attributed to promoter id ${promoterId}`
+      );
+    } else {
+      const cookieStore = await cookies();
+      const refCode = cookieStore.get("promoter_ref")?.value;
+
+      if (refCode) {
+        const promoter = await PromoterRepository.getByCode(
+          refCode
+        );
+
+        promoterId = promoter?.id ?? null;
+
+        console.log(
+          promoter
+            ? `[order-create] referral code "${refCode}" matched promoter "${promoter.name}" (id ${promoter.id})`
+            : `[order-create] referral code "${refCode}" found in cookie but no active promoter matches it`
+        );
+      } else {
+        console.log(
+          "[order-create] no account attribution and no referral cookie — direct order"
+        );
+      }
+    }
 
     console.log(
       customerId

@@ -1,7 +1,9 @@
 import bcrypt from "bcryptjs";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { CustomerRepository } from "@/app/lib/repositories/customerRepository";
+import { PromoterService } from "@/app/lib/services/promoterService";
 import {
   CUSTOMER_SESSION_COOKIE,
   CUSTOMER_SESSION_MAX_AGE,
@@ -13,7 +15,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
   try {
-    const { phone, password, name, email } =
+    const { phone, password, name, email, referralCode } =
       await request.json();
 
     const cleanPhone = String(phone ?? "").trim();
@@ -93,8 +95,18 @@ export async function POST(request: Request) {
       name: customer.name,
     });
 
+    // Same attribution as login — typed code takes priority, falling
+    // back to the ?ref= cookie. Every brand-new account is unattributed
+    // going in, so this always succeeds if a valid code is present.
+    const cookieStore = await cookies();
+    const referral = await PromoterService.attributeCustomerReferral(
+      customer.id,
+      referralCode || cookieStore.get("promoter_ref")?.value
+    );
+
     const response = NextResponse.json({
       success: true,
+      referral,
     });
 
     response.cookies.set(

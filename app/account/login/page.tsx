@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useState } from "react";
 
 import Spinner from "@/app/components/ui/Spinner";
+import { readReferralCookie } from "@/app/lib/referral/readReferralCookie";
 
 function noticeForPath(from: string | null): string | null {
   if (!from) {
@@ -32,6 +33,13 @@ function LoginForm() {
 
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  // Lazy initializer, not an effect: this form only ever mounts on the
+  // client (it's inside the Suspense boundary that useSearchParams
+  // requires below, so there's no SSR pass to mismatch against), so
+  // reading the cookie here is safe and avoids an extra render.
+  const [referralCode, setReferralCode] = useState(
+    () => readReferralCookie() ?? ""
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -51,7 +59,11 @@ function LoginForm() {
             "Content-Type": "application/json",
           },
 
-          body: JSON.stringify({ phone, password }),
+          body: JSON.stringify({
+            phone,
+            password,
+            referralCode: referralCode.trim() || undefined,
+          }),
         }
       );
 
@@ -138,6 +150,41 @@ function LoginForm() {
               }
               style={inputStyle}
             />
+          </div>
+
+          <div style={{ marginBottom: 18 }}>
+            <label style={labelStyle}>
+              Referral code{" "}
+              <span
+                style={{
+                  fontWeight: 400,
+                  color: "var(--color-text-muted)",
+                }}
+              >
+                (optional)
+              </span>
+            </label>
+
+            <input
+              placeholder="e.g. rajesh10"
+              autoComplete="off"
+              value={referralCode}
+              onChange={(e) =>
+                setReferralCode(e.target.value)
+              }
+              style={inputStyle}
+            />
+
+            <p
+              style={{
+                fontSize: 12,
+                color: "var(--color-text-muted)",
+                marginTop: 6,
+              }}
+            >
+              Were you referred by someone? Enter their code — it only
+              ever applies once, the first time you use it.
+            </p>
           </div>
 
           <div style={{ marginBottom: 24, textAlign: "right" }}>

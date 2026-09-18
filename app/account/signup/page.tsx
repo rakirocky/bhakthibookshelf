@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useState } from "react";
 
 import Spinner from "@/app/components/ui/Spinner";
+import { readReferralCookie } from "@/app/lib/referral/readReferralCookie";
 
 function noticeForPath(from: string | null): string | null {
   if (!from) {
@@ -33,6 +34,11 @@ function SignupForm() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // Lazy initializer, not an effect — see the same comment in
+  // app/account/login/page.tsx.
+  const [referralCode, setReferralCode] = useState(
+    () => readReferralCookie() ?? ""
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -57,6 +63,7 @@ function SignupForm() {
             phone,
             email,
             password,
+            referralCode: referralCode.trim() || undefined,
           }),
         }
       );
@@ -175,6 +182,34 @@ function SignupForm() {
 
             <p style={hintStyle}>
               At least 8 characters.
+            </p>
+          </div>
+
+          <div style={{ marginBottom: 24 }}>
+            <label style={labelStyle}>
+              Referral code{" "}
+              <span
+                style={{
+                  fontWeight: 400,
+                  color: "var(--color-text-muted)",
+                }}
+              >
+                (optional)
+              </span>
+            </label>
+
+            <input
+              placeholder="e.g. rajesh10"
+              autoComplete="off"
+              value={referralCode}
+              onChange={(e) =>
+                setReferralCode(e.target.value)
+              }
+              style={inputStyle}
+            />
+
+            <p style={hintStyle}>
+              Were you referred by someone? Enter their code here.
             </p>
           </div>
 

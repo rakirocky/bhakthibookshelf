@@ -47,7 +47,7 @@ export default async function AdminPromotersPage() {
           width: "100%",
           borderCollapse: "collapse",
           background: "var(--color-white)",
-          minWidth: 900,
+          minWidth: 1100,
         }}
       >
         <thead>
@@ -62,7 +62,11 @@ export default async function AdminPromotersPage() {
 
             <th align="left">Referral Link</th>
 
+            <th align="center">Referred Customers</th>
+
             <th align="center">Orders</th>
+
+            <th align="center">Books Sold</th>
 
             <th align="center">Subs</th>
 
@@ -111,6 +115,19 @@ export default async function AdminPromotersPage() {
 
               <td align="center">
                 <Link
+                  href={`/admin/customers?promoter=${p.code}`}
+                  style={{
+                    color: "var(--color-primary)",
+                    fontWeight: 600,
+                    textDecoration: "underline",
+                  }}
+                >
+                  {p.referred_customer_count}
+                </Link>
+              </td>
+
+              <td align="center">
+                <Link
                   href={`/admin/orders?promoter=${p.code}`}
                   style={{
                     color: "var(--color-primary)",
@@ -120,6 +137,10 @@ export default async function AdminPromotersPage() {
                 >
                   {p.paid_order_count}
                 </Link>
+              </td>
+
+              <td align="center">
+                {p.paid_book_count}
               </td>
 
               <td align="center">
@@ -182,7 +203,7 @@ export default async function AdminPromotersPage() {
           {promoters.length === 0 && (
             <tr>
               <td
-                colSpan={9}
+                colSpan={11}
                 align="center"
                 style={{
                   padding: 30,

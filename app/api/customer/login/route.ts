@@ -1,8 +1,10 @@
 import bcrypt from "bcryptjs";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { CustomerRepository } from "@/app/lib/repositories/customerRepository";
 import { LoginRateLimitService } from "@/app/lib/services/loginRateLimitService";
+import { PromoterService } from "@/app/lib/services/promoterService";
 import {
   CUSTOMER_SESSION_COOKIE,
   CUSTOMER_SESSION_MAX_AGE,
@@ -11,7 +13,8 @@ import {
 
 export async function POST(request: Request) {
   try {
-    const { phone, password } = await request.json();
+    const { phone, password, referralCode } =
+      await request.json();
 
     if (!phone || !password) {
       return NextResponse.json(
@@ -99,8 +102,20 @@ export async function POST(request: Request) {
       name: customer.name,
     });
 
+    // Attribute this account to a promoter if a referral code is
+    // available — whatever the customer typed on the login form takes
+    // priority, falling back to the ?ref= cookie so a link click alone
+    // (no typed code) still attributes on next login. No-ops once an
+    // account is already attributed — see PromoterService for why.
+    const cookieStore = await cookies();
+    const referral = await PromoterService.attributeCustomerReferral(
+      customer.id,
+      referralCode || cookieStore.get("promoter_ref")?.value
+    );
+
     const response = NextResponse.json({
       success: true,
+      referral,
     });
 
     response.cookies.set(

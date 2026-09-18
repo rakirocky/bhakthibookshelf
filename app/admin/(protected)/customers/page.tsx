@@ -1,8 +1,19 @@
+import Link from "next/link";
+
 import { CustomerRepository } from "@/app/lib/repositories/customerRepository";
 import ResetCustomerPasswordButton from "@/app/components/admin/ResetCustomerPasswordButton";
 
-export default async function AdminCustomersPage() {
-  const customers = await CustomerRepository.getAll();
+export default async function AdminCustomersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ promoter?: string }>;
+}) {
+  const params = await searchParams;
+  const promoterFilter = params.promoter;
+
+  const customers = await CustomerRepository.getAll(
+    promoterFilter
+  );
 
   return (
     <div>
@@ -18,11 +29,39 @@ export default async function AdminCustomersPage() {
       <p
         style={{
           color: "var(--color-text-secondary)",
-          marginBottom: 30,
+          marginBottom: promoterFilter ? 12 : 30,
         }}
       >
         Total Customers : {customers.length}
       </p>
+
+      {promoterFilter && (
+        <div
+          style={{
+            marginBottom: 30,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 10,
+            background: "var(--color-bg-subtle)",
+            padding: "8px 14px",
+            borderRadius: "var(--radius-pill)",
+            fontSize: 13,
+          }}
+        >
+          Showing only customers referred by{" "}
+          <strong>{promoterFilter}</strong>
+
+          <Link
+            href="/admin/customers"
+            style={{
+              color: "var(--color-danger-text)",
+              fontWeight: 600,
+            }}
+          >
+            Clear filter ×
+          </Link>
+        </div>
+      )}
 
       <div style={{ overflowX: "auto" }}>
 
@@ -31,7 +70,7 @@ export default async function AdminCustomersPage() {
           width: "100%",
           borderCollapse: "collapse",
           background: "var(--color-white)",
-          minWidth: 700,
+          minWidth: 800,
         }}
       >
         <thead>
@@ -47,6 +86,8 @@ export default async function AdminCustomersPage() {
             <th align="left">Phone</th>
 
             <th align="left">Email</th>
+
+            <th align="left">Referred By</th>
 
             <th align="left">Joined</th>
 
@@ -71,6 +112,32 @@ export default async function AdminCustomersPage() {
               <td>{customer.email || "—"}</td>
 
               <td>
+                {customer.referred_by_promoter_name ? (
+                  <span style={{ fontSize: 13 }}>
+                    {customer.referred_by_promoter_name}
+                    <br />
+                    <span
+                      style={{
+                        fontSize: 11,
+                        color: "var(--color-text-muted)",
+                      }}
+                    >
+                      {customer.referred_by_promoter_code}
+                    </span>
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: "var(--color-text-faint)",
+                    }}
+                  >
+                    Direct
+                  </span>
+                )}
+              </td>
+
+              <td>
                 {new Date(
                   customer.created_at
                 ).toLocaleDateString("en-IN")}
@@ -88,7 +155,7 @@ export default async function AdminCustomersPage() {
           {customers.length === 0 && (
             <tr>
               <td
-                colSpan={5}
+                colSpan={6}
                 align="center"
                 style={{
                   padding: 30,
