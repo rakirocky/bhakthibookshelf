@@ -101,6 +101,13 @@ export default function Navbar() {
           </Link>
 
           <Link
+            href="/downloads"
+            onClick={() => setMenuOpen(false)}
+          >
+            Downloads
+          </Link>
+
+          <Link
             href="/account"
             onClick={() => setMenuOpen(false)}
           >
