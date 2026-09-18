@@ -97,7 +97,9 @@ export class SubscriptionRepository {
 
     if (promoterCode) {
       params.push(promoterCode);
-      whereClause = `WHERE pr.code = $${params.length}`;
+      // Matches the promoters page's paid_subscription_count — see the
+      // same reasoning in OrderRepository.getAllOrders.
+      whereClause = `WHERE pr.code = $${params.length} AND s.payment_status = 'PAID'`;
     }
 
     const { rows } = await db.query(

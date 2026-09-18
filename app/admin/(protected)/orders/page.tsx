@@ -52,7 +52,7 @@ export default async function AdminOrdersPage({
               fontSize: 13,
             }}
           >
-            Showing only orders referred by{" "}
+            Showing only <strong>paid</strong> orders referred by{" "}
             <strong>{promoterFilter}</strong>
 
             <Link

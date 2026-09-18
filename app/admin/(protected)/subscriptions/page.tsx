@@ -49,7 +49,7 @@ export default async function AdminSubscriptionsPage({
             fontSize: 13,
           }}
         >
-          Showing only subscriptions referred by{" "}
+          Showing only <strong>paid</strong> subscriptions referred by{" "}
           <strong>{promoterFilter}</strong>
 
           <Link

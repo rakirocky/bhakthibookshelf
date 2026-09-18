@@ -148,7 +148,11 @@ export class OrderRepository {
 
     if (promoterCode) {
       params.push(promoterCode);
-      whereClause = `WHERE p.code = $${params.length}`;
+      // Matches the promoters page's paid_order_count, which only counts
+      // PAID orders — without this, the drill-down includes PENDING/FAILED
+      // orders and its total looks inconsistent with the number that link
+      // came from.
+      whereClause = `WHERE p.code = $${params.length} AND o.payment_status = 'PAID'`;
     }
 
     const { rows } = await db.query(
