@@ -77,6 +77,10 @@ export class SubscriptionService {
     );
   }
 
+  static async getDashboardRevenue() {
+    return SubscriptionRepository.getTotalPaidRevenue();
+  }
+
   static async markPaid(
     id: number,
     paymentDetails?: {

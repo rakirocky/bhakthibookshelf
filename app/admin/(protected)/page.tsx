@@ -7,21 +7,29 @@ import {
 } from "../../lib/services/book-service";
 
 import { OrderService } from "../../lib/services/orderService";
+import { SubscriptionService } from "../../lib/services/subscriptionService";
 
 export default async function AdminDashboardPage() {
   const [
     totalBooks,
     totalOrders,
-    totalRevenue,
+    orderRevenue,
+    subscriptionRevenue,
     latestBooks,
     recentOrders,
   ] = await Promise.all([
     getDashboardBookCount(),
     OrderService.getDashboardOrderCount(),
     OrderService.getDashboardRevenue(),
-    OrderService.getDashboardRecentOrders(),
+    SubscriptionService.getDashboardRevenue(),
     getDashboardLatestBooks(),
+    OrderService.getDashboardRecentOrders(),
   ]);
+
+  // PAID orders + PAID subscriptions — see the comments on
+  // OrderRepository.getTotalRevenue / SubscriptionRepository.
+  // getTotalPaidRevenue for why each is filtered that way.
+  const totalRevenue = orderRevenue + subscriptionRevenue;
 
   return (
     <>

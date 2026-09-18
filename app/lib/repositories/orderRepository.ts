@@ -114,10 +114,15 @@ export class OrderRepository {
     return rows[0].total;
   }
 
+  // PAID only — a PENDING/FAILED order isn't revenue yet, it's just a
+  // cart someone abandoned or a payment that never went through. This
+  // is only order revenue; the dashboard adds subscription revenue on
+  // top separately (see SubscriptionRepository.getTotalPaidRevenue).
   static async getTotalRevenue() {
     const { rows } = await db.query(`
       SELECT COALESCE(SUM(total_amount),0) AS total
       FROM orders
+      WHERE payment_status = 'PAID'
     `);
 
     return Number(rows[0].total);

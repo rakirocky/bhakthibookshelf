@@ -3,6 +3,16 @@ import "server-only";
 import { db } from "../db/db";
 
 export class SubscriptionRepository {
+  static async getTotalPaidRevenue(): Promise<number> {
+    const { rows } = await db.query(`
+      SELECT COALESCE(SUM(amount), 0) AS total
+      FROM subscriptions
+      WHERE payment_status = 'PAID'
+    `);
+
+    return Number(rows[0].total);
+  }
+
   static async getActivePlans() {
     const { rows } = await db.query(`
       SELECT id, name, price, duration_days, is_active

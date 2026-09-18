@@ -50,6 +50,28 @@ export class CustomerRepository {
     return rows[0];
   }
 
+  // Batch lookup for list pages that need to match a set of phone
+  // numbers to accounts (e.g. admin/password-resets) without running
+  // one query per row.
+  static async getByPhones(
+    phones: string[]
+  ): Promise<CustomerRow[]> {
+    if (phones.length === 0) {
+      return [];
+    }
+
+    const { rows } = await db.query(
+      `
+      SELECT id, phone, name, email, password_hash, is_active
+      FROM customers
+      WHERE phone = ANY($1::text[])
+      `,
+      [phones]
+    );
+
+    return rows;
+  }
+
   static async getById(
     id: number
   ): Promise<CustomerRow | null> {

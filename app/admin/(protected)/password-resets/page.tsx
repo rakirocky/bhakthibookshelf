@@ -6,15 +6,18 @@ import MarkResolvedButton from "@/app/components/admin/MarkResolvedButton";
 export default async function AdminPasswordResetsPage() {
   const pending = await PasswordResetRequestRepository.getPending();
 
-  const rows = await Promise.all(
-    pending.map(async (req: any) => {
-      const customer = await CustomerRepository.getByPhone(
-        req.phone
-      );
-
-      return { ...req, customer };
-    })
+  const customers = await CustomerRepository.getByPhones(
+    pending.map((req: any) => req.phone)
   );
+
+  const customerByPhone = new Map(
+    customers.map((c) => [c.phone, c])
+  );
+
+  const rows = pending.map((req: any) => ({
+    ...req,
+    customer: customerByPhone.get(req.phone) ?? null,
+  }));
 
   return (
     <div>

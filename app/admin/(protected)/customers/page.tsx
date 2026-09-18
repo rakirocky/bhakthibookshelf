@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { CustomerRepository } from "@/app/lib/repositories/customerRepository";
 import ResetCustomerPasswordButton from "@/app/components/admin/ResetCustomerPasswordButton";
+import ManageDownloadsButton from "@/app/components/admin/ManageDownloadsButton";
 
 export default async function AdminCustomersPage({
   searchParams,
@@ -144,10 +145,23 @@ export default async function AdminCustomersPage({
               </td>
 
               <td align="center">
-                <ResetCustomerPasswordButton
-                  customerId={customer.id}
-                  customerPhone={customer.phone}
-                />
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 8,
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <ResetCustomerPasswordButton
+                    customerId={customer.id}
+                    customerPhone={customer.phone}
+                  />
+
+                  <ManageDownloadsButton
+                    customerId={customer.id}
+                  />
+                </div>
               </td>
             </tr>
           ))}
