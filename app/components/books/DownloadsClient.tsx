@@ -10,18 +10,12 @@ import {
   reconcileLibrary,
   removeBook,
 } from "@/app/lib/offline/library";
-import { useIsNativeApp } from "@/app/lib/offline/useNative";
-
 /**
- * The real Downloads screen — active only inside the app. On the website
- * it renders `fallback` (the "open the app" explainer).
+ * The Downloads screen — the only place a purchased book can be opened,
+ * on the app or the website. Files are saved to this device (encrypted)
+ * and read in the watermarked in-browser/in-app reader.
  */
-export default function DownloadsClient({
-  fallback,
-}: {
-  fallback: React.ReactNode;
-}) {
-  const native = useIsNativeApp();
+export default function DownloadsClient() {
   const [books, setBooks] = useState<LocalBookDetail[] | null>(null);
   const [totalBytes, setTotalBytes] = useState(0);
   const [syncing, setSyncing] = useState(false);
@@ -35,7 +29,6 @@ export default function DownloadsClient({
   }, []);
 
   useEffect(() => {
-    if (!native) return;
     let alive = true;
 
     (async () => {
@@ -61,7 +54,7 @@ export default function DownloadsClient({
     return () => {
       alive = false;
     };
-  }, [native, refresh]);
+  }, [refresh]);
 
   async function handleRemove(downloadId: number) {
     if (!window.confirm("Remove this download from your device?")) return;
@@ -94,8 +87,6 @@ export default function DownloadsClient({
       setBusy(false);
     }
   }
-
-  if (!native) return <>{fallback}</>;
 
   return (
     <main

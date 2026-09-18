@@ -44,6 +44,7 @@ export default function ReaderClient({
   const [title, setTitle] = useState("Reading");
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [tabHidden, setTabHidden] = useState(false);
 
   const renderPage = useCallback(async (num: number) => {
     const doc = docRef.current;
@@ -125,15 +126,54 @@ export default function ReaderClient({
     void renderPage(page);
   }, [status, page, renderPage]);
 
-  // Block the long-press / right-click "save image" path.
+  // Browsers have no equivalent of Android's FLAG_SECURE — none of this
+  // actually blocks a screenshot (OS-level tools and a second camera both
+  // bypass it entirely). It's the same "deterrent, not a block" posture
+  // already accepted for iOS: raise the friction, keep the page watermark
+  // as the real traceability measure. Long-press / right-click "save
+  // image", the print dialog, "save page as", and the devtools shortcuts
+  // are the paths worth closing off.
   useEffect(() => {
-    const block = (e: Event) => e.preventDefault();
-    document.addEventListener("contextmenu", block);
-    return () => document.removeEventListener("contextmenu", block);
+    const blockContextMenu = (e: Event) => e.preventDefault();
+
+    const blockShortcuts = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      const mod = e.ctrlKey || e.metaKey;
+
+      if (
+        key === "f12" ||
+        (mod && key === "p") || // print
+        (mod && key === "s") || // save page
+        (mod && key === "u") || // view source
+        (mod && e.shiftKey && ["i", "j", "c"].includes(key)) // devtools panes
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("contextmenu", blockContextMenu);
+    document.addEventListener("keydown", blockShortcuts);
+    return () => {
+      document.removeEventListener("contextmenu", blockContextMenu);
+      document.removeEventListener("keydown", blockShortcuts);
+    };
+  }, []);
+
+  // Blank the page while the tab is hidden (switched away, minimized) —
+  // trips up casual screen-recording/casting tools that rely on the tab
+  // staying visible, and keeps the page out of OS task-switcher previews.
+  useEffect(() => {
+    const onVisibility = () => setTabHidden(document.hidden);
+    document.addEventListener("visibilitychange", onVisibility);
+    onVisibility();
+    return () => document.removeEventListener("visibilitychange", onVisibility);
   }, []);
 
   return (
-    <div className="reader">
+    <div
+      className="reader"
+      style={{ userSelect: "none", WebkitUserSelect: "none" }}
+    >
       <div className="reader__bar">
         <button type="button" onClick={() => router.back()}>
           ‹ Close
@@ -144,7 +184,7 @@ export default function ReaderClient({
         </span>
       </div>
 
-      <div className="reader__stage">
+      <div className="reader__stage" style={{ position: "relative" }}>
         {status === "loading" && (
           <p className="reader__msg">Opening book…</p>
         )}
@@ -156,6 +196,15 @@ export default function ReaderClient({
           className="reader__canvas"
           hidden={status !== "ready"}
         />
+        {tabHidden && status === "ready" && (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "var(--color-navy, #0a1a2f)",
+            }}
+          />
+        )}
       </div>
 
       {status === "ready" && (

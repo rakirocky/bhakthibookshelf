@@ -7,8 +7,9 @@ export const metadata = {
 };
 
 /**
- * The in-app reader. Everything it needs is on the device already, so
- * this page works fully offline; on the website there is nothing to open.
+ * The reader — app or browser. Everything it needs is on this device
+ * already (decrypted in memory, never written back to disk), so it works
+ * fully offline once a book has been saved from the Downloads page.
  */
 export default async function ReaderPage({
   params,

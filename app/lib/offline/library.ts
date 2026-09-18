@@ -8,7 +8,7 @@ import {
   loadBookKey,
   saveBookKey,
 } from "./device";
-import { isNativeApp } from "./native";
+import { nativePlatform } from "./native";
 
 /**
  * The on-device offline library.
@@ -84,7 +84,7 @@ async function registerDevice(deviceId: string): Promise<void> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       deviceId,
-      platform: "android",
+      platform: await nativePlatform(),
       label: await getDeviceLabel(),
     }),
   });
@@ -167,10 +167,6 @@ async function persistDownloadResponse(
 }
 
 export async function downloadBook(bookId: number): Promise<LocalBook> {
-  if (!isNativeApp()) {
-    throw new Error("Offline downloads are only available in the app.");
-  }
-
   const deviceId = await getOrCreateDeviceId();
   await registerDevice(deviceId);
 
@@ -217,7 +213,6 @@ export async function openBook(downloadId: number): Promise<{
 /* ---------- list / remove ---------- */
 
 export async function listBooks(): Promise<LocalBook[]> {
-  if (!isNativeApp()) return [];
   const local = await readIndex();
 
   // Hide books that belong to a different signed-in account. If the
@@ -378,8 +373,6 @@ export async function reconcileLibrary(): Promise<ReconcileResult> {
     restored: 0,
     unavailable: 0,
   };
-
-  if (!isNativeApp()) return result;
 
   const deviceId = await getOrCreateDeviceId();
 

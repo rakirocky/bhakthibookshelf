@@ -8,19 +8,18 @@ import {
   downloadBook,
   listBooks,
 } from "@/app/lib/offline/library";
-import { useIsNativeApp } from "@/app/lib/offline/useNative";
 
 /**
- * "Save for offline reading" — shown only inside the app, only when the
- * reader already has access to the book. On the website it renders
- * nothing (the normal download link stays).
+ * "Save for offline reading" — the only way to get a purchased book onto
+ * this device (app or browser). The file is encrypted at rest and only
+ * ever opened inside the watermarked reader; there is no plain-PDF
+ * download anymore.
  */
 export default function OfflineSaveButton({
   bookId,
 }: {
   bookId: number;
 }) {
-  const native = useIsNativeApp();
   const [state, setState] = useState<
     "idle" | "saving" | "saved" | "error"
   >("idle");
@@ -29,8 +28,6 @@ export default function OfflineSaveButton({
   const [atDeviceLimit, setAtDeviceLimit] = useState(false);
 
   useEffect(() => {
-    if (!native) return;
-
     void listBooks().then((books) => {
       const hit = books.find((b) => b.bookId === bookId);
       if (hit) {
@@ -38,9 +35,7 @@ export default function OfflineSaveButton({
         setState("saved");
       }
     });
-  }, [native, bookId]);
-
-  if (!native) return null;
+  }, [bookId]);
 
   async function save() {
     setState("saving");

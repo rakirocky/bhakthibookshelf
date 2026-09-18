@@ -24,10 +24,9 @@ export default function BookActions({
   const { addItem } = useCart();
   const native = useIsNativeApp();
 
-  // "Download Full Book" always shows. For a book you already own it's a
-  // real download link; for one you don't, it's a "buy now" shortcut —
-  // adds to cart and goes straight to checkout — sitting alongside the
-  // regular "Add To Cart" for anyone who wants to keep browsing first.
+  // "Download Full Book — ₹x" is a buy-now shortcut for a book you don't
+  // own yet: adds to cart and goes straight to checkout, sitting alongside
+  // the regular "Add To Cart" for anyone who wants to keep browsing first.
   function handleBuyAndCheckout() {
     addItem({
       id: book.id,
@@ -52,17 +51,7 @@ export default function BookActions({
       }}
     >
       {hasAccess ? (
-        <>
-          <a
-            href={`/api/customer/download/${book.id}`}
-            className="btn btn-primary"
-            style={{ textDecoration: "none" }}
-          >
-            ✓ Download Full Book
-          </a>
-
-          <OfflineSaveButton bookId={book.id} />
-        </>
+        <OfflineSaveButton bookId={book.id} />
       ) : native ? (
         <PurchaseOnWebNotice />
       ) : (
