@@ -38,8 +38,9 @@ export default async function SubscribePage() {
             marginBottom: 40,
           }}
         >
-          One subscription, every book — including new
-          releases added during your year.
+          Pay once, read forever — every book in the
+          library, including new releases added after you
+          join.
         </p>
 
         {plans.map((plan: any) => (
@@ -69,7 +70,9 @@ export default async function SubscribePage() {
                 }}
               >
                 {" "}
-                / {plan.duration_days} days
+                {plan.duration_days
+                  ? `/ ${plan.duration_days} days`
+                  : "one-time payment"}
               </span>
             </p>
 
@@ -83,10 +86,15 @@ export default async function SubscribePage() {
             >
               <li>Access to every book in the library</li>
               <li>
-                Includes new titles added during your
-                subscription
+                {plan.duration_days
+                  ? "Includes new titles added during your subscription"
+                  : "Includes every new title added, for as long as the library exists"}
               </li>
-              <li>Read on any device</li>
+              <li>
+                {plan.duration_days
+                  ? "Read on any device"
+                  : "No renewal, ever — read on any device"}
+              </li>
             </ul>
 
             {!session && (
@@ -101,10 +109,11 @@ export default async function SubscribePage() {
 
             {session && status?.status === "ACTIVE" && (
               <div style={statusBoxStyle("var(--color-success-bg)", "var(--color-success-text)")}>
-                ✓ Active until{" "}
-                {new Date(
-                  status.subscription!.ends_at as string
-                ).toLocaleDateString("en-IN")}
+                {status.subscription!.ends_at
+                  ? `✓ Active until ${new Date(
+                      status.subscription!.ends_at as string
+                    ).toLocaleDateString("en-IN")}`
+                  : "✓ Lifetime access — yours forever"}
               </div>
             )}
 

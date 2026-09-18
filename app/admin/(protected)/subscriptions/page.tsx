@@ -145,11 +145,17 @@ export default async function AdminSubscriptionsPage({
               </td>
 
               <td>
-                {sub.ends_at
-                  ? new Date(
-                      sub.ends_at
-                    ).toLocaleDateString("en-IN")
-                  : "—"}
+                {sub.ends_at ? (
+                  new Date(sub.ends_at).toLocaleDateString(
+                    "en-IN"
+                  )
+                ) : sub.payment_status === "PAID" ? (
+                  <span style={{ fontWeight: 600 }}>
+                    Lifetime
+                  </span>
+                ) : (
+                  "—"
+                )}
               </td>
 
               <td align="center">

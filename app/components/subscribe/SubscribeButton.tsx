@@ -85,7 +85,7 @@ export default function SubscribeButton({
         amount: payment.amount,
         currency: payment.currency,
         name: "Bhakthi Bookshelf",
-        description: "Yearly Subscription",
+        description: "Lifetime Subscription",
       });
 
       if (!result) {

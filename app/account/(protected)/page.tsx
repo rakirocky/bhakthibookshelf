@@ -72,10 +72,11 @@ export default async function AccountPage() {
 
         {status?.status === "ACTIVE" && (
           <p style={{ margin: 0, color: "var(--color-success-text)" }}>
-            ✓ Active until{" "}
-            {new Date(
-              status.subscription!.ends_at as string
-            ).toLocaleDateString("en-IN")}
+            {status.subscription!.ends_at
+              ? `✓ Active until ${new Date(
+                  status.subscription!.ends_at as string
+                ).toLocaleDateString("en-IN")}`
+              : "✓ Lifetime access — yours forever"}
           </p>
         )}
 

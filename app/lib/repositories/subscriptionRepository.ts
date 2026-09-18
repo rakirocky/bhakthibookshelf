@@ -61,6 +61,13 @@ export class SubscriptionRepository {
     return rows[0];
   }
 
+  // NULL ends_at means a lifetime subscription — it never expires, so
+  // it must never be filtered out here the way `ends_at > NOW()` alone
+  // would (NULL compared to anything is NULL, i.e. false, in SQL).
+  // NULLS FIRST in the ORDER BY means a lifetime row wins over a
+  // dated one if a customer somehow has both (shouldn't normally
+  // happen — SubscriptionService.purchase blocks a second subscribe
+  // while one is already active).
   static async getActiveForCustomer(customerId: number) {
     const { rows } = await db.query(
       `
@@ -72,8 +79,8 @@ export class SubscriptionRepository {
       JOIN subscription_plans p ON p.id = s.plan_id
       WHERE s.customer_id = $1
         AND s.payment_status = 'PAID'
-        AND s.ends_at > CURRENT_TIMESTAMP
-      ORDER BY s.ends_at DESC
+        AND (s.ends_at IS NULL OR s.ends_at > CURRENT_TIMESTAMP)
+      ORDER BY s.ends_at DESC NULLS FIRST
       LIMIT 1
       `,
       [customerId]
@@ -149,6 +156,10 @@ export class SubscriptionRepository {
       SET
         payment_status = 'PAID',
         starts_at = CURRENT_TIMESTAMP,
+        -- A lifetime plan has duration_days = NULL, which propagates
+        -- through || and the interval cast to NULL, and
+        -- CURRENT_TIMESTAMP + NULL = NULL — ends_at correctly comes
+        -- out NULL ("never expires") with no special-casing needed.
         ends_at = CURRENT_TIMESTAMP +
           (
             SELECT (duration_days || ' days')::interval

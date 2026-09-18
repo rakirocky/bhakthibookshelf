@@ -2,7 +2,8 @@ export interface SubscriptionPlan {
   id: number;
   name: string;
   price: number;
-  duration_days: number;
+  // NULL means the plan never expires (lifetime access).
+  duration_days: number | null;
   is_active: boolean;
 }
 
