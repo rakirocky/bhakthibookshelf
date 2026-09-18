@@ -28,4 +28,23 @@ export class NewsletterRepository {
 
     return rows;
   }
+
+  // Soft delete, not a hard DELETE — matches `subscribe`'s ON CONFLICT
+  // reactivation (a former subscriber re-subscribing with the same
+  // email flips is_active back to TRUE on the same row rather than
+  // erroring on a duplicate) and keeps the row as a record that this
+  // email was once subscribed and was removed.
+  static async deactivate(id: number) {
+    const { rows } = await db.query(
+      `
+      UPDATE newsletter_subscribers
+      SET is_active = FALSE
+      WHERE id = $1
+      RETURNING id, email
+      `,
+      [id]
+    );
+
+    return rows[0] ?? null;
+  }
 }

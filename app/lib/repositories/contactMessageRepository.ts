@@ -43,4 +43,11 @@ export class ContactMessageRepository {
 
     return rows[0] ?? null;
   }
+
+  static async delete(id: number) {
+    await db.query(
+      `DELETE FROM contact_messages WHERE id = $1`,
+      [id]
+    );
+  }
 }

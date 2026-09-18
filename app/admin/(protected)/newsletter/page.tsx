@@ -1,4 +1,5 @@
 import { NewsletterRepository } from "@/app/lib/repositories/newsletterRepository";
+import UnsubscribeButton from "@/app/components/admin/UnsubscribeButton";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,8 @@ export default async function AdminNewsletterPage() {
             </th>
 
             <th align="left">Subscribed</th>
+
+            <th align="center">Action</th>
           </tr>
         </thead>
 
@@ -55,13 +58,20 @@ export default async function AdminNewsletterPage() {
                   "en-IN"
                 )}
               </td>
+
+              <td align="center">
+                <UnsubscribeButton
+                  id={s.id}
+                  email={s.email}
+                />
+              </td>
             </tr>
           ))}
 
           {subscribers.length === 0 && (
             <tr>
               <td
-                colSpan={2}
+                colSpan={3}
                 align="center"
                 style={{ padding: 30 }}
               >

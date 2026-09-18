@@ -63,4 +63,8 @@ export class ContactMessageService {
   static async markRead(id: number) {
     return ContactMessageRepository.markRead(id);
   }
+
+  static async delete(id: number) {
+    return ContactMessageRepository.delete(id);
+  }
 }

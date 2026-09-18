@@ -1,5 +1,6 @@
 import { ContactMessageService } from "@/app/lib/services/contactMessageService";
 import MarkMessageReadButton from "@/app/components/admin/MarkMessageReadButton";
+import DeleteMessageButton from "@/app/components/admin/DeleteMessageButton";
 import StatusBadge from "@/app/components/admin/StatusBadge";
 
 export const dynamic = "force-dynamic";
@@ -48,6 +49,7 @@ export default async function AdminContactMessagesPage() {
               <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
                 <StatusBadge status={m.is_read ? "ACTIVE" : "PENDING"} />
                 {!m.is_read && <MarkMessageReadButton id={m.id} />}
+                <DeleteMessageButton id={m.id} />
               </div>
             </div>
 
