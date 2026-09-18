@@ -163,7 +163,26 @@ async function persistDownloadResponse(
   list.unshift(book);
   await writeIndex(list);
 
+  void requestPersistentStorage();
+
   return book;
+}
+
+/**
+ * Ask the browser to treat this origin's storage as "persistent" — best
+ * effort, no guarantee, but it makes Chrome/Firefox/Edge much less likely
+ * to silently evict a saved book under disk pressure the way "best effort"
+ * site data can be. No-op (and harmless) inside the native app, where the
+ * encrypted file already lives in real app storage, not browser storage.
+ */
+async function requestPersistentStorage(): Promise<void> {
+  try {
+    if (typeof navigator !== "undefined" && navigator.storage?.persist) {
+      await navigator.storage.persist();
+    }
+  } catch {
+    /* best effort only */
+  }
 }
 
 export async function downloadBook(bookId: number): Promise<LocalBook> {
