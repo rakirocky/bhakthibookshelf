@@ -20,6 +20,12 @@ export interface CustomerSessionPayload {
   customerId: number;
   phone: string;
   name: string | null;
+  // Identifies this specific login — matched against
+  // customers.active_session_id in getCustomerSession() to enforce
+  // single-device login. Generated at login/signup time, not here;
+  // this file stays a pure JWT sign/verify helper so it can keep
+  // running on proxy.ts's Edge runtime, which has no `pg` access.
+  sessionId: string;
 }
 
 export async function signCustomerSession(
@@ -44,6 +50,7 @@ export async function verifyCustomerSession(
       customerId: payload.customerId as number,
       phone: payload.phone as string,
       name: (payload.name as string) ?? null,
+      sessionId: payload.sessionId as string,
     };
   } catch {
     return null;

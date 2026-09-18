@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CustomerRepository } from "@/app/lib/repositories/customerRepository";
 import ResetCustomerPasswordButton from "@/app/components/admin/ResetCustomerPasswordButton";
 import ManageDownloadsButton from "@/app/components/admin/ManageDownloadsButton";
+import ForceLogoutButton from "@/app/components/admin/ForceLogoutButton";
 
 export default async function AdminCustomersPage({
   searchParams,
@@ -71,7 +72,7 @@ export default async function AdminCustomersPage({
           width: "100%",
           borderCollapse: "collapse",
           background: "var(--color-white)",
-          minWidth: 800,
+          minWidth: 950,
         }}
       >
         <thead>
@@ -89,6 +90,8 @@ export default async function AdminCustomersPage({
             <th align="left">Email</th>
 
             <th align="left">Referred By</th>
+
+            <th align="center">Session</th>
 
             <th align="left">Joined</th>
 
@@ -138,6 +141,33 @@ export default async function AdminCustomersPage({
                 )}
               </td>
 
+              <td align="center">
+                {customer.has_active_session ? (
+                  <span
+                    style={{
+                      background: "var(--color-success-bg)",
+                      color: "var(--color-success-text)",
+                      padding: "4px 10px",
+                      borderRadius: 999,
+                      fontSize: 11,
+                      fontWeight: 600,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    ACTIVE
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: "var(--color-text-faint)",
+                    }}
+                  >
+                    None
+                  </span>
+                )}
+              </td>
+
               <td>
                 {new Date(
                   customer.created_at
@@ -161,6 +191,13 @@ export default async function AdminCustomersPage({
                   <ManageDownloadsButton
                     customerId={customer.id}
                   />
+
+                  {customer.has_active_session && (
+                    <ForceLogoutButton
+                      customerId={customer.id}
+                      customerPhone={customer.phone}
+                    />
+                  )}
                 </div>
               </td>
             </tr>
@@ -169,7 +206,7 @@ export default async function AdminCustomersPage({
           {customers.length === 0 && (
             <tr>
               <td
-                colSpan={6}
+                colSpan={7}
                 align="center"
                 style={{
                   padding: 30,

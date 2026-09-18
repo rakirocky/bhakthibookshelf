@@ -42,10 +42,12 @@ function LoginForm() {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  // Set when the server rejects a login because this account is
+  // already active elsewhere — offers a self-service "sign out that
+  // device" retry instead of just a dead-end error message.
+  const [sessionConflict, setSessionConflict] = useState(false);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-
+  async function attemptLogin(forceLogout: boolean) {
     setLoading(true);
     setError("");
 
@@ -63,6 +65,7 @@ function LoginForm() {
             phone,
             password,
             referralCode: referralCode.trim() || undefined,
+            forceLogout: forceLogout || undefined,
           }),
         }
       );
@@ -70,6 +73,12 @@ function LoginForm() {
       const data = await response.json();
 
       if (!response.ok || !data.success) {
+        if (data.reason === "session_active_elsewhere") {
+          setSessionConflict(true);
+          setLoading(false);
+          return;
+        }
+
         throw new Error(
           data.message ?? "Login failed."
         );
@@ -86,6 +95,12 @@ function LoginForm() {
 
       setLoading(false);
     }
+  }
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setSessionConflict(false);
+    attemptLogin(false);
   }
 
   return (
@@ -202,6 +217,46 @@ function LoginForm() {
 
           {error && (
             <p style={errorStyle}>{error}</p>
+          )}
+
+          {sessionConflict && (
+            <div
+              style={{
+                ...noticeStyle,
+                background: "var(--color-warning-bg)",
+                color: "var(--color-warning-text)",
+              }}
+            >
+              <p style={{ margin: "0 0 10px" }}>
+                This account is already signed in on
+                another device — only one device can be
+                signed in at a time.
+              </p>
+
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => attemptLogin(true)}
+                className="btn btn-primary"
+                style={{ width: "100%" }}
+              >
+                {loading && <Spinner />}
+                {loading
+                  ? "Signing out that device..."
+                  : "Sign out that device & continue here"}
+              </button>
+
+              <p
+                style={{
+                  margin: "10px 0 0",
+                  fontSize: 12,
+                }}
+              >
+                Only do this if that device is genuinely
+                lost or you no longer use it — it will be
+                signed out immediately.
+              </p>
+            </div>
           )}
 
           <button

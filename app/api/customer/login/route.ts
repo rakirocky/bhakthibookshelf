@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -13,7 +14,7 @@ import {
 
 export async function POST(request: Request) {
   try {
-    const { phone, password, referralCode } =
+    const { phone, password, referralCode, forceLogout } =
       await request.json();
 
     if (!phone || !password) {
@@ -91,15 +92,66 @@ export async function POST(request: Request) {
       `[customer login] success — customer #${customer.id} (${customer.phone})`
     );
 
+    // Credentials were genuinely correct here, so this counts toward
+    // rate-limit "success" regardless of what happens next — the
+    // single-active-session check below isn't a wrong-password case.
     await LoginRateLimitService.recordSuccess(
       cleanPhone,
       "customer"
+    );
+
+    // Single-active-session login (owner decision, 2026-09-19): reject
+    // this login outright rather than silently kicking the other
+    // device — see migration 024 for the reasoning. `forceLogout` is
+    // the self-service escape hatch (added after the fact, same day):
+    // the password was already verified correct above, so whoever's
+    // making this request has already proven they're the account
+    // owner — no extra re-authentication is needed to let them kick
+    // their own other device out, same trust boundary as a normal
+    // login. This only fires when the login form explicitly resends
+    // the request with forceLogout after being shown the blocked
+    // state — it's never silently implied by the client.
+    const hasActiveSession =
+      await CustomerRepository.hasActiveSession(customer.id);
+
+    if (hasActiveSession && !forceLogout) {
+      console.log(
+        `[customer login] blocked — customer #${customer.id} already has an active session on another device`
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "This account is already signed in on another device.",
+          reason: "session_active_elsewhere",
+        },
+        { status: 409 }
+      );
+    }
+
+    if (hasActiveSession && forceLogout) {
+      console.log(
+        `[customer login] customer #${customer.id} signed out their other device to log in here`
+      );
+    }
+
+    const sessionId = crypto.randomUUID();
+    const sessionExpiresAt = new Date(
+      Date.now() + CUSTOMER_SESSION_MAX_AGE * 1000
+    );
+
+    await CustomerRepository.setActiveSession(
+      customer.id,
+      sessionId,
+      sessionExpiresAt
     );
 
     const token = await signCustomerSession({
       customerId: customer.id,
       phone: customer.phone,
       name: customer.name,
+      sessionId,
     });
 
     // Attribute this account to a promoter if a referral code is

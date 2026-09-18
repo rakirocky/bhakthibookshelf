@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -89,10 +90,26 @@ export async function POST(request: Request) {
       `[customer signup] success — customer #${customer.id} (${customer.phone})`
     );
 
+    // A brand-new account has no active session yet, so this always
+    // succeeds — but it still has to be recorded, otherwise this first
+    // session wouldn't count toward the single-active-session login
+    // limit and a second device could sign in right after unblocked.
+    const sessionId = crypto.randomUUID();
+    const sessionExpiresAt = new Date(
+      Date.now() + CUSTOMER_SESSION_MAX_AGE * 1000
+    );
+
+    await CustomerRepository.setActiveSession(
+      customer.id,
+      sessionId,
+      sessionExpiresAt
+    );
+
     const token = await signCustomerSession({
       customerId: customer.id,
       phone: customer.phone,
       name: customer.name,
+      sessionId,
     });
 
     // Same attribution as login — typed code takes priority, falling

@@ -103,7 +103,11 @@ export class CustomerRepository {
       SELECT
         c.id, c.phone, c.name, c.email, c.is_active, c.created_at,
         p.name AS referred_by_promoter_name,
-        p.code AS referred_by_promoter_code
+        p.code AS referred_by_promoter_code,
+        (
+          c.active_session_id IS NOT NULL
+          AND c.active_session_expires_at > CURRENT_TIMESTAMP
+        ) AS has_active_session
       FROM customers c
       LEFT JOIN promoters p ON p.id = c.referred_by_promoter_id
       ${whereClause}
@@ -178,6 +182,86 @@ export class CustomerRepository {
       WHERE id = $1
       `,
       [id, email]
+    );
+  }
+
+  // --- Single-active-session login (see migration 024) ---
+
+  // True iff there's a still-unexpired session already on this
+  // account — a login attempt while this is true gets rejected rather
+  // than silently displacing the other device.
+  static async hasActiveSession(id: number): Promise<boolean> {
+    const { rows } = await db.query(
+      `
+      SELECT 1 FROM customers
+      WHERE id = $1
+        AND active_session_id IS NOT NULL
+        AND active_session_expires_at > CURRENT_TIMESTAMP
+      `,
+      [id]
+    );
+
+    return rows.length > 0;
+  }
+
+  static async setActiveSession(
+    id: number,
+    sessionId: string,
+    expiresAt: Date
+  ): Promise<void> {
+    await db.query(
+      `
+      UPDATE customers
+      SET active_session_id = $2, active_session_expires_at = $3
+      WHERE id = $1
+      `,
+      [id, sessionId, expiresAt]
+    );
+  }
+
+  // Used by getCustomerSession() on every authenticated request to
+  // confirm the presented JWT's sessionId is still THE active one —
+  // this is what makes an admin's force-logout (or a natural expiry)
+  // take effect immediately rather than only blocking future logins.
+  static async getActiveSessionId(
+    id: number
+  ): Promise<string | null> {
+    const { rows } = await db.query(
+      `SELECT active_session_id FROM customers WHERE id = $1`,
+      [id]
+    );
+
+    return rows[0]?.active_session_id ?? null;
+  }
+
+  // Self-service logout — only clears the slot if it's still this
+  // exact session (guards against a stale/duplicate logout call from a
+  // device that's already been superseded some other way clobbering a
+  // newer, legitimate session).
+  static async clearActiveSession(
+    id: number,
+    sessionId: string
+  ): Promise<void> {
+    await db.query(
+      `
+      UPDATE customers
+      SET active_session_id = NULL, active_session_expires_at = NULL
+      WHERE id = $1 AND active_session_id = $2
+      `,
+      [id, sessionId]
+    );
+  }
+
+  // Admin support lever — unconditionally frees the login slot (e.g.
+  // "I lost my phone, I can't log out from it myself").
+  static async forceLogout(id: number): Promise<void> {
+    await db.query(
+      `
+      UPDATE customers
+      SET active_session_id = NULL, active_session_expires_at = NULL
+      WHERE id = $1
+      `,
+      [id]
     );
   }
 }
