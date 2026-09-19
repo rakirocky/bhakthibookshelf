@@ -3,7 +3,25 @@ import Container from "../ui/Container";
 import FeatureItem from "../ui/FeatureItem";
 import HeroBookshelf from "./HeroBookshelf";
 
-export default function Hero() {
+import { getAllBooks } from "../../lib/services/book-service";
+import { getLanguagePreference } from "../../lib/language";
+
+// How many of the newest covers feed the slider — getAllBooks() is already
+// ordered by created_at DESC, so slicing here just means the latest admin
+// upload is the first thing visitors see.
+const HERO_BOOK_LIMIT = 10;
+
+export default async function Hero() {
+  const language = await getLanguagePreference();
+  const allBooks = await getAllBooks(language);
+
+  const heroBooks = allBooks.slice(0, HERO_BOOK_LIMIT).map((book) => ({
+    id: book.id,
+    slug: book.slug,
+    title: book.title,
+    cover_image: book.cover_image,
+  }));
+
   return (
     <section className="hero">
       <Container>
@@ -44,7 +62,7 @@ export default function Hero() {
           </div>
 
           <div className="hero-right">
-            <HeroBookshelf />
+            <HeroBookshelf books={heroBooks} />
           </div>
         </div>
       </Container>

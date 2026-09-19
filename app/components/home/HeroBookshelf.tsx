@@ -1,39 +1,100 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
-export default function HeroBookshelf() {
+import { fileUrl } from "@/app/lib/upload/fileUrl";
+
+export type HeroBook = {
+  id: number;
+  slug: string;
+  title: string;
+  cover_image: string | null;
+};
+
+type Props = {
+  books: HeroBook[];
+};
+
+export default function HeroBookshelf({ books }: Props) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  if (books.length === 0) {
+    return null;
+  }
+
+  const activeBook = books[activeIndex];
+  const canSlide = books.length > 1;
+
+  function showPrev() {
+    setActiveIndex((current) => (current - 1 + books.length) % books.length);
+  }
+
+  function showNext() {
+    setActiveIndex((current) => (current + 1) % books.length);
+  }
+
   return (
-    <div className="hero-bookshelf">
-      <Image
-        src="/images/books/bhagavad-gita.jpg"
-        alt="Bhagavad Gita"
-        width={170}
-        height={250}
-        className="hero-book hero-book-1"
-      />
+    <div className="hero-slider">
+      <div className="hero-slide">
+        <Link
+          href={`/books/${activeBook.slug}`}
+          className="hero-slide-cover"
+          aria-label={`View ${activeBook.title}`}
+        >
+          <Image
+            key={activeBook.id}
+            src={fileUrl(activeBook.cover_image) || "/images/books/default-book.jpg"}
+            alt={activeBook.title}
+            fill
+            sizes="300px"
+            style={{ objectFit: "cover" }}
+            priority
+          />
+        </Link>
 
-      <Image
-        src="/images/books/ramayana.jpg"
-        alt="Ramayana"
-        width={170}
-        height={250}
-        className="hero-book hero-book-2"
-      />
+        {canSlide && (
+          <>
+            <button
+              type="button"
+              className="hero-slider-arrow hero-slider-arrow-left"
+              onClick={showPrev}
+              aria-label="Previous cover"
+            >
+              &#8249;
+            </button>
 
-      <Image
-        src="/images/books/mahabharata.jpg"
-        alt="Mahabharata"
-        width={170}
-        height={250}
-        className="hero-book hero-book-3"
-      />
+            <button
+              type="button"
+              className="hero-slider-arrow hero-slider-arrow-right"
+              onClick={showNext}
+              aria-label="Next cover"
+            >
+              &#8250;
+            </button>
+          </>
+        )}
+      </div>
 
-      <Image
-        src="/images/books/hanuman-chalisa.jpg"
-        alt="Hanuman Chalisa"
-        width={170}
-        height={250}
-        className="hero-book hero-book-4"
-      />
+      {canSlide && (
+        <div className="hero-slider-dots">
+          {books.map((book, i) => (
+            <button
+              key={book.id}
+              type="button"
+              className={
+                i === activeIndex
+                  ? "hero-slider-dot is-active"
+                  : "hero-slider-dot"
+              }
+              onClick={() => setActiveIndex(i)}
+              aria-label={`Go to ${book.title}`}
+              aria-current={i === activeIndex}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
