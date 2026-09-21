@@ -17,6 +17,7 @@ export default function BookGrid({
           author={book.author}
           price={Number(book.discount_price ?? book.price)}
           cover={book.cover_image}
+          createdAt={book.created_at}
         />
       ))}
     </div>

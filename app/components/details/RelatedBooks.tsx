@@ -29,6 +29,7 @@ export default function RelatedBooks({
               book.discount_price ?? book.price
             )}
             cover={book.cover_image}
+            createdAt={book.created_at}
           />
         ))}
 

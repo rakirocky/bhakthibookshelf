@@ -70,6 +70,21 @@ export async function getBookCount() {
   return rows[0].total;
 }
 
+// Same as getBookCount(), but excludes the "TEST DEMO - ..." rows added for
+// the coverflow slider demo — those aren't real catalog and shouldn't
+// inflate the public-facing stats count. Safe to simplify back to
+// getBookCount() once those rows are deleted.
+export async function getPublicBookCount() {
+  const { rows } = await db.query(`
+    SELECT COUNT(*)::int AS total
+    FROM books
+    WHERE published=true
+      AND title NOT LIKE 'TEST DEMO - %';
+  `);
+
+  return rows[0].total;
+}
+
 export async function getLatestBooks(limit = 5) {
   const { rows } = await db.query(
     `

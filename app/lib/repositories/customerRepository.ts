@@ -12,6 +12,16 @@ export interface CustomerRow {
 }
 
 export class CustomerRepository {
+  static async getTotalCount(): Promise<number> {
+    const { rows } = await db.query(`
+      SELECT COUNT(*)::int AS total
+      FROM customers
+      WHERE is_active = true
+    `);
+
+    return rows[0].total;
+  }
+
   static async getByPhone(
     phone: string
   ): Promise<CustomerRow | null> {

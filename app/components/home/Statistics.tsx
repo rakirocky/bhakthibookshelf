@@ -1,8 +1,14 @@
+import { BookOpen, Users, Zap, ShieldCheck } from "lucide-react";
+
 import Container from "../ui/Container";
 import SectionHeader from "../ui/SectionHeader";
 import StatCard from "../ui/StatCard";
 
-export default function Statistics() {
+import { getSiteStats } from "../../lib/services/site-stats-service";
+
+export default async function Statistics() {
+  const { bookCount, customerCount } = await getSiteStats();
+
   return (
     <section className="statistics">
       <Container>
@@ -13,27 +19,27 @@ export default function Statistics() {
 
         <div className="stats-grid">
           <StatCard
-            icon="📚"
-            number="Curated"
-            label="A carefully selected collection of devotional books."
+            icon={<BookOpen />}
+            number={`${bookCount}+`}
+            label="Devotional books in our growing library."
           />
 
           <StatCard
-            icon="🙏"
-            number="Authentic"
-            label="Rooted in the timeless teachings of Sanatana Dharma."
+            icon={<Users />}
+            number={`${customerCount}+`}
+            label="Readers who've joined Bhakthi Bookshelf."
           />
 
           <StatCard
-            icon="⚡"
+            icon={<Zap />}
             number="Instant"
             label="Download your books immediately after purchase."
           />
 
           <StatCard
-            icon="🌍"
-            number="Anywhere"
-            label="Read your spiritual library on all your favorite devices."
+            icon={<ShieldCheck />}
+            number="Secure"
+            label="Safe, encrypted payments on every order."
           />
         </div>
       </Container>

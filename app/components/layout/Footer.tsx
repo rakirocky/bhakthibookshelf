@@ -1,5 +1,12 @@
 import Link from "next/link";
+import { Phone, Mail, Smartphone, Download } from "lucide-react";
+
 import Container from "../ui/Container";
+
+// Direct APK link — there's no Play Store/App Store listing yet (still
+// pending submission), so this points straight at the signed release build.
+// Swap this for the real store link(s) once that submission goes live.
+const APP_DOWNLOAD_URL = "https://bhakthibookshelf.in/downloads/bhakthi-bookshelf.apk";
 
 export default function Footer() {
   return (
@@ -49,9 +56,9 @@ export default function Footer() {
           <div className="footer-links">
             <h3>Support</h3>
 
-            <p>📞 +91 90084 91459</p>
+            <p><Phone size={16} /> +91 90084 91459</p>
 
-            <p>📧 bhakthibookshelf@gmail.com</p>
+            <p><Mail size={16} /> bhakthibookshelf@gmail.com</p>
 
             <Link href="/contact">Contact Us</Link>
 
@@ -60,6 +67,24 @@ export default function Footer() {
             <Link href="/terms-conditions">Terms & Conditions</Link>
           </div>
 
+        </div>
+
+        <div className="footer-app">
+          <div className="footer-app-text">
+            <Smartphone />
+            <div>
+              <strong>Get the Bhakthi Bookshelf app</strong>
+              <p>Read offline, download once, carry your library anywhere.</p>
+            </div>
+          </div>
+
+          <a
+            href={APP_DOWNLOAD_URL}
+            className="footer-app-button"
+          >
+            <Download size={18} />
+            Download for Android
+          </a>
         </div>
 
         <div className="footer-bottom">

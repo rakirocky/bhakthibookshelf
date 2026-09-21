@@ -1,3 +1,5 @@
+import { BookMarked, Zap, ShieldCheck, Sparkles } from "lucide-react";
+
 export default function WhyChooseUs() {
   return (
     <section className="why-choose">
@@ -17,7 +19,8 @@ export default function WhyChooseUs() {
         <div className="why-grid">
 
           <div className="why-card">
-            <h3>📚 Authentic Scriptures</h3>
+            <div className="why-icon"><BookMarked /></div>
+            <h3>Authentic Scriptures</h3>
 
             <p>
               Carefully curated devotional books from trusted sources.
@@ -25,7 +28,8 @@ export default function WhyChooseUs() {
           </div>
 
           <div className="why-card">
-            <h3>⚡ Instant Downloads</h3>
+            <div className="why-icon"><Zap /></div>
+            <h3>Instant Downloads</h3>
 
             <p>
               Purchase today and download immediately after payment.
@@ -33,7 +37,8 @@ export default function WhyChooseUs() {
           </div>
 
           <div className="why-card">
-            <h3>🔒 Secure Payments</h3>
+            <div className="why-icon"><ShieldCheck /></div>
+            <h3>Secure Payments</h3>
 
             <p>
               Safe and reliable online payment experience.
@@ -41,7 +46,8 @@ export default function WhyChooseUs() {
           </div>
 
           <div className="why-card">
-            <h3>🙏 Spiritual Growth</h3>
+            <div className="why-icon"><Sparkles /></div>
+            <h3>Spiritual Growth</h3>
 
             <p>
               Build your personal digital library of sacred knowledge.

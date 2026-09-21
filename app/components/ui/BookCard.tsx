@@ -3,13 +3,25 @@ import Link from "next/link";
 
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 
+const NEW_BADGE_WINDOW_DAYS = 14;
+
 type Props = {
   slug: string;
   title: string;
   author: string;
   price: number;
   cover?: string | null;
+  createdAt?: Date | string | null;
 };
+
+function isRecentlyAdded(createdAt?: Date | string | null) {
+  if (!createdAt) {
+    return false;
+  }
+
+  const ageMs = Date.now() - new Date(createdAt).getTime();
+  return ageMs < NEW_BADGE_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+}
 
 export default function BookCard({
   slug,
@@ -17,6 +29,7 @@ export default function BookCard({
   author,
   price,
   cover,
+  createdAt,
 }: Props) {
   return (
     <article className="book-card">
@@ -24,7 +37,12 @@ export default function BookCard({
 
         <div className="book-image">
 
+          {isRecentlyAdded(createdAt) && (
+            <span className="book-badge">New</span>
+          )}
+
           <Image
+            className="book-cover-image"
             src={
               fileUrl(cover) ||
               "/images/books/default-book.jpg"
