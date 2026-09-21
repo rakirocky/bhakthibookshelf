@@ -3,12 +3,12 @@ import SectionHeader from "../ui/SectionHeader";
 import Button from "../ui/Button";
 import BookCard from "../ui/BookCard";
 
-import { getFeaturedBooks } from "../../lib/services/book-service";
+import { getFeaturedBooksOrLatest } from "../../lib/services/book-service";
 import { getLanguagePreference } from "../../lib/language";
 
 export default async function FeaturedBooks() {
   const language = await getLanguagePreference();
-  const books = await getFeaturedBooks(language);
+  const books = await getFeaturedBooksOrLatest(language);
 
   return (
     <section className="featured-books">

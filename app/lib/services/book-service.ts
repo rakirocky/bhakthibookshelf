@@ -22,6 +22,21 @@ export const getFeaturedBooks = unstable_cache(
   { tags: ["books"], revalidate: 300 }
 );
 
+// The homepage's "Featured Books" section otherwise renders an empty grid
+// whenever no admin has ticked "featured" on any book — falls back to the
+// newest published books so the section is never blank in practice.
+const FEATURED_FALLBACK_LIMIT = 8;
+
+export async function getFeaturedBooksOrLatest(language?: string) {
+  const featured = await getFeaturedBooks(language);
+  if (featured.length > 0) {
+    return featured;
+  }
+
+  const latest = await getAllBooks(language);
+  return latest.slice(0, FEATURED_FALLBACK_LIMIT);
+}
+
 export const getBookBySlug = unstable_cache(
   async (slug: string) => repository.findBookBySlug(slug),
   ["books", "by-slug"],
