@@ -5,22 +5,29 @@
 .hero{
     background:linear-gradient(135deg,#fff8EC,#fffDF8);
     padding:90px 20px;
+    overflow-x:hidden;
 }
 
 .hero-wrapper{
-    display:grid;
-    grid-template-columns:1.2fr .8fr;
-    gap:60px;
+    display:flex;
+    flex-direction:column;
     align-items:center;
+    gap:50px;
+    text-align:center;
 }
 
-.hero-left h1{
+.hero-intro,
+.hero-left{
+    max-width:720px;
+}
+
+.hero-intro h1{
     font-size:72px;
     color:var(--color-navy);
     margin:20px 0;
 }
 
-.hero-left h1 span{
+.hero-intro h1 span{
     color:var(--color-primary);
 }
 
@@ -44,13 +51,16 @@
     display:flex;
     gap:20px;
     flex-wrap:wrap;
+    justify-content:center;
 }
 
 .hero-features{
     margin-top:40px;
     display:flex;
-    flex-direction:column;
-    gap:15px;
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:15px 30px;
 }
 
 .feature-item{
@@ -167,13 +177,33 @@
     flex-direction:column;
     align-items:center;
     gap:24px;
+    width:100%;
     margin:auto;
+}
+
+/* Breaks out of the centered Container to the full viewport width, so the
+   arrows can sit at the page edges instead of hugging the cover. */
+.hero-slider-row{
+    position:relative;
+    width:100vw;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.hero-slider-track{
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .hero-slide{
     position:relative;
     width:300px;
     height:440px;
+    z-index:2;
 }
 
 .hero-slide-cover{
@@ -189,6 +219,35 @@
 
 .hero-slide-cover:hover{
     transform:translateY(-8px);
+}
+
+/* The neighbour covers peeking in on either side of the active one. */
+.hero-slide-peek{
+    position:relative;
+    width:220px;
+    height:320px;
+    padding:0;
+    border:none;
+    background:none;
+    border-radius:16px;
+    overflow:hidden;
+    cursor:pointer;
+    transform:scale(.88);
+    box-shadow:0 15px 35px rgba(0,0,0,.15);
+    transition:.3s;
+    z-index:1;
+}
+
+.hero-slide-peek:hover{
+    transform:scale(.92);
+}
+
+.hero-slide-peek-left{
+    margin-right:-60px;
+}
+
+.hero-slide-peek-right{
+    margin-left:-60px;
 }
 
 .hero-slider-dots{
@@ -245,27 +304,18 @@
 }
 
 .hero-slider-arrow-left{
-    left:-18px;
+    left:24px;
 }
 
 .hero-slider-arrow-right{
-    right:-18px;
+    right:24px;
 }
 
 @media(max-width:900px){
 
-.hero-wrapper{
-    grid-template-columns:1fr;
-}
-
-.hero-left{
-    order:2;
-}
-
-.hero-right{
-    order:1;
-    margin-top:0;
-    margin-bottom:40px;
+/* Coverflow peeks don't fit narrower screens — collapse to a single cover. */
+.hero-slide-peek{
+    display:none;
 }
 
 .hero-slide{
@@ -279,6 +329,14 @@
     font-size:20px;
 }
 
+.hero-slider-arrow-left{
+    left:14px;
+}
+
+.hero-slider-arrow-right{
+    right:14px;
+}
+
 }
 
 @media(max-width:560px){
@@ -287,7 +345,7 @@
     padding:60px 16px;
 }
 
-.hero-left h1{
+.hero-intro h1{
     font-size:40px;
     margin:14px 0;
 }
@@ -340,11 +398,11 @@
 }
 
 .hero-slider-arrow-left{
-    left:-10px;
+    left:8px;
 }
 
 .hero-slider-arrow-right{
-    right:-10px;
+    right:8px;
 }
 
 }

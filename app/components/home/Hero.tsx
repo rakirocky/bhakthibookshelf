@@ -26,7 +26,7 @@ export default async function Hero() {
     <section className="hero">
       <Container>
         <div className="hero-wrapper">
-          <div className="hero-left">
+          <div className="hero-intro">
             <p className="hero-tag">
               🪔 Trusted Digital Spiritual Library
             </p>
@@ -41,7 +41,13 @@ export default async function Hero() {
               digital library and carry divine knowledge wherever
               you go.
             </p>
+          </div>
 
+          <div className="hero-right">
+            <HeroBookshelf books={heroBooks} />
+          </div>
+
+          <div className="hero-left">
             <div className="hero-buttons">
               <Button
                 href="/books"
@@ -59,10 +65,6 @@ export default async function Hero() {
               <FeatureItem text="Instant Downloads" />
               <FeatureItem text="Secure Payments" />
             </div>
-          </div>
-
-          <div className="hero-right">
-            <HeroBookshelf books={heroBooks} />
           </div>
         </div>
       </Container>
