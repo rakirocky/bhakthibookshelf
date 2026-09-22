@@ -1,23 +1,119 @@
+import Image from "next/image";
+
 import Footer from "../components/layout/Footer";
 
 export default function AboutPage() {
   return (
     <>
-      <main className="page-container" style={{ background: "#fffdf7" }}>
-        <section className="page-header">
-          <h1>About Bhakthi Bookshelf</h1>
-          <p style={{ fontStyle: "italic" }}>
-            &ldquo;ಭಕ್ತಿಯಲ್ಲಿದೆ ಅದಮ್ಯ ಶಕ್ತಿ, ಇದರಿಂದ ಸಿಗುವುದು ಮನಃಶಾಂತಿ&rdquo;
-            <br />
-            &ldquo;There is indomitable power in devotion — this gives peace of
-            mind.&rdquo;
+      <main>
+        {/* ===== Hero — same navy/gold medallion treatment as Contact ===== */}
+        <section
+          style={{
+            background:
+              "linear-gradient(135deg, var(--color-navy) 0%, #142a5c 100%)",
+            padding: "70px 20px 90px",
+            textAlign: "center",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 340,
+              height: 340,
+              borderRadius: "50%",
+              background:
+                "radial-gradient(circle, rgba(217,119,6,0.35) 0%, rgba(217,119,6,0) 70%)",
+              pointerEvents: "none",
+            }}
+          />
+
+          <div
+            style={{
+              position: "relative",
+              display: "inline-flex",
+              padding: 8,
+              borderRadius: "50%",
+              background:
+                "linear-gradient(135deg, var(--color-primary), var(--color-accent-gold))",
+              marginBottom: 26,
+              boxShadow: "0 12px 40px rgba(0,0,0,.35)",
+            }}
+          >
+            <div
+              style={{
+                background: "var(--color-white)",
+                borderRadius: "50%",
+                padding: 10,
+              }}
+            >
+              <Image
+                src="/images/logo.png"
+                alt="Bhakthi Bookshelf"
+                width={130}
+                height={130}
+                style={{ borderRadius: "50%", display: "block" }}
+                priority
+              />
+            </div>
+          </div>
+
+          <h1
+            style={{
+              margin: "0 0 10px",
+              color: "var(--color-white)",
+              position: "relative",
+            }}
+          >
+            About Bhakthi Bookshelf
+          </h1>
+
+          <p
+            style={{
+              color: "rgba(255,255,255,0.75)",
+              maxWidth: 480,
+              margin: "0 auto",
+              position: "relative",
+            }}
+          >
+            A home for devotional reading.
           </p>
         </section>
 
+        {/* ===== Content — card pulled up over the hero for depth ===== */}
         <section
           className="content-section"
-          style={{ maxWidth: 780, margin: "0 auto 60px", lineHeight: 1.9 }}
+          style={{
+            maxWidth: 780,
+            margin: "-50px auto 60px",
+            padding: "0 20px",
+            position: "relative",
+            lineHeight: 1.9,
+            background: "var(--color-white)",
+            borderRadius: 16,
+            boxShadow: "0 20px 60px rgba(0,0,0,.12)",
+          }}
         >
+          <div style={{ padding: "40px 30px 10px" }}>
+            <Image
+              src="/images/about-banner-kannada.svg"
+              alt=""
+              width={1200}
+              height={500}
+              style={{
+                width: "100%",
+                height: "auto",
+                borderRadius: 10,
+                marginBottom: 30,
+              }}
+            />
+          </div>
+
+          <div style={{ padding: "0 30px" }}>
           <h2 lang="kn">ನಮಸ್ಕಾರ ಬಂಧುಗಳೇ</h2>
           <p lang="kn">
             ನಮ್ಮ ಹಿಂದೂ ಧರ್ಮವು ಪ್ರಪಂಚದ ಅತ್ಯಂತ ಪುರಾತನವಾದ, ಪ್ರಮುಖವಾದ
@@ -65,7 +161,24 @@ export default function AboutPage() {
               margin: "40px 0",
             }}
           />
+          </div>
 
+          <div style={{ padding: "0 30px" }}>
+            <Image
+              src="/images/about-banner-english.svg"
+              alt=""
+              width={1200}
+              height={500}
+              style={{
+                width: "100%",
+                height: "auto",
+                borderRadius: 10,
+                marginBottom: 30,
+              }}
+            />
+          </div>
+
+          <div style={{ padding: "0 30px" }}>
           <h2>Hello Friends</h2>
           <p>
             Our Hindu religion is one of the oldest and most important
@@ -101,12 +214,13 @@ export default function AboutPage() {
             the reader&rsquo;s time while creating a pleasant and peaceful
             feeling in the mind.
           </p>
-          <p>
+          <p style={{ paddingBottom: 30 }}>
             May all of you encourage and co-operate with us in this
             effort.
             <br />
             Thank you.
           </p>
+          </div>
         </section>
       </main>
 
