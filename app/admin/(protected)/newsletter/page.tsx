@@ -1,5 +1,6 @@
 import { NewsletterRepository } from "@/app/lib/repositories/newsletterRepository";
 import UnsubscribeButton from "@/app/components/admin/UnsubscribeButton";
+import SendNewsletterForm from "@/app/components/admin/SendNewsletterForm";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,8 @@ export default async function AdminNewsletterPage() {
       >
         Total : {subscribers.length}
       </p>
+
+      <SendNewsletterForm recipientCount={subscribers.length} />
 
       <div style={{ overflowX: "auto" }}>
 
