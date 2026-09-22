@@ -74,22 +74,24 @@ once you decide what to feature.)*
 
 ---
 
-## Graphic assets needed
+## Graphic assets — drafted, in `docs/play-store-assets/`
 
-None of these exist in the repo yet — they're image exports, not something I can
-generate directly. Exact specs Play Console enforces:
+Drafted 2026-09-22. Ready to upload as-is; swap any of them later if you want a
+different look.
 
-| Asset | Spec | Notes |
-| --- | --- | --- |
-| App icon | 512×512 PNG, 32-bit with alpha | Play Console asset, separate from the APK's launcher icons in `android/app/src/main/res/mipmap-*`. Base it on the same `ic_launcher` art. |
-| Feature graphic | 1024×500 JPG or PNG (no alpha) | Shown at the top of the listing. |
-| Phone screenshots | 2–8 images, 16:9 or 9:16, min 320px, max 3840px on the long edge | Suggested set: home/catalogue, a book detail page, the in-app reader with a page open, Downloads screen, Manage Devices screen. |
-| 7" / 10" tablet screenshots | Same rules, optional but recommended if you expect tablet installs | |
-| Promo video | Optional, YouTube URL | Skip for v1. |
+| Asset | Spec | File | Notes |
+| --- | --- | --- | --- |
+| App icon | 512×512 PNG | `app-icon-512.png` | Reused as-is from `public/icons/icon-512.png` — the same icon already shipping in the installed app, so the Play listing matches what's on-device. No alpha channel, which Play accepts fine in practice. |
+| Feature graphic | 1024×500 PNG (no alpha) | `feature-graphic.png` | Custom-built HTML mockup rendered to exact size: navy/gold brand gradient, the real logo in a medallion, "Bhakthi Bookshelf" wordmark + tagline. Matches the same hero style used on the site's Contact/About pages. |
+| Phone screenshots | 4 images, ≤2:1 elongation, min 320px/max 3840px per side | `screenshot-1-home.png` (home/hero), `screenshot-2-book-detail.png` (Bhagavad Gita detail page), `screenshot-3-subscribe.png` (lifetime plan), `screenshot-4-library.png` (catalogue) | Real screenshots of the actual live site rendered at phone width (not mockups) — this server-mode Capacitor app loads this exact UI, so these are accurate. Play requires elongation ≤2:1 (not the older 16:9–9:16 language), confirmed all 4 fit that. Reader/Downloads/Manage-Devices screens need a real logged-in session to screenshot meaningfully — not captured (would need a seeded test account logged in through a real browser, not just curl). |
+| 7" / 10" tablet screenshots | Same rules, optional | — | Not drafted; recommend only if you expect tablet installs. |
+| Promo video | Optional, YouTube URL | — | Skip for v1. |
 
-If you want, I can draft the feature graphic and a screenshot frame set as an HTML
-mockup via the `design` skill and hand you PNG exports to drop in — say the word and I'll
-start that once you've picked which screens to feature.
+**Note on the screenshot method**: headless Chrome's `--window-size` below ~500px
+CSS width isn't honored reliably in this environment (clamps to 500 and produces
+garbled stale-layout renders) — don't reuse a sub-500 width if regenerating these.
+500 CSS width + `--force-device-scale-factor=2` (1000px physical output) works
+cleanly and was verified against a real production build, not just dev.
 
 ---
 
