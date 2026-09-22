@@ -24,12 +24,41 @@ function InstagramIcon({ size = 20 }: { size?: number }) {
   );
 }
 
+// lucide-react@1.47.0 (pinned) has no brand icons for either store —
+// inlined for the same reason as InstagramIcon above.
+function PlayStoreIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M4.7 2.3c-.4.4-.7 1-.7 1.7v16c0 .7.3 1.3.7 1.7l.1.1L14 12.5v-.1L4.8 2.2l-.1.1z" />
+      <path d="M17.1 15.6 14 12.5v-.1l3.1-3.1 6.9 3.9c.9.5.9 1.4 0 1.9l-6.9 3.9-.1-.1zM6.2 21.8l7.6-7.6.1.1-7.6 7.6-.1-.1zm7.7-9.2-.1.1L6.2 2.2l7.7 9.2v.9.1z" />
+    </svg>
+  );
+}
+
+function AppleIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M16.7 12.7c0-3 2.5-4.4 2.6-4.5-1.4-2-3.5-2.3-4.3-2.4-1.8-.2-3.6 1.1-4.5 1.1-.9 0-2.4-1-3.9-1-2 0-3.9 1.2-4.9 3-2.1 3.7-.5 9.1 1.5 12.1 1 1.5 2.1 3.1 3.7 3 1.5-.1 2-1 3.8-1s2.2 1 3.8 1c1.6 0 2.6-1.4 3.5-2.9.7-1 1.1-2.1 1.4-3.2-2.3-.9-2.7-3.9-2.7-4.2z" />
+      <path d="M14.3 4.1c.8-1 1.3-2.3 1.2-3.6-1.1.1-2.5.8-3.3 1.7-.7.8-1.4 2.1-1.2 3.4 1.3.1 2.5-.6 3.3-1.5z" />
+    </svg>
+  );
+}
+
 // Direct APK link — there's no Play Store/App Store listing yet (still
 // pending submission), so this points straight at the signed release build.
 // Swap this for the real store link(s) once that submission goes live.
 const APP_DOWNLOAD_URL = "https://bhakthibookshelf.in/downloads/bhakthi-bookshelf.apk";
 
 const INSTAGRAM_URL = "https://www.instagram.com/bb_scroll?stkn=eGdsdWNtOHVseHV5";
+
+// Neither listing exists yet — see docs/play-store-listing.md (Play submission
+// still needs a developer account + Play Billing decision) and
+// android-capacitor-build-env notes (iOS needs a Mac/Xcode Cloud, not built
+// at all yet). Set these once each store listing is actually live; the icons
+// below only render when their URL is non-null, so nothing links to a 404
+// or an unrelated page in the meantime.
+const PLAY_STORE_URL: string | null = null;
+const APP_STORE_URL: string | null = null;
 
 export default function Footer() {
   return (
@@ -60,6 +89,28 @@ export default function Footer() {
               >
                 <InstagramIcon />
               </a>
+
+              {PLAY_STORE_URL && (
+                <a
+                  href={PLAY_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Bhakthi Bookshelf on Google Play"
+                >
+                  <PlayStoreIcon />
+                </a>
+              )}
+
+              {APP_STORE_URL && (
+                <a
+                  href={APP_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Bhakthi Bookshelf on the App Store"
+                >
+                  <AppleIcon />
+                </a>
+              )}
             </div>
           </div>
 
