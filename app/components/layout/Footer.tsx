@@ -3,10 +3,33 @@ import { Phone, Mail, Smartphone, Download } from "lucide-react";
 
 import Container from "../ui/Container";
 
+// lucide-react@1.47.0 (pinned in package.json) doesn't ship an Instagram
+// icon — inlined instead of bumping a shared dependency for one glyph.
+function InstagramIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+
 // Direct APK link — there's no Play Store/App Store listing yet (still
 // pending submission), so this points straight at the signed release build.
 // Swap this for the real store link(s) once that submission goes live.
 const APP_DOWNLOAD_URL = "https://bhakthibookshelf.in/downloads/bhakthi-bookshelf.apk";
+
+const INSTAGRAM_URL = "https://www.instagram.com/bb_scroll?stkn=eGdsdWNtOHVseHV5";
 
 export default function Footer() {
   return (
@@ -27,6 +50,17 @@ export default function Footer() {
               epics, prayers and spiritual wisdom in one trusted
               digital library.
             </p>
+
+            <div className="footer-social">
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow Bhakthi Bookshelf on Instagram"
+              >
+                <InstagramIcon />
+              </a>
+            </div>
           </div>
 
           <div className="footer-links">
