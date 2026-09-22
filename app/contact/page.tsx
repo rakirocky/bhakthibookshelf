@@ -118,8 +118,8 @@ export default async function ContactPage() {
             <ContactInfoRow
               icon={<PhoneIcon color="var(--color-primary)" />}
               label="Phone"
-              value={settings.contact_phone || "+91 90084 91459"}
-              href={`tel:${settings.contact_phone || "+919008491459"}`}
+              value={settings.contact_phone || "+91 78921 19482"}
+              href={`tel:${settings.contact_phone || "+917892119482"}`}
             />
 
             <ContactInfoRow

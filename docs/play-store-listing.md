@@ -2,7 +2,7 @@
 
 Content to paste into Play Console → **Grow → Store presence → Main store listing**.
 Contact details below use the fallback values in `app/privacy-policy/page.tsx` /
-`SettingsService` (`BhakthiBookshelf@gmail.com`, `+91 90084 91459`) — **confirm these
+`SettingsService` (`BhakthiBookshelf@gmail.com`, `+91 78921 19482`) — **confirm these
 match whatever's actually saved in `/admin/settings` on prod** before you submit; Play
 cross-checks the listing against the app's own privacy policy page.
 
@@ -18,7 +18,7 @@ cross-checks the listing against the app's own privacy policy page.
 | Category | **Books & Reference** |
 | Tags (pick up to 5 in Console) | Religion & Spirituality, Reading, Ebooks |
 | Contact email | `BhakthiBookshelf@gmail.com` *(confirm live value)* |
-| Contact phone | `+91 90084 91459` *(confirm live value)* |
+| Contact phone | `+91 78921 19482` *(confirm live value)* |
 | Website | `https://bhakthibookshelf.in` |
 | Privacy policy URL | `https://bhakthibookshelf.in/privacy-policy` |
 

@@ -8,7 +8,7 @@ export default async function TermsPage() {
 
   const storeName = settings.store_name || "Bhakthi Bookshelf";
   const email = settings.contact_email || "BhakthiBookshelf@gmail.com";
-  const phone = settings.contact_phone || "+91 90084 91459";
+  const phone = settings.contact_phone || "+91 78921 19482";
   const address = settings.address;
 
   const lastUpdated = new Date().toLocaleDateString("en-IN", {

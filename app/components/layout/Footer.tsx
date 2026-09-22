@@ -56,7 +56,7 @@ export default function Footer() {
           <div className="footer-links">
             <h3>Support</h3>
 
-            <p><Phone size={16} /> +91 90084 91459</p>
+            <p><Phone size={16} /> +91 78921 19482</p>
 
             <p><Mail size={16} /> bhakthibookshelf@gmail.com</p>
 
