@@ -97,7 +97,7 @@ export default async function AdminOrderDetailPage({
           </p>
 
           <p style={{ margin: "4px 0" }}>
-            {order.mobile}
+            Phone: {order.mobile}
           </p>
 
           <p style={{ margin: "4px 0" }}>

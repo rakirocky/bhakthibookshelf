@@ -109,8 +109,8 @@ export function generateInvoicePdf(
       .text(
         `${order.city}, ${order.state} - ${order.pincode}, ${order.country}`
       )
-      .text(order.mobile)
-      .text(order.email);
+      .text(`Phone: ${order.mobile}`)
+      .text(`Email: ${order.email}`);
 
     if (order.gst_number) {
       doc.text(`Customer GSTIN: ${order.gst_number}`);
