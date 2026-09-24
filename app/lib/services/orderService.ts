@@ -130,7 +130,7 @@ static async getDashboardRecentOrders() {
       throw new Error("Order not found");
     }
 
-    if (updated.previous_payment_status !== "PAID") {
+    if (updated.newly_paid) {
       // Fire-and-forget: the payment is already recorded, and a mail
       // hiccup must never turn a successful payment into an error for
       // the customer (admin can resend from the order page).

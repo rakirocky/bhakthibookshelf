@@ -285,24 +285,32 @@ export class OrderRepository {
     }
   ) {
     const { rows } = await db.query(
-      // The FOR UPDATE lock makes the webhook and client-side verify
-      // (which can race) serialize here, so exactly one of them sees
-      // previous_payment_status <> 'PAID' — used to fire the
-      // confirmation email once, not twice.
+      // Only the call that actually flips the row to PAID gets
+      // newly_paid = true, so the webhook and client-side verify (which
+      // can race) fire the confirmation email once, not twice. A
+      // concurrent UPDATE waits on the row lock, re-checks the WHERE
+      // against the committed row, and matches nothing.
+      //
+      // (Don't try this with a `SELECT ... FOR UPDATE` CTE read back in
+      // RETURNING — Postgres evaluates it after the UPDATE and skips the
+      // self-modified row, so it always comes back NULL.)
       `
-      WITH prev AS (
-        SELECT payment_status FROM orders WHERE id = $1 FOR UPDATE
+      WITH upd AS (
+        UPDATE orders
+        SET
+          payment_status = 'PAID',
+          order_status = 'CONFIRMED',
+          payment_id = $2,
+          payment_method = $3,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = $1 AND payment_status IS DISTINCT FROM 'PAID'
+        RETURNING id, order_number, payment_status, order_status
       )
-      UPDATE orders
-      SET
-        payment_status = 'PAID',
-        order_status = 'CONFIRMED',
-        payment_id = $2,
-        payment_method = $3,
-        updated_at = CURRENT_TIMESTAMP
-      WHERE id = $1
-      RETURNING id, order_number, payment_status, order_status,
-        (SELECT payment_status FROM prev) AS previous_payment_status
+      SELECT *, TRUE AS newly_paid FROM upd
+      UNION ALL
+      SELECT id, order_number, payment_status, order_status, FALSE
+      FROM orders
+      WHERE id = $1 AND NOT EXISTS (SELECT 1 FROM upd)
       `,
       [
         id,
