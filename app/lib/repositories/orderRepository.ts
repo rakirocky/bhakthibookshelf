@@ -336,12 +336,29 @@ export class OrderRepository {
     customerId: number
   ) {
     const { rows } = await db.query(
-      `SELECT order_number, payment_status FROM orders
-       WHERE order_number = $1 AND customer_id = $2`,
+      `SELECT o.order_number, o.payment_status,
+         COALESCE(
+           json_agg(json_build_object('slug', b.slug, 'title', b.title)
+             ORDER BY oi.id) FILTER (WHERE b.id IS NOT NULL),
+           '[]'
+         ) AS books
+       FROM orders o
+       LEFT JOIN order_items oi ON oi.order_id = o.id
+       LEFT JOIN books b ON b.id = oi.book_id
+       WHERE o.order_number = $1 AND o.customer_id = $2
+       GROUP BY o.id`,
       [orderNumber, customerId]
     );
 
-    return rows[0] ?? null;
+    return (
+      (rows[0] as
+        | {
+            order_number: string;
+            payment_status: string;
+            books: { slug: string; title: string }[];
+          }
+        | undefined) ?? null
+    );
   }
 
   static async hasCustomerPurchasedBook(

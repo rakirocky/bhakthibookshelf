@@ -31,6 +31,13 @@ export default async function OrderSuccessPage({
 
   const paid = record?.payment_status === "PAID";
 
+  // Purchased books open (and save for offline) from their own page;
+  // Downloads only lists books already saved to this device, so it's
+  // empty right after buying — send them to the book instead.
+  const books = record?.books ?? [];
+  const readHref =
+    books.length === 1 ? `/books/${books[0].slug}` : "/account";
+
   return (
     <Container>
       <div
@@ -64,8 +71,9 @@ export default async function OrderSuccessPage({
 
         {paid && (
           <p>
-            Your books are ready in Downloads. A payment
-            confirmation and invoice has been emailed to you.
+            Your {books.length === 1 ? "book is" : "books are"} ready to
+            read. A payment confirmation and invoice has been emailed
+            to you.
           </p>
         )}
 
@@ -80,10 +88,12 @@ export default async function OrderSuccessPage({
         >
           {paid && (
             <Link
-              href="/downloads"
+              href={readHref}
               className="book-button"
             >
-              Go to Downloads
+              {books.length === 1
+                ? "Read your book"
+                : "Go to your books"}
             </Link>
           )}
 

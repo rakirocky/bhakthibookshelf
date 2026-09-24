@@ -17,8 +17,10 @@ import {
  */
 export default function OfflineSaveButton({
   bookId,
+  onSaved,
 }: {
   bookId: number;
+  onSaved?: () => void;
 }) {
   const [state, setState] = useState<
     "idle" | "saving" | "saved" | "error"
@@ -45,6 +47,7 @@ export default function OfflineSaveButton({
       const book = await downloadBook(bookId);
       setDownloadId(book.downloadId);
       setState("saved");
+      onSaved?.();
     } catch (err) {
       setState("error");
       setAtDeviceLimit(err instanceof DeviceLimitError);

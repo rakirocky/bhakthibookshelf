@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
+import OfflineSaveButton from "@/app/components/books/OfflineSaveButton";
 import { formatBytes } from "@/app/lib/offline/bytes";
 import {
   LocalBookDetail,
@@ -15,7 +16,18 @@ import {
  * on the app or the website. Files are saved to this device (encrypted)
  * and read in the watermarked in-browser/in-app reader.
  */
-export default function DownloadsClient() {
+export type PurchasedBook = {
+  id: number;
+  slug: string;
+  title: string;
+  author: string;
+};
+
+export default function DownloadsClient({
+  purchased = [],
+}: {
+  purchased?: PurchasedBook[];
+}) {
   const [books, setBooks] = useState<LocalBookDetail[] | null>(null);
   const [totalBytes, setTotalBytes] = useState(0);
   const [syncing, setSyncing] = useState(false);
@@ -55,6 +67,12 @@ export default function DownloadsClient() {
       alive = false;
     };
   }, [refresh]);
+
+  // Books this account owns that aren't on this device yet — otherwise a
+  // fresh buyer lands on an empty page with nothing to click.
+  const savedIds = new Set((books ?? []).map((b) => b.bookId));
+  const notSaved =
+    books === null ? [] : purchased.filter((p) => !savedIds.has(p.id));
 
   async function handleRemove(downloadId: number) {
     if (!window.confirm("Remove this download from your device?")) return;
@@ -132,7 +150,10 @@ export default function DownloadsClient() {
         <p style={{ color: "var(--color-text-muted)" }}>Loading…</p>
       )}
 
-      {books !== null && books.length === 0 && !syncing && (
+      {books !== null &&
+        books.length === 0 &&
+        notSaved.length === 0 &&
+        !syncing && (
         <p style={{ color: "var(--color-text-secondary)", lineHeight: 1.6 }}>
           No downloads yet. Open a book you own and tap{" "}
           <strong>Save for offline reading</strong>.
@@ -182,6 +203,66 @@ export default function DownloadsClient() {
           </li>
         ))}
       </ul>
+
+      {notSaved.length > 0 && (
+        <section style={{ marginTop: books && books.length > 0 ? 28 : 0 }}>
+          <h2
+            style={{
+              fontSize: 17,
+              color: "var(--color-navy)",
+              marginBottom: 4,
+            }}
+          >
+            Your books — not on this device yet
+          </h2>
+          <p
+            style={{
+              fontSize: 13,
+              color: "var(--color-text-muted)",
+              marginBottom: 6,
+            }}
+          >
+            Save a book to read it here, even offline.
+          </p>
+
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {notSaved.map((p) => (
+              <li
+                key={p.id}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: 12,
+                  padding: "14px 0",
+                  borderBottom: "1px solid var(--color-border)",
+                }}
+              >
+                <div style={{ flex: 1, minWidth: 160 }}>
+                  <Link
+                    href={`/books/${p.slug}`}
+                    style={{ fontWeight: 600, color: "inherit" }}
+                  >
+                    {p.title}
+                  </Link>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      color: "var(--color-text-muted)",
+                    }}
+                  >
+                    {p.author}
+                  </div>
+                </div>
+                <OfflineSaveButton
+                  bookId={p.id}
+                  onSaved={() => void refresh()}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <div
         style={{
