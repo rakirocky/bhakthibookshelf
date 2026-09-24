@@ -53,6 +53,9 @@ export default async function AccountPage() {
       />
 
       <div
+        // Read-only app: only show the card when there's a subscription
+        // to report — "you don't have one" is an upsell.
+        data-web-only={status?.status === "ACTIVE" ? undefined : true}
         style={{
           background: "var(--color-white)",
           border: "1px solid var(--color-border)",
