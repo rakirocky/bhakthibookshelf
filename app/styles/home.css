@@ -215,16 +215,15 @@
     margin:auto;
 }
 
-/* Breaks out of the centered Container to the full viewport width, so the
-   arrows can sit at the page edges instead of hugging the cover. */
+/* Arrows sit right beside the covers (not at the viewport edges, where
+   the temple frame's pillars now cover them). */
 .hero-slider-row{
     position:relative;
-    width:100vw;
-    margin-left:calc(50% - 50vw);
-    margin-right:calc(50% - 50vw);
+    width:100%;
     display:flex;
     align-items:center;
     justify-content:center;
+    gap:28px;
 }
 
 .hero-slider-track{
@@ -311,9 +310,8 @@
 }
 
 .hero-slider-arrow{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
+    position:relative;
+    flex-shrink:0;
     width:44px;
     height:44px;
     border-radius:50%;
@@ -332,18 +330,11 @@
 }
 
 .hero-slider-arrow:hover{
-    transform:translateY(-50%) scale(1.1);
+    transform:scale(1.1);
     background:var(--color-primary);
     color:#fff;
 }
 
-.hero-slider-arrow-left{
-    left:24px;
-}
-
-.hero-slider-arrow-right{
-    right:24px;
-}
 
 @media(max-width:900px){
 
@@ -361,14 +352,6 @@
     width:36px;
     height:36px;
     font-size:20px;
-}
-
-.hero-slider-arrow-left{
-    left:14px;
-}
-
-.hero-slider-arrow-right{
-    right:14px;
 }
 
 }
@@ -431,14 +414,6 @@
     font-size:18px;
 }
 
-.hero-slider-arrow-left{
-    left:8px;
-}
-
-.hero-slider-arrow-right{
-    right:8px;
-}
-
 }
 /* About page: warm parchment instead of a plain white card — saffron
    glow at the top, faint lotus mandalas behind the Kannada and English
@@ -479,4 +454,21 @@
 
 .about-sacred hr {
   border-top-color: rgba(217, 119, 6, 0.35) !important;
+}
+
+/* Small phones: cover + both arrows must fit between the frame pillars. */
+@media(max-width:480px){
+.hero-slider-row{
+    gap:8px;
+}
+
+.hero-slide{
+    width:220px;
+    height:322px;
+}
+
+.hero-slider-arrow{
+    width:34px;
+    height:34px;
+}
 }
