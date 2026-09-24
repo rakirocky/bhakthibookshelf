@@ -102,6 +102,7 @@ export default async function AccountPage() {
 
             <Link
               href="/subscribe"
+              data-web-only
               className="btn btn-primary"
               style={{ textDecoration: "none" }}
             >
@@ -151,8 +152,7 @@ export default async function AccountPage() {
               fontSize: 14,
             }}
           >
-            Books you purchase will show up here once
-            payment is confirmed.
+            Books on your account will show up here.
           </p>
         ) : (
           <div

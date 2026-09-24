@@ -7,7 +7,6 @@ import Spinner from "@/app/components/ui/Spinner";
 import { useToast } from "@/app/context/ToastContext";
 import { openRazorpayCheckout } from "@/app/lib/razorpayClient";
 import { useIsNativeApp } from "@/app/lib/offline/useNative";
-import PurchaseOnWebNotice from "@/app/components/native/PurchaseOnWebNotice";
 
 export default function SubscribeButton({
   planId,
@@ -164,9 +163,7 @@ export default function SubscribeButton({
   }
 
   if (native) {
-    return (
-      <PurchaseOnWebNotice message="Subscribing isn't available in the app. Please visit bhakthibookshelf.in in your browser to subscribe." />
-    );
+    return null;
   }
 
   if (pendingPayment) {

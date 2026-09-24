@@ -6,7 +6,6 @@ import { Book } from "@/app/lib/types/book";
 
 import AddToCartButton from "../cart/AddToCartButton";
 import OfflineSaveButton from "../books/OfflineSaveButton";
-import PurchaseOnWebNotice from "../native/PurchaseOnWebNotice";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import { useCart } from "@/app/hooks/useCart";
 import { useIsNativeApp } from "@/app/lib/offline/useNative";
@@ -53,9 +52,13 @@ export default function BookActions({
       {hasAccess ? (
         <OfflineSaveButton bookId={book.id} />
       ) : native ? (
-        <PurchaseOnWebNotice />
+        // Read-only app: no buy button, price or "buy on the web" pointer
+        // (Play anti-steering policy) — just state it isn't owned.
+        <p style={{ margin: 0, color: "var(--color-text-secondary)" }}>
+          This book isn&apos;t in your library yet.
+        </p>
       ) : (
-        <>
+        <span data-web-only style={{ display: "contents" }}>
           <AddToCartButton book={book} />
 
           <button
@@ -66,7 +69,7 @@ export default function BookActions({
             Download Full Book — ₹
             {book.discount_price ?? book.price}
           </button>
-        </>
+        </span>
       )}
 
       {book.sample_pdf && (

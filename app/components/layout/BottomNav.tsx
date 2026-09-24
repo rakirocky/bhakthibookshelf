@@ -65,7 +65,7 @@ const TABS: Tab[] = [
 
 const MORE_LINKS = [
   { href: "/downloads", label: "Downloads" },
-  { href: "/subscribe", label: "Subscribe" },
+  { href: "/subscribe", label: "Subscribe", webOnly: true },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -133,7 +133,28 @@ export default function BottomNav() {
         ))}
 
         <Link
+          href="/downloads"
+          data-app-only
+          className={
+            pathname === "/downloads"
+              ? "bottom-nav__item is-active"
+              : "bottom-nav__item"
+          }
+          aria-current={pathname === "/downloads" ? "page" : undefined}
+        >
+          <TabIcon>
+            <>
+              <path d="M12 3.5v11" />
+              <path d="m7.5 10 4.5 4.5 4.5-4.5" />
+              <path d="M4.5 16.5v2a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2" />
+            </>
+          </TabIcon>
+          <span>Downloads</span>
+        </Link>
+
+        <Link
           href="/cart"
+          data-web-only
           className={
             pathname === "/cart"
               ? "bottom-nav__item is-active"
@@ -199,6 +220,7 @@ export default function BottomNav() {
                   key={link.href}
                   href={link.href}
                   className="more-sheet__link"
+                  data-web-only={"webOnly" in link ? true : undefined}
                   onClick={() => setMoreOpen(false)}
                 >
                   {link.label}

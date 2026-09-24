@@ -99,11 +99,11 @@ export default function BooksClient({ books }: Props) {
                   Title A-Z
                 </option>
 
-                <option value="price-low">
+                <option value="price-low" data-web-only>
                   Price Low to High
                 </option>
 
-                <option value="price-high">
+                <option value="price-high" data-web-only>
                   Price High to Low
                 </option>
               </select>

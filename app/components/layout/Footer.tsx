@@ -154,7 +154,7 @@ export default function Footer() {
 
         </div>
 
-        <div className="footer-app">
+        <div className="footer-app" data-web-only>
           <div className="footer-app-text">
             <Smartphone />
             <div>

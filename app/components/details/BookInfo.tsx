@@ -44,7 +44,7 @@ export default function BookInfo({
 
       </div>
 
-      <div className="book-price">
+      <div className="book-price" data-web-only>
 
         {book.discount_price && (
           <span

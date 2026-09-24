@@ -11,7 +11,6 @@ import { useCart } from "../hooks/useCart";
 import EmptyCart from "../components/cart/EmptyCart";
 import { useIsNativeApp } from "../lib/offline/useNative";
 import { isNativeApp } from "../lib/offline/native";
-import PurchaseOnWebNotice from "../components/native/PurchaseOnWebNotice";
 
 export default function CheckoutClient({
   signedIn,
@@ -33,11 +32,7 @@ export default function CheckoutClient({
   }, [signedIn, router]);
 
   if (native) {
-    return (
-      <Container>
-        <PurchaseOnWebNotice message="Checkout isn't available in the app. Please visit bhakthibookshelf.in in your browser to complete your purchase." />
-      </Container>
-    );
+    return null;
   }
 
   if (!signedIn) {

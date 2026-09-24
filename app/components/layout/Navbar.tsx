@@ -96,6 +96,7 @@ export default function Navbar() {
           <Link
             href="/subscribe"
             onClick={() => setMenuOpen(false)}
+            data-web-only
           >
             Subscribe
           </Link>
@@ -116,7 +117,9 @@ export default function Navbar() {
 
           <LanguageSwitcher />
 
-          <CartBadge />
+          <span data-web-only style={{ display: "contents" }}>
+            <CartBadge />
+          </span>
 
         </nav>
 

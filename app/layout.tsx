@@ -7,6 +7,7 @@ import BottomNav from "./components/layout/BottomNav";
 import AnnouncementBar from "./components/layout/AnnouncementBar";
 import ServiceWorkerRegister from "./components/layout/ServiceWorkerRegister";
 import ReconcileOnResume from "./components/offline/ReconcileOnResume";
+import AppModeGuard from "./components/native/AppModeGuard";
 import { AnnouncementService } from "./lib/services/announcementService";
 
 // Update NEXT_PUBLIC_SITE_URL in your .env once the real domain is live —
@@ -71,6 +72,14 @@ export const viewport: Viewport = {
 // the same issue fixed earlier on /admin, /books, and the homepage).
 export const dynamic = "force-dynamic";
 
+// Inside the Play Store app the site is read-only: Google Play requires
+// Play Billing for in-app digital purchases and forbids steering users to
+// buy on the web, so the app never shows prices, cart, buy or subscribe.
+// Capacitor injects its bridge ahead of page scripts, so this inline
+// script can flag <html data-app> before first paint and CSS
+// ([data-web-only], see layout.css) hides commerce UI with no flash.
+const APP_MODE_SCRIPT = `try{if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()){document.documentElement.setAttribute("data-app","")}}catch(e){}`;
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -80,7 +89,14 @@ export default async function RootLayout({
     await AnnouncementService.getActive();
 
   return (
-    <html lang="en">
+    // suppressHydrationWarning: APP_MODE_SCRIPT sets data-app on <html>
+    // before React hydrates, which React would otherwise flag.
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{ __html: APP_MODE_SCRIPT }}
+        />
+      </head>
       <body>
         <Providers>
           <AnnouncementBar announcements={announcements} />
@@ -89,6 +105,7 @@ export default async function RootLayout({
           <BottomNav />
           <ServiceWorkerRegister />
           <ReconcileOnResume />
+          <AppModeGuard />
         </Providers>
       </body>
     </html>

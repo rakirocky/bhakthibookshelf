@@ -63,7 +63,7 @@ export default async function Hero() {
             <div className="hero-features">
               <FeatureItem text="Curated Collection" />
               <FeatureItem text="Instant Downloads" />
-              <FeatureItem text="Secure Payments" />
+              <FeatureItem text="Secure Payments" webOnly />
             </div>
           </div>
         </div>

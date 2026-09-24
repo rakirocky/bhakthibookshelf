@@ -27,7 +27,7 @@ export default function WhyChooseUs() {
             </p>
           </div>
 
-          <div className="why-card">
+          <div className="why-card" data-web-only>
             <div className="why-icon"><Zap /></div>
             <h3>Instant Downloads</h3>
 
@@ -36,7 +36,7 @@ export default function WhyChooseUs() {
             </p>
           </div>
 
-          <div className="why-card">
+          <div className="why-card" data-web-only>
             <div className="why-icon"><ShieldCheck /></div>
             <h3>Secure Payments</h3>
 

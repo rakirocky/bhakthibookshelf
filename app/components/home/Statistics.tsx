@@ -31,12 +31,14 @@ export default async function Statistics() {
           />
 
           <StatCard
+            webOnly
             icon={<Zap />}
             number="Instant"
             label="Download your books immediately after purchase."
           />
 
           <StatCard
+            webOnly
             icon={<ShieldCheck />}
             number="Secure"
             label="Safe, encrypted payments on every order."
