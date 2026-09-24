@@ -123,3 +123,44 @@
   min-width: 0;
   overflow-wrap: anywhere;
 }
+
+/* Contact page "Follow us" links */
+.contact-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.contact-social a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 8px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.contact-social a span {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.contact-social a strong {
+  font-size: 14px;
+  color: var(--color-text-strong);
+}
+
+.contact-social a small {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.contact-social a:hover {
+  border-color: var(--color-primary);
+  background: rgba(217, 119, 6, 0.06);
+  transform: translateY(-2px);
+}

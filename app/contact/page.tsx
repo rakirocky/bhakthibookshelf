@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import Footer from "../components/layout/Footer";
 import ContactForm from "../components/contact/ContactForm";
+import { SOCIAL_LINKS } from "../components/layout/SocialLinks";
 import { PhoneIcon, MailIcon, ClockIcon, PinIcon } from "../components/ui/Icons";
 import { SettingsService } from "@/app/lib/services/settingsService";
 
@@ -158,13 +159,34 @@ export default async function ContactPage() {
             >
               <p
                 style={{
-                  margin: 0,
-                  fontSize: 13,
+                  margin: "0 0 12px",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
                   color: "var(--color-text-muted)",
                 }}
               >
-                Social media links coming soon.
+                Follow us
               </p>
+
+              <div className="contact-social">
+                {SOCIAL_LINKS.map(({ name, handle, href, Icon }) => (
+                  <a
+                    key={name}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Bhakthi Bookshelf on ${name}`}
+                  >
+                    <Icon size={18} />
+                    <span>
+                      <strong>{name}</strong>
+                      <small>{handle}</small>
+                    </span>
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
