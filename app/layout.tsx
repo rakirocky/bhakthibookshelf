@@ -8,6 +8,7 @@ import AnnouncementBar from "./components/layout/AnnouncementBar";
 import ServiceWorkerRegister from "./components/layout/ServiceWorkerRegister";
 import ReconcileOnResume from "./components/offline/ReconcileOnResume";
 import AppModeGuard from "./components/native/AppModeGuard";
+import TempleFrame from "./components/layout/TempleFrame";
 import { AnnouncementService } from "./lib/services/announcementService";
 import { SettingsService } from "./lib/services/settingsService";
 
@@ -113,7 +114,7 @@ export default async function RootLayout({
         <Providers>
           <AnnouncementBar announcements={announcements} />
           <Navbar />
-          {children}
+          <TempleFrame>{children}</TempleFrame>
           <BottomNav />
           <ServiceWorkerRegister />
           <ReconcileOnResume />

@@ -344,3 +344,80 @@ html[data-app] [data-web-only] {
 html:not([data-app]) [data-app-only] {
   display: none !important;
 }
+
+/* ---------------------------------------------------------------
+   Temple frame (TempleFrame.tsx). Piece sizes are the source pixels
+   of /images/frame/*.webp; --tf-s scales the whole frame.
+   --------------------------------------------------------------- */
+.temple-frame {
+  --tf-s: 0.55;
+  position: relative;
+  /* clear the flat top band + centre lotus, the pillars, and the bottom band */
+  padding: calc(140px * var(--tf-s)) calc(72px * var(--tf-s) + 12px)
+    calc(96px * var(--tf-s));
+}
+
+.temple-frame__content {
+  position: relative;
+  min-width: 0;
+}
+
+.temple-frame__top,
+.temple-frame__bottom,
+.temple-frame__side {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.temple-frame__top,
+.temple-frame__bottom {
+  left: 0;
+  right: 0;
+}
+
+.temple-frame__top {
+  top: 0;
+  height: calc(210px * var(--tf-s));
+  background:
+    url("/images/frame/top-left.webp") left top / auto 100% no-repeat,
+    url("/images/frame/top-right.webp") right top / auto 100% no-repeat,
+    url("/images/frame/top-center.webp") center top / auto 100% no-repeat,
+    url("/images/frame/top-fill.webp") left top / auto 100% repeat-x;
+}
+
+.temple-frame__bottom {
+  bottom: 0;
+  height: calc(216px * var(--tf-s));
+  background:
+    url("/images/frame/bottom-left.webp") left bottom / auto 100% no-repeat,
+    url("/images/frame/bottom-right.webp") right bottom / auto 100% no-repeat,
+    url("/images/frame/bottom-center.webp") center bottom / auto 100% no-repeat,
+    url("/images/frame/bottom-fill.webp") left bottom / auto 100% repeat-x;
+}
+
+.temple-frame__side {
+  top: calc(210px * var(--tf-s));
+  bottom: calc(216px * var(--tf-s));
+  width: calc(72px * var(--tf-s));
+  /* "round" fits a whole number of pillar lengths, so the last one
+     meets the bottom corner cleanly on any page height */
+  background-repeat: no-repeat round;
+  background-size: 100% calc(1090px * var(--tf-s));
+}
+
+.temple-frame__side--left {
+  left: 0;
+  background-image: url("/images/frame/pillar-left.webp");
+}
+
+.temple-frame__side--right {
+  right: 0;
+  background-image: url("/images/frame/pillar-right.webp");
+}
+
+@media (max-width: 860px) {
+  .temple-frame {
+    --tf-s: 0.3;
+  }
+}
