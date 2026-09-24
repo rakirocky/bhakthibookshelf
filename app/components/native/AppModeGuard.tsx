@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import { isNativeApp } from "@/app/lib/offline/native";
+import { isReadOnlyApp } from "@/app/lib/offline/appMode";
 
 // Purchase pages have nothing to offer in the read-only app (see
 // APP_MODE_SCRIPT in app/layout.tsx), so a deep link or back-stack entry
@@ -15,7 +15,7 @@ export default function AppModeGuard() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isNativeApp()) return;
+    if (!isReadOnlyApp()) return;
 
     // Fallback in case the inline script ran before the bridge existed.
     document.documentElement.setAttribute("data-app", "");

@@ -9,8 +9,7 @@ import CheckoutSummary from "../components/checkout/CheckoutSummary";
 
 import { useCart } from "../hooks/useCart";
 import EmptyCart from "../components/cart/EmptyCart";
-import { useIsNativeApp } from "../lib/offline/useNative";
-import { isNativeApp } from "../lib/offline/native";
+import { useIsReadOnlyApp, isReadOnlyApp } from "../lib/offline/appMode";
 
 export default function CheckoutClient({
   signedIn,
@@ -18,20 +17,20 @@ export default function CheckoutClient({
   signedIn: boolean;
 }) {
   const { items } = useCart();
-  const native = useIsNativeApp();
+  const readOnlyApp = useIsReadOnlyApp();
   const router = useRouter();
 
   // A stale/superseded login still passes proxy.ts, so without this the
   // customer fills in the whole form and is only bounced at "Pay".
-  // isNativeApp() is read directly: the hook's first (hydration) value
-  // is always false, which would bounce the app's "buy on web" notice.
+  // isReadOnlyApp() is read directly: the hook's first (hydration) value
+  // is always false; the read-only app's own guard handles /checkout.
   useEffect(() => {
-    if (!signedIn && !isNativeApp()) {
+    if (!signedIn && !isReadOnlyApp()) {
       router.replace("/account/login?from=/checkout");
     }
   }, [signedIn, router]);
 
-  if (native) {
+  if (readOnlyApp) {
     return null;
   }
 

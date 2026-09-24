@@ -8,7 +8,7 @@ import AddToCartButton from "../cart/AddToCartButton";
 import OfflineSaveButton from "../books/OfflineSaveButton";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import { useCart } from "@/app/hooks/useCart";
-import { useIsNativeApp } from "@/app/lib/offline/useNative";
+import { useIsReadOnlyApp } from "@/app/lib/offline/appMode";
 
 type Props = {
   book: Book;
@@ -21,7 +21,7 @@ export default function BookActions({
 }: Props) {
   const router = useRouter();
   const { addItem } = useCart();
-  const native = useIsNativeApp();
+  const readOnlyApp = useIsReadOnlyApp();
 
   // "Download Full Book — ₹x" is a buy-now shortcut for a book you don't
   // own yet: adds to cart and goes straight to checkout, sitting alongside
@@ -51,7 +51,7 @@ export default function BookActions({
     >
       {hasAccess ? (
         <OfflineSaveButton bookId={book.id} />
-      ) : native ? (
+      ) : readOnlyApp ? (
         // Read-only app: no buy button, price or "buy on the web" pointer
         // (Play anti-steering policy) — just state it isn't owned.
         <p style={{ margin: 0, color: "var(--color-text-secondary)" }}>

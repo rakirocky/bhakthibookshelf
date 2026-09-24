@@ -1,4 +1,5 @@
 import SettingsForm from "@/app/components/admin/SettingsForm";
+import AppCommerceToggle from "@/app/components/admin/AppCommerceToggle";
 import { SettingsService } from "@/app/lib/services/settingsService";
 
 export default async function AdminSettingsPage() {
@@ -33,6 +34,20 @@ export default async function AdminSettingsPage() {
         }}
       >
         <SettingsForm initialSettings={settings} />
+      </div>
+
+      <div
+        style={{
+          background: "var(--color-white)",
+          border: "1px solid var(--color-border)",
+          borderRadius: 12,
+          padding: 30,
+          marginTop: 20,
+        }}
+      >
+        <AppCommerceToggle
+          initialEnabled={settings.app_commerce_enabled === true}
+        />
       </div>
     </div>
   );

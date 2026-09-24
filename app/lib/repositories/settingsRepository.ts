@@ -11,6 +11,20 @@ export class SettingsRepository {
     return rows[0] ?? null;
   }
 
+  static async setAppCommerceEnabled(enabled: boolean) {
+    const { rows } = await db.query(
+      `
+      UPDATE settings
+      SET app_commerce_enabled = $1, updated_at = CURRENT_TIMESTAMP
+      WHERE id = 1
+      RETURNING app_commerce_enabled
+      `,
+      [enabled]
+    );
+
+    return rows[0] ?? null;
+  }
+
   static async updateSettings(data: {
     store_name: string;
     contact_email?: string | null;

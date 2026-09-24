@@ -5,6 +5,8 @@ export interface StoreSettings {
   contact_phone: string | null;
   address: string | null;
   gst_number: string | null;
+  /** Show prices/cart/buy inside the Android app (see migration 025). */
+  app_commerce_enabled: boolean;
   updated_at: string;
 }
 

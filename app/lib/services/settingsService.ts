@@ -8,6 +8,7 @@ const DEFAULT_SETTINGS: StoreSettings = {
   contact_phone: null,
   address: null,
   gst_number: null,
+  app_commerce_enabled: false,
   updated_at: new Date().toISOString(),
 };
 
@@ -18,6 +19,34 @@ export class SettingsService {
     // Falls back to sane defaults if the migration hasn't been run yet,
     // rather than crashing the Settings page.
     return settings ?? DEFAULT_SETTINGS;
+  }
+
+  /**
+   * Whether the Android app may show prices and sell. Read on every
+   * page render (root layout); any failure means read-only, the safe
+   * side for Play Store policy.
+   */
+  static async isAppCommerceEnabled(): Promise<boolean> {
+    try {
+      const settings = await SettingsRepository.getSettings();
+      return settings?.app_commerce_enabled === true;
+    } catch {
+      return false;
+    }
+  }
+
+  static async setAppCommerceEnabled(enabled: boolean) {
+    const updated = await SettingsRepository.setAppCommerceEnabled(enabled);
+
+    if (!updated) {
+      throw new Error("Settings row not found.");
+    }
+
+    console.log(
+      `[settings] in-app buying ${enabled ? "ENABLED" : "disabled"} for the Android app`
+    );
+
+    return updated.app_commerce_enabled as boolean;
   }
 
   static async updateSettings(

@@ -9,6 +9,7 @@ import ServiceWorkerRegister from "./components/layout/ServiceWorkerRegister";
 import ReconcileOnResume from "./components/offline/ReconcileOnResume";
 import AppModeGuard from "./components/native/AppModeGuard";
 import { AnnouncementService } from "./lib/services/announcementService";
+import { SettingsService } from "./lib/services/settingsService";
 
 // Update NEXT_PUBLIC_SITE_URL in your .env once the real domain is live —
 // everything below (canonical URL, OG image URL) resolves against this.
@@ -78,6 +79,9 @@ export const dynamic = "force-dynamic";
 // Capacitor injects its bridge ahead of page scripts, so this inline
 // script can flag <html data-app> before first paint and CSS
 // ([data-web-only], see layout.css) hides commerce UI with no flash.
+// The admin can switch in-app buying on (Settings → Android app): the
+// script is then left out and <html data-app-commerce> tells client code
+// (isReadOnlyApp) to behave like the website.
 const APP_MODE_SCRIPT = `try{if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()){document.documentElement.setAttribute("data-app","")}}catch(e){}`;
 
 export default async function RootLayout({
@@ -88,14 +92,22 @@ export default async function RootLayout({
   const announcements =
     await AnnouncementService.getActive();
 
+  const appCommerce = await SettingsService.isAppCommerceEnabled();
+
   return (
     // suppressHydrationWarning: APP_MODE_SCRIPT sets data-app on <html>
     // before React hydrates, which React would otherwise flag.
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      data-app-commerce={appCommerce ? "" : undefined}
+    >
       <head>
-        <script
-          dangerouslySetInnerHTML={{ __html: APP_MODE_SCRIPT }}
-        />
+        {!appCommerce && (
+          <script
+            dangerouslySetInnerHTML={{ __html: APP_MODE_SCRIPT }}
+          />
+        )}
       </head>
       <body>
         <Providers>

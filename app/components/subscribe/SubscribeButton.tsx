@@ -6,7 +6,7 @@ import { useState } from "react";
 import Spinner from "@/app/components/ui/Spinner";
 import { useToast } from "@/app/context/ToastContext";
 import { openRazorpayCheckout } from "@/app/lib/razorpayClient";
-import { useIsNativeApp } from "@/app/lib/offline/useNative";
+import { useIsReadOnlyApp } from "@/app/lib/offline/appMode";
 
 export default function SubscribeButton({
   planId,
@@ -15,7 +15,7 @@ export default function SubscribeButton({
 }) {
   const router = useRouter();
   const { showToast } = useToast();
-  const native = useIsNativeApp();
+  const readOnlyApp = useIsReadOnlyApp();
 
   const [loading, setLoading] = useState(false);
 
@@ -162,7 +162,7 @@ export default function SubscribeButton({
     }
   }
 
-  if (native) {
+  if (readOnlyApp) {
     return null;
   }
 
