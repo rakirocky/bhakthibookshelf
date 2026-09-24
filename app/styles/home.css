@@ -440,3 +440,43 @@
 }
 
 }
+/* About page: warm parchment instead of a plain white card — saffron
+   glow at the top, faint lotus mandalas behind the Kannada and English
+   text, and a thin double gold rule. */
+.about-sacred {
+  background:
+    url("/images/mandala.svg") center 22% / min(620px, 92%) no-repeat,
+    url("/images/mandala.svg") center 74% / min(620px, 92%) no-repeat,
+    radial-gradient(ellipse 80% 30% at 50% 0%, rgba(245, 158, 11, 0.18), transparent 70%),
+    linear-gradient(180deg, #fffbf1 0%, #fdf2dc 55%, #fbe8c4 100%);
+  border: 1px solid rgba(217, 119, 6, 0.45);
+  box-shadow:
+    0 20px 60px rgba(124, 45, 18, 0.16),
+    inset 0 0 0 7px #fffbf1,
+    inset 0 0 0 8px rgba(217, 119, 6, 0.3);
+}
+
+.about-sacred h2 {
+  color: #7c2d12;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.about-sacred h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 64px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #d97706, rgba(217, 119, 6, 0));
+}
+
+.about-sacred p {
+  color: #3f2f24;
+}
+
+.about-sacred hr {
+  border-top-color: rgba(217, 119, 6, 0.35) !important;
+}

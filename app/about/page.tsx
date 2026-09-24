@@ -86,16 +86,14 @@ export default function AboutPage() {
 
         {/* ===== Content — card pulled up over the hero for depth ===== */}
         <section
-          className="content-section"
+          className="content-section about-sacred"
           style={{
             maxWidth: 780,
             margin: "-50px auto 60px",
             padding: "0 20px",
             position: "relative",
             lineHeight: 1.9,
-            background: "var(--color-white)",
             borderRadius: 16,
-            boxShadow: "0 20px 60px rgba(0,0,0,.12)",
           }}
         >
           <div style={{ padding: "40px 30px 10px" }}>

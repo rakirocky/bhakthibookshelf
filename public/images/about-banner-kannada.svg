@@ -56,8 +56,8 @@
   <text x="600" y="270" font-family="Noto Sans Kannada, Noto Sans, Arial, sans-serif" font-size="22" fill="#92400E" text-anchor="middle">ಭಕ್ತಿ ಸಾಹಿತ್ಯದ ಮನೆ</text>
 
   <!-- quote -->
-  <text x="600" y="340" font-family="Noto Sans Kannada, Noto Sans, Arial, sans-serif" font-size="24" fill="#57534E" text-anchor="middle" font-style="italic">"ಭಕ್ತಿಯಲ್ಲಿದೆ ಅದಮ್ಯ ಶಕ್ತಿ,</text>
-  <text x="600" y="378" font-family="Noto Sans Kannada, Noto Sans, Arial, sans-serif" font-size="24" fill="#57534E" text-anchor="middle" font-style="italic">ಇದರಿಂದ ಸಿಗುವುದು ಮನಃ ಶಾಂತಿ..."</text>
+  <text x="600" y="352" font-family="Noto Sans Kannada, Noto Sans, Arial, sans-serif" font-size="34" font-weight="600" fill="#7C2D12" text-anchor="middle" font-style="italic">"ಭಕ್ತಿಯಲ್ಲಿದೆ ಅದಮ್ಯ ಶಕ್ತಿ,</text>
+  <text x="600" y="400" font-family="Noto Sans Kannada, Noto Sans, Arial, sans-serif" font-size="34" font-weight="600" fill="#7C2D12" text-anchor="middle" font-style="italic">ಇದರಿಂದ ಸಿಗುವುದು ಮನಃ ಶಾಂತಿ..."</text>
 
   <!-- bottom divider -->
   <line x1="450" y1="430" x2="750" y2="430" stroke="#D97706" stroke-width="1.5"/>
