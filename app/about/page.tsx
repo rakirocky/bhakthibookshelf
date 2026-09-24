@@ -103,7 +103,7 @@ export default function AboutPage() {
               src="/images/about-banner-kannada.svg"
               alt=""
               width={1200}
-              height={500}
+              height={560}
               style={{
                 width: "100%",
                 height: "auto",
@@ -168,7 +168,7 @@ export default function AboutPage() {
               src="/images/about-banner-english.svg"
               alt=""
               width={1200}
-              height={500}
+              height={560}
               style={{
                 width: "100%",
                 height: "auto",
