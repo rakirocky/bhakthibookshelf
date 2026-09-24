@@ -1,0 +1,242 @@
+/* ==================================================================
+   MODERNISATION SPRINT (2026-09-25)
+   1. typography  · 7. 3D book covers  · 6. page transitions + image
+   shimmer  · 10. lighter temple frame inside the Android app
+   ================================================================== */
+
+/* ---------- 1. Typography (fonts loaded in app/layout.tsx) ---------- */
+body {
+  font-family: var(--font-body), var(--font-body-kn), Arial, Helvetica, sans-serif;
+}
+
+/* Form controls don't inherit fonts by default — keep buttons/inputs in
+   the site font instead of the browser's Arial. */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* Marcellus has a single weight; don't let the browser fake-bold it
+   (Kannada falls back to Noto Serif Kannada 600). */
+.temple-frame__content :is(h1, h2, h3),
+.brand h2,
+.footer :is(h2, h3) {
+  font-family: var(--font-heading), var(--font-heading-kn), Georgia, serif;
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: 0.01em;
+}
+
+.temple-frame__content h1 {
+  line-height: 1.15;
+}
+
+/* The brand name reads better a touch larger in Marcellus (desktop
+   only — on phones it must stay on one line next to the logo) */
+@media (min-width: 861px) {
+  .brand h2 {
+    font-size: 30px;
+  }
+}
+
+/* ---------- 7. 3D book covers ---------- */
+.book-card > a {
+  display: block;
+  perspective: 1200px;
+}
+
+.book-card .book-image {
+  transform-origin: left center;
+  border-radius: 4px 12px 12px 4px;
+  /* stacked page edges on the right + a soft drop shadow */
+  box-shadow:
+    3px 1px 0 -1px #fbf5e8,
+    4px 1px 0 -1px #d9cbb0,
+    6px 2px 0 -2px #fbf5e8,
+    7px 2px 0 -2px #d9cbb0,
+    0 16px 28px rgba(60, 30, 10, 0.22);
+  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.55s;
+}
+
+/* spine: a shaded band down the left edge */
+.book-card .book-image::after,
+.hero-slide-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 7%;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.38) 0%,
+    rgba(255, 255, 255, 0.2) 45%,
+    rgba(0, 0, 0, 0.12) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.book-card .book-badge {
+  z-index: 2;
+}
+
+.book-card:hover .book-image {
+  transform: rotateY(-18deg) translateX(4px);
+  box-shadow:
+    3px 1px 0 -1px #fbf5e8,
+    4px 1px 0 -1px #d9cbb0,
+    6px 2px 0 -2px #fbf5e8,
+    7px 2px 0 -2px #d9cbb0,
+    18px 22px 36px rgba(60, 30, 10, 0.3);
+}
+
+/* the old zoom-on-hover fights the turn — the book turns instead */
+.book-card:hover .book-cover-image {
+  transform: none;
+}
+
+.hero-slide-cover {
+  border-radius: 4px 16px 16px 4px;
+}
+
+/* Book page: the cover stands slightly turned, straightens on hover.
+   The box sizes to the image (it had a fixed height shorter than the
+   cover, so on phones the cover hung over the book title). */
+.book-cover {
+  height: auto;
+  background: none;
+  box-shadow: none;
+  perspective: 1400px;
+}
+
+.book-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.book-cover img {
+  border-radius: 3px 10px 10px 3px;
+  transform: rotateY(-12deg);
+  transform-origin: left center;
+  box-shadow:
+    4px 1px 0 -1px #fbf5e8,
+    5px 1px 0 -1px #d9cbb0,
+    8px 2px 0 -2px #fbf5e8,
+    9px 2px 0 -2px #d9cbb0,
+    22px 26px 44px rgba(60, 30, 10, 0.3);
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.book-cover:hover img {
+  transform: rotateY(0deg);
+}
+
+/* ---------- 6. Page transitions + image shimmer ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* each client-side navigation mounts new page content → it glides in */
+  .temple-frame__content > * {
+    animation: page-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+}
+
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* a soft gold shimmer shows behind covers until the image paints (a
+   few cycles only — it's hidden behind a loaded cover, so it shouldn't
+   keep repainting and draining phone batteries) */
+.book-card .book-image,
+.hero-slide-cover,
+.skeleton {
+  background: linear-gradient(100deg, #f6ead3 30%, #fdf6e7 50%, #f6ead3 70%);
+  background-size: 300% 100%;
+  animation: shimmer 1.4s linear 4;
+}
+
+.skeleton {
+  animation-iteration-count: infinite;
+}
+
+@keyframes shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book-card .book-image,
+  .hero-slide-cover,
+  .skeleton {
+    animation: none;
+  }
+
+  .book-card .book-image,
+  .book-cover img {
+    transition: none;
+  }
+}
+
+/* Skeleton pages (loading.tsx) */
+.skeleton-page {
+  max-width: 1300px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 40px 0 60px;
+}
+
+.skeleton {
+  border-radius: 12px;
+}
+
+.skeleton-title {
+  width: 260px;
+  max-width: 70%;
+  height: 40px;
+  margin: 0 auto 14px;
+}
+
+.skeleton-line {
+  width: 420px;
+  max-width: 90%;
+  height: 16px;
+  margin: 0 auto 40px;
+}
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 28px;
+}
+
+.skeleton-card {
+  height: 400px;
+  border-radius: 20px;
+}
+
+.skeleton-book {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.skeleton-book .skeleton-cover {
+  width: 300px;
+  max-width: 100%;
+  height: 430px;
+}
+
+.skeleton-book .skeleton-lines {
+  flex: 1;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ---------- 10. Lighter temple frame inside the Android app ---------- */
+html[data-native] .temple-frame {
+  --tf-s: 0.2;
+}

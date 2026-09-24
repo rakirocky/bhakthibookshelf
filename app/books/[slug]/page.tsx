@@ -8,6 +8,7 @@ import {
 } from "@/app/lib/services/book-service";
 
 import { fileUrl } from "@/app/lib/upload/fileUrl";
+import ShareBook from "@/app/components/details/ShareBook";
 import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
 import { AccessService } from "@/app/lib/services/accessService";
 import { getLanguagePreference } from "@/app/lib/language";
@@ -46,7 +47,6 @@ export async function generateMetadata(
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 300);
-  const cover = fileUrl(book.cover_image);
 
   return {
     title,
@@ -57,13 +57,12 @@ export async function generateMetadata(
       description,
       url: `/books/${book.slug}`,
       type: "article",
-      ...(cover ? { images: [{ url: cover, alt: book.title }] } : {}),
+      // image: ./opengraph-image.tsx (1200x630 preview card)
     },
     twitter: {
-      card: cover ? "summary_large_image" : "summary",
+      card: "summary_large_image",
       title,
       description,
-      ...(cover ? { images: [cover] } : {}),
     },
   };
 }
@@ -121,10 +120,12 @@ export default async function BookDetailsPage({
 
           <BookInfo book={book} />
 
-	  <BookActions
-             book={book}
-             hasAccess={hasAccess}
-          />		
+          <BookActions
+            book={book}
+            hasAccess={hasAccess}
+          />
+
+          <ShareBook title={book.title} slug={book.slug} />
 
         </div>
 

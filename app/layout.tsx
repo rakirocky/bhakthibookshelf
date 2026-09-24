@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Marcellus, Noto_Sans, Noto_Sans_Kannada, Noto_Serif_Kannada } from "next/font/google";
 import "./styles/globals.css";
 
 import Providers from "./providers";
@@ -81,9 +82,22 @@ export const dynamic = "force-dynamic";
 // script can flag <html data-app> before first paint and CSS
 // ([data-web-only], see layout.css) hides commerce UI with no flash.
 // The admin can switch in-app buying on (Settings → Android app): the
-// script is then left out and <html data-app-commerce> tells client code
-// (isReadOnlyApp) to behave like the website.
-const APP_MODE_SCRIPT = `try{if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()){document.documentElement.setAttribute("data-app","")}}catch(e){}`;
+// server then marks <html data-app-commerce>, the script skips data-app,
+// and client code (isReadOnlyApp) behaves like the website.
+// Also always marks <html data-native> inside the app (buying on or off),
+// e.g. for the lighter temple frame on small app screens.
+const APP_MODE_SCRIPT = `try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform()){var d=document.documentElement;d.setAttribute("data-native","");if(!d.hasAttribute("data-app-commerce"))d.setAttribute("data-app","")}}catch(e){}`;
+
+// Site typography (self-hosted by next/font): Marcellus headings, Noto
+// Sans body; the Kannada Noto faces are listed after them in each stack
+// so Kannada text falls back to a matching, properly shaped font.
+const headingFont = Marcellus({ subsets: ["latin"], weight: "400", variable: "--font-heading" });
+const bodyFont = Noto_Sans({ subsets: ["latin"], variable: "--font-body" });
+const bodyFontKn = Noto_Sans_Kannada({ subsets: ["kannada"], variable: "--font-body-kn" });
+const headingFontKn = Noto_Serif_Kannada({ subsets: ["kannada"], weight: ["600"], variable: "--font-heading-kn" });
+const fontVariables = [headingFont, bodyFont, bodyFontKn, headingFontKn]
+  .map((f) => f.variable)
+  .join(" ");
 
 export default async function RootLayout({
   children,
@@ -100,15 +114,14 @@ export default async function RootLayout({
     // before React hydrates, which React would otherwise flag.
     <html
       lang="en"
+      className={fontVariables}
       suppressHydrationWarning
       data-app-commerce={appCommerce ? "" : undefined}
     >
       <head>
-        {!appCommerce && (
-          <script
-            dangerouslySetInnerHTML={{ __html: APP_MODE_SCRIPT }}
-          />
-        )}
+        <script
+          dangerouslySetInnerHTML={{ __html: APP_MODE_SCRIPT }}
+        />
       </head>
       <body>
         <Providers>

@@ -247,3 +247,50 @@
 }
 
 }
+/* Book page share row (ShareBook.tsx) */
+.share-book {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.share-book__label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.share-book__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-white);
+  color: var(--color-text-strong);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.share-book__btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary);
+}
+
+.share-book__btn--whatsapp {
+  background: #25d366;
+  border-color: #25d366;
+  color: #fff;
+}
+
+.share-book__btn--whatsapp:hover {
+  background: #1ebe5b;
+  border-color: #1ebe5b;
+}
