@@ -218,7 +218,7 @@ export default function AboutPage() {
             May all of you encourage and co-operate with us in this
             effort.
             <br />
-            Thank you.
+            Thank you
           </p>
           </div>
         </section>
