@@ -2,6 +2,7 @@ import Button from "../ui/Button";
 import Container from "../ui/Container";
 import FeatureItem from "../ui/FeatureItem";
 import HeroBookshelf from "./HeroBookshelf";
+import LanguageComingSoon from "./LanguageComingSoon";
 
 import { getAllBooks } from "../../lib/services/book-service";
 import { getLanguagePreference } from "../../lib/language";
@@ -44,7 +45,13 @@ export default async function Hero() {
           </div>
 
           <div className="hero-right">
-            <HeroBookshelf books={heroBooks} />
+            {heroBooks.length > 0 ? (
+              // key: remount on a language switch so the slider starts
+              // from the first cover of the new list, not a stale index.
+              <HeroBookshelf key={language} books={heroBooks} />
+            ) : (
+              <LanguageComingSoon language={language} />
+            )}
           </div>
 
           <div className="hero-left">

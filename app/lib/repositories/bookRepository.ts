@@ -2,13 +2,23 @@ import "server-only";
 
 import { db } from "../db/db";
 
+// Match a language however it was typed ("English", "en", "ENGLISH ")
+// so a stray value can't silently drop a book from the language filter
+// (migration 026 normalized the existing rows).
+function languageAliases(language: string): string[] {
+  const l = language.trim().toLowerCase();
+  if (l === "english" || l === "en") return ["english", "en", "eng"];
+  if (l === "kannada" || l === "kn") return ["kannada", "kn", "kan"];
+  return [l];
+}
+
 export async function findAllBooks(language?: string) {
-  const params: string[] = [];
+  const params: string[][] = [];
   let whereClause = "WHERE published=true";
 
   if (language && language !== "all") {
-    params.push(language);
-    whereClause += ` AND language=$${params.length}`;
+    params.push(languageAliases(language));
+    whereClause += " AND lower(trim(language)) = ANY($1::text[])";
   }
 
   const { rows } = await db.query(
@@ -25,12 +35,12 @@ export async function findAllBooks(language?: string) {
 }
 
 export async function findFeaturedBooks(language?: string) {
-  const params: string[] = [];
+  const params: string[][] = [];
   let whereClause = "WHERE featured=true AND published=true";
 
   if (language && language !== "all") {
-    params.push(language);
-    whereClause += ` AND language=$${params.length}`;
+    params.push(languageAliases(language));
+    whereClause += " AND lower(trim(language)) = ANY($1::text[])";
   }
 
   const { rows } = await db.query(
