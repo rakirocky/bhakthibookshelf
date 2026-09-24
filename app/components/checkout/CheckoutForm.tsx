@@ -187,6 +187,13 @@ export default function CheckoutForm() {
       const data =
         await response.json();
 
+      if (response.status === 401) {
+        // Stale/superseded login — send them to sign in before any
+        // payment starts; the login page brings them back here.
+        router.push("/account/login?from=/checkout");
+        return;
+      }
+
       if (!data.success) {
         alert(data.message);
         return;

@@ -44,11 +44,25 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    // customerId will always be set in practice, since /checkout and
-    // /api/orders both require a valid session (see proxy.ts) — this
-    // fallback to null just means "no order can exist without an
-    // account to check it against," not that it currently happens.
-    const customerId = preAuthSession?.customerId ?? null;
+    // proxy.ts only checks that the JWT is well-formed — it can't see
+    // that a newer login has superseded it (single-session, migration
+    // 024). getCustomerSession() is the authoritative check, so refuse
+    // here rather than create an account-less order: that order could
+    // still be paid, but would never show up in anyone's library, and
+    // verify-payment would 401 right after the money was taken.
+    if (!preAuthSession) {
+      return NextResponse.json(
+        {
+          success: false,
+          code: "SESSION_EXPIRED",
+          message:
+            "Your session has expired. Please sign in again to complete your purchase.",
+        },
+        { status: 401 }
+      );
+    }
+
+    const customerId = preAuthSession.customerId;
 
     // The account's own durable referral binding (set at signup/login,
     // see PromoterService.attributeCustomerReferral) is the primary

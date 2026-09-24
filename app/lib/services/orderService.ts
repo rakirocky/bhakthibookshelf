@@ -1,4 +1,5 @@
 import { OrderRepository } from "../repositories/orderRepository";
+import { sendPaymentConfirmationEmail } from "./orderEmailService";
 import {
   CreateOrderRequest,
   ORDER_STATUSES,
@@ -129,7 +130,35 @@ static async getDashboardRecentOrders() {
       throw new Error("Order not found");
     }
 
+    if (updated.previous_payment_status !== "PAID") {
+      // Fire-and-forget: the payment is already recorded, and a mail
+      // hiccup must never turn a successful payment into an error for
+      // the customer (admin can resend from the order page).
+      void OrderService.sendConfirmationEmail(id);
+    }
+
     return updated;
+  }
+
+  private static async sendConfirmationEmail(id: number) {
+    try {
+      const order = await OrderService.getOrderDetail(id);
+
+      if (!order?.email) {
+        return;
+      }
+
+      await sendPaymentConfirmationEmail(order);
+
+      console.log(
+        `[order-paid] confirmation email sent to ${order.email} for order ${order.order_number}`
+      );
+    } catch (error) {
+      console.error(
+        `[order-paid] confirmation email FAILED for order id ${id}:`,
+        error
+      );
+    }
   }
 
   static async getByRazorpayOrderId(

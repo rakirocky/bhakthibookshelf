@@ -285,7 +285,14 @@ export class OrderRepository {
     }
   ) {
     const { rows } = await db.query(
+      // The FOR UPDATE lock makes the webhook and client-side verify
+      // (which can race) serialize here, so exactly one of them sees
+      // previous_payment_status <> 'PAID' — used to fire the
+      // confirmation email once, not twice.
       `
+      WITH prev AS (
+        SELECT payment_status FROM orders WHERE id = $1 FOR UPDATE
+      )
       UPDATE orders
       SET
         payment_status = 'PAID',
@@ -294,7 +301,8 @@ export class OrderRepository {
         payment_method = $3,
         updated_at = CURRENT_TIMESTAMP
       WHERE id = $1
-      RETURNING id, order_number, payment_status, order_status
+      RETURNING id, order_number, payment_status, order_status,
+        (SELECT payment_status FROM prev) AS previous_payment_status
       `,
       [
         id,
