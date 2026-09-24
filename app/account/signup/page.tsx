@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useState } from "react";
 
 import Spinner from "@/app/components/ui/Spinner";
 import { readReferralCookie } from "@/app/lib/referral/readReferralCookie";
+import { safeReturnPath } from "@/app/lib/auth/safeReturnPath";
 
 function noticeForPath(from: string | null): string | null {
   if (!from) {
@@ -20,7 +21,6 @@ function noticeForPath(from: string | null): string | null {
 }
 
 function SignupForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const from = searchParams.get("from");
@@ -76,8 +76,8 @@ function SignupForm() {
         );
       }
 
-      router.push(from ?? "/account");
-      router.refresh();
+      // Full page load — see the matching comment in account/login.
+      window.location.assign(safeReturnPath(from));
     } catch (err) {
       setError(
         err instanceof Error

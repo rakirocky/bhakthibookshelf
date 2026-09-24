@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useState } from "react";
 
 import Spinner from "@/app/components/ui/Spinner";
 import { readReferralCookie } from "@/app/lib/referral/readReferralCookie";
+import { safeReturnPath } from "@/app/lib/auth/safeReturnPath";
 
 function noticeForPath(from: string | null): string | null {
   if (!from) {
@@ -20,7 +21,6 @@ function noticeForPath(from: string | null): string | null {
 }
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const from = searchParams.get("from");
@@ -84,8 +84,11 @@ function LoginForm() {
         );
       }
 
-      router.push(from ?? "/account");
-      router.refresh();
+      // Full page load, not router.push: the client router may still
+      // hold a signed-out prefetch of the target (e.g. /account's
+      // redirect to /account/required) and would replay it, landing a
+      // just-signed-in customer on "Sign In Required".
+      window.location.assign(safeReturnPath(from));
     } catch (err) {
       setError(
         err instanceof Error
