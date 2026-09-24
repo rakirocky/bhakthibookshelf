@@ -472,3 +472,111 @@
     height:34px;
 }
 }
+
+/* ==========================================
+   HOME — SPIRITUAL THEME (trial; scoped to .home-sacred on app/page.tsx)
+   Parchment + saffron tones, lotus mandalas, lotus dividers under
+   headings, a saffron-to-maroon "promise" band.
+========================================== */
+
+/* Hero: sunrise glow + a large faint mandala behind the book slider */
+.home-sacred .hero {
+  background:
+    url("/images/mandala.svg") center 72% / min(760px, 120%) no-repeat,
+    radial-gradient(ellipse 55% 40% at 50% 68%, rgba(245, 158, 11, 0.28), transparent 70%),
+    radial-gradient(ellipse 90% 35% at 50% 0%, rgba(253, 230, 138, 0.35), transparent 70%),
+    linear-gradient(180deg, #fffaf0 0%, #fdf0d5 100%);
+}
+
+.home-sacred .hero-tag {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(217, 119, 6, 0.35);
+}
+
+/* Section headings: maroon with a lotus divider */
+.home-sacred .section-header h2,
+.home-sacred .newsletter h2 {
+  color: #7c2d12;
+}
+
+.home-sacred .section-header h2::after,
+.home-sacred .newsletter h2::after {
+  content: "";
+  display: block;
+  width: 220px;
+  max-width: 70%;
+  height: 28px;
+  margin: 14px auto 0;
+  background: url("/images/lotus-divider.svg") center / contain no-repeat;
+}
+
+/* Featured Books: parchment band, mandalas peeking in from the corners */
+.home-sacred .featured-books {
+  background:
+    url("/images/mandala.svg") -180px -120px / 520px no-repeat,
+    url("/images/mandala.svg") calc(100% + 180px) calc(100% + 120px) / 520px no-repeat,
+    linear-gradient(180deg, #fdf0d5 0%, #fffaf0 100%);
+}
+
+.home-sacred .book-card {
+  border: 1px solid rgba(217, 119, 6, 0.22);
+  box-shadow: 0 12px 30px rgba(124, 45, 18, 0.1);
+}
+
+/* Our Promise: saffron-to-maroon band with cream, gold-edged cards */
+.home-sacred .statistics {
+  background:
+    url("/images/mandala.svg") center / 900px no-repeat,
+    linear-gradient(135deg, #7c2d12 0%, #9a3412 45%, #b45309 100%);
+}
+
+.home-sacred .statistics .section-header h2 {
+  color: #fde68a;
+}
+
+.home-sacred .statistics .section-header p {
+  color: rgba(255, 244, 222, 0.88);
+}
+
+.home-sacred .stat-card {
+  background: linear-gradient(180deg, #fffbf1, #fdf0d5);
+  border: 1px solid rgba(253, 230, 138, 0.9);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.25);
+}
+
+.home-sacred .stat-card h2 {
+  color: #7c2d12;
+}
+
+/* Why choose us: faint temple pattern, cards with a gold top edge */
+.home-sacred .why-choose {
+  background:
+    url("/images/temple-pattern.svg") repeat,
+    linear-gradient(180deg, #fffaf0 0%, #fdf2dc 100%);
+}
+
+.home-sacred .why-card {
+  background: linear-gradient(180deg, #ffffff, #fffaf0);
+  border-top: 3px solid #d97706;
+  box-shadow: 0 12px 30px rgba(124, 45, 18, 0.1);
+}
+
+/* Newsletter: parchment card with a double gold rule */
+.home-sacred .newsletter {
+  background: linear-gradient(180deg, #fdf2dc 0%, #fffaf0 100%);
+}
+
+.home-sacred .newsletter > .container {
+  max-width: 900px;
+  padding: 50px 30px;
+  border-radius: 18px;
+  background:
+    url("/images/mandala.svg") center / 520px no-repeat,
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245, 158, 11, 0.16), transparent 70%),
+    #fffbf1;
+  border: 1px solid rgba(217, 119, 6, 0.45);
+  box-shadow:
+    0 20px 50px rgba(124, 45, 18, 0.12),
+    inset 0 0 0 7px #fffbf1,
+    inset 0 0 0 8px rgba(217, 119, 6, 0.3);
+}

@@ -14,15 +14,19 @@ export default function Home() {
   return (
    <>
 
-  <Hero />
+  {/* home-sacred: spiritual theme (home.css) — trial on the home page
+      before rolling it out to other pages. */}
+  <div className="home-sacred">
+    <Hero />
 
-  <FeaturedBooks />
+    <FeaturedBooks />
 
-  <Statistics />
+    <Statistics />
 
-  <WhyChooseUs />
+    <WhyChooseUs />
 
-  <Newsletter />
+    <Newsletter />
+  </div>
 
   <Footer />
 </>
