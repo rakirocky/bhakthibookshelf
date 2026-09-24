@@ -14,7 +14,6 @@ export default function CartItem({
   item,
 }: Props) {
   const {
-    updateQuantity,
     removeItem,
   } = useCart();
 
@@ -57,36 +56,6 @@ export default function CartItem({
             flexWrap: "wrap",
           }}
         >
-          <button
-            type="button"
-            className="qty-btn"
-            onClick={() =>
-              updateQuantity(
-                item.id,
-                item.quantity - 1
-              )
-            }
-          >
-            -
-          </button>
-
-          <strong>
-            {item.quantity}
-          </strong>
-
-          <button
-            type="button"
-            className="qty-btn"
-            onClick={() =>
-              updateQuantity(
-                item.id,
-                item.quantity + 1
-              )
-            }
-          >
-            +
-          </button>
-
           <button
             type="button"
             className="btn-danger-text"

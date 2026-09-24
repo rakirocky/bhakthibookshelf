@@ -257,3 +257,22 @@ export async function deleteBook(id: number) {
     [id]
   );
 }
+
+// The price actually charged for each published book — orders must
+// be priced from this, never from what the browser sends.
+export async function getPurchasablePrices(ids: number[]) {
+  const { rows } = await db.query(
+    `
+    SELECT id, title, COALESCE(discount_price, price)::numeric AS price
+    FROM books
+    WHERE published = true AND id = ANY($1::int[]);
+    `,
+    [ids]
+  );
+
+  return rows.map((r: { id: number; title: string; price: string }) => ({
+    id: r.id,
+    title: r.title,
+    price: Number(r.price),
+  }));
+}

@@ -135,7 +135,7 @@ export async function POST(request: Request) {
 
     try {
       razorpayOrder = await RazorpayService.createOrder({
-        amountInRupees: body.total_amount,
+        amountInRupees: order.totalAmount,
         receipt: order.orderNumber,
         notes: {
           order_id: String(order.id),

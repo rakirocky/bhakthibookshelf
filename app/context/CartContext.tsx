@@ -50,9 +50,11 @@ export function CartProvider({
 
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
+        const parsed: CartItem[] = JSON.parse(saved);
+        // Carts saved before ebooks were capped at one copy may hold
+        // quantity > 1 — normalize so the shown total matches the charge.
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setItems(parsed);
+        setItems(parsed.map((x) => ({ ...x, quantity: 1 })));
       } catch {
         /* corrupt cart JSON — ignore, start empty */
       }
@@ -72,15 +74,9 @@ export function CartProvider({
         (x) => x.id === item.id
       );
 
+      // Ebooks are one copy each — adding again is a no-op.
       if (existing) {
-        return prev.map((x) =>
-          x.id === item.id
-            ? {
-                ...x,
-                quantity: x.quantity + 1,
-              }
-            : x
-        );
+        return prev;
       }
 
       return [

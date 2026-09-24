@@ -1,4 +1,5 @@
 import { OrderRepository } from "../repositories/orderRepository";
+import { getPurchasablePrices } from "../repositories/bookRepository";
 import { sendPaymentConfirmationEmail } from "./orderEmailService";
 import {
   CreateOrderRequest,
@@ -28,11 +29,56 @@ export class OrderService {
       throw new Error("Mobile number is required");
     }
 
-    return await OrderRepository.createOrder(
-      order,
+    // Price from the database, never from the request: the browser's
+    // price/total/quantity are ignored, so an edited request can't buy
+    // a book for less. Ebooks are one copy each, so duplicates collapse
+    // to quantity 1 (a double-clicked "Buy" used to charge twice).
+    const bookIds = [
+      ...new Set(order.items.map((i) => Number(i.book_id))),
+    ];
+
+    if (bookIds.some((id) => !Number.isInteger(id) || id <= 0)) {
+      throw new Error("Invalid book in cart");
+    }
+
+    const books = await getPurchasablePrices(bookIds);
+
+    if (books.length !== bookIds.length) {
+      throw new Error(
+        "One or more books in your cart are no longer available. Please remove them and try again."
+      );
+    }
+
+    if (customerId) {
+      for (const book of books) {
+        if (
+          await OrderRepository.hasCustomerPurchasedBook(
+            customerId,
+            book.id
+          )
+        ) {
+          throw new Error(
+            `You already own "${book.title}" — remove it from your cart. It's in your library.`
+          );
+        }
+      }
+    }
+
+    const items = books.map((b) => ({
+      book_id: b.id,
+      quantity: 1,
+      price: b.price,
+    }));
+
+    const totalAmount = items.reduce((sum, i) => sum + i.price, 0);
+
+    const created = await OrderRepository.createOrder(
+      { ...order, items, total_amount: totalAmount },
       promoterId,
       customerId
     );
+
+    return { ...created, totalAmount };
   }
 
   static async getDashboardOrderCount() {
