@@ -169,6 +169,16 @@ static async getDashboardRecentOrders() {
     );
   }
 
+  static async getCustomerOrderStatus(
+    orderNumber: string,
+    customerId: number
+  ) {
+    return OrderRepository.getCustomerOrderStatus(
+      orderNumber,
+      customerId
+    );
+  }
+
   static async getPurchasedBooksForCustomer(
     customerId: number
   ) {

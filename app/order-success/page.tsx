@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Container from "../components/ui/Container";
+import { getCustomerSession } from "../lib/auth/getCustomerSession";
+import { OrderService } from "../lib/services/orderService";
 
 type Props = {
   searchParams: Promise<{
@@ -14,6 +16,21 @@ export default async function OrderSuccessPage({
 
   const order = params.order ?? "";
 
+  // Read the real status (the webhook or verify-payment has usually
+  // marked it PAID by the time we land here). Scoped to the signed-in
+  // customer so an order number in the URL reveals nothing on its own.
+  const session = await getCustomerSession();
+
+  const record =
+    session && order
+      ? await OrderService.getCustomerOrderStatus(
+          order,
+          session.customerId
+        )
+      : null;
+
+  const paid = record?.payment_status === "PAID";
+
   return (
     <Container>
       <div
@@ -24,7 +41,11 @@ export default async function OrderSuccessPage({
       >
         <h1>🎉 Thank You</h1>
 
-        <p>Your order has been created successfully.</p>
+        <p>
+          {paid
+            ? "Your payment was successful."
+            : "Your order has been created successfully."}
+        </p>
 
         <h2
           style={{
@@ -38,15 +59,41 @@ export default async function OrderSuccessPage({
 
         <p>
           Payment Status:
-          <strong> Pending</strong>
+          <strong> {paid ? "Paid" : "Pending"}</strong>
         </p>
 
-        <Link
-          href="/books"
-          className="book-button"
+        {paid && (
+          <p>
+            Your books are ready in Downloads. A payment
+            confirmation and invoice has been emailed to you.
+          </p>
+        )}
+
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            justifyContent: "center",
+            flexWrap: "wrap",
+            marginTop: 20,
+          }}
         >
-          Continue Shopping
-        </Link>
+          {paid && (
+            <Link
+              href="/downloads"
+              className="book-button"
+            >
+              Go to Downloads
+            </Link>
+          )}
+
+          <Link
+            href="/books"
+            className="book-button"
+          >
+            Continue Shopping
+          </Link>
+        </div>
       </div>
     </Container>
   );

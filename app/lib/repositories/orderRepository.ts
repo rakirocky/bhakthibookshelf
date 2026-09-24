@@ -331,6 +331,19 @@ export class OrderRepository {
     return rows[0] ?? null;
   }
 
+  static async getCustomerOrderStatus(
+    orderNumber: string,
+    customerId: number
+  ) {
+    const { rows } = await db.query(
+      `SELECT order_number, payment_status FROM orders
+       WHERE order_number = $1 AND customer_id = $2`,
+      [orderNumber, customerId]
+    );
+
+    return rows[0] ?? null;
+  }
+
   static async hasCustomerPurchasedBook(
     customerId: number,
     bookId: number
