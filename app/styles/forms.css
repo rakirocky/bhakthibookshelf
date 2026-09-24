@@ -51,3 +51,34 @@
 }
 
 }
+/* Checkout form: labels above full-width fields */
+.checkout-form label {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: var(--color-text-strong);
+}
+
+.checkout-form input,
+.checkout-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border-input);
+  border-radius: 10px;
+  background: var(--color-white);
+  font: inherit;
+  color: var(--color-text);
+}
+
+.checkout-form textarea {
+  resize: vertical;
+}
+
+.checkout-form input:focus,
+.checkout-form textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.18);
+}

@@ -1,0 +1,86 @@
+/* ==================================================================
+   SITE-WIDE SPIRITUAL THEME (owner chose the home page's .home-sacred
+   look, 2026-09-25, and asked for it on every page).
+
+   Scoped to .temple-frame (TempleFrame.tsx), i.e. every customer page
+   except /admin and /reader. Mostly done by re-pointing the design
+   tokens inside the frame — cards/borders that use var(--color-white)
+   / var(--color-border) turn ivory/gold without touching each page.
+   ================================================================== */
+
+.temple-frame {
+  background: linear-gradient(180deg, #fffaf0 0%, #fdf2dc 100%);
+  /* short pages (cart, order success…) still fill the screen, so the
+     frame's bottom lotus sits at the bottom, not mid-screen */
+  min-height: calc(100vh - 96px);
+  min-height: calc(100dvh - 96px);
+}
+
+@media (max-width: 860px) {
+  .temple-frame {
+    /* header + bottom tab bar */
+    min-height: calc(100vh - 150px);
+    min-height: calc(100dvh - 150px);
+  }
+}
+
+.temple-frame__content {
+  --color-white: #fffbf1;
+  --color-bg-white: #fffbf1;
+  --color-bg-page: #fdf6e6;
+  --color-bg-subtle: #fbf0d9;
+  --color-border: rgba(217, 119, 6, 0.22);
+  --color-border-strong: rgba(217, 119, 6, 0.34);
+  --color-border-input: rgba(180, 83, 9, 0.38);
+  --shadow-card: 0 10px 26px rgba(124, 45, 18, 0.08);
+  --shadow-lifted: 0 14px 34px rgba(124, 45, 18, 0.12);
+
+  /* a faint lotus mandala at the top of every page (home's own hero
+     background covers it) */
+  background: url("/images/mandala.svg") center 30px / min(760px, 110%) no-repeat;
+}
+
+/* Hard-coded white cards */
+.temple-frame__content :is(.book-card, .stat-card, .contact-card) {
+  background: #fffbf1;
+  border: 1px solid rgba(217, 119, 6, 0.22);
+}
+
+/* Headings: maroon. !important is needed to beat inline navy/grey
+   colours on individual pages; excluded where the heading sits on a
+   dark band (home hero/promise band, About/Contact banners with white
+   titles, footer). */
+.temple-frame__content
+  :where(h1, h2):not(:where(.hero *, .statistics *, .footer *, [style*="color-white"], [style*="color: var(--color-white)"])) {
+  color: #7c2d12 !important;
+}
+
+/* Page titles get a small gold ornament underneath. It's text, so it
+   follows the title's own alignment (left or centred) on every page.
+   Skipped on the home hero and book titles. */
+.temple-frame__content
+  :where(h1):not(:where(.hero *, .footer *, .book-details-page *, [style*="color-white"], [style*="color: var(--color-white)"]))::after {
+  content: "\2500\2500\2500  \2726  \2500\2500\2500";
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 1px;
+  color: #d97706;
+  white-space: nowrap;
+}
+
+/* Header + mobile bottom bar match the parchment (outside the frame,
+   so styled directly) */
+.navbar {
+  background: linear-gradient(180deg, #fffbf1, #fdf3dd);
+  border-bottom: 1px solid rgba(217, 119, 6, 0.5);
+}
+
+@media (max-width: 860px) {
+  .bottom-nav {
+    background: #fffbf1;
+    border-top: 1px solid rgba(217, 119, 6, 0.4);
+  }
+}

@@ -117,3 +117,9 @@
   transform: translateY(-4px);
   box-shadow: var(--shadow-lifted);
 }
+/* long email/phone lines wrap instead of spilling past the card on
+   narrow phones */
+.contact-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

@@ -105,7 +105,7 @@ export default async function ContactPage() {
             position: "relative",
             display: "grid",
             gridTemplateColumns:
-              "repeat(auto-fit, minmax(320px, 1fr))",
+              "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
             gap: 30,
           }}
         >

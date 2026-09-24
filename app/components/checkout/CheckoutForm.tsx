@@ -289,6 +289,7 @@ export default function CheckoutForm() {
   return (
     <form
       onSubmit={submit}
+      className="checkout-form"
       style={{
         display: "grid",
         gap: 20,

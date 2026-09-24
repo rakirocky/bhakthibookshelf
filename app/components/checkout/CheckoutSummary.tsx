@@ -13,7 +13,8 @@ export default function CheckoutSummary() {
       style={{
         border: "1px solid var(--color-border-strong)",
         padding: 25,
-        borderRadius: 8,
+        borderRadius: 12,
+        alignSelf: "start",
       }}
     >
       <h2>Order Summary</h2>
@@ -29,11 +30,7 @@ export default function CheckoutSummary() {
             margin: "12px 0",
           }}
         >
-          <span>
-            {item.title}
-
-            × {item.quantity}
-          </span>
+          <span>{item.title}</span>
 
           <strong>
             ₹
@@ -57,19 +54,6 @@ export default function CheckoutSummary() {
 
         <span>₹{total}</span>
       </div>
-
-      <button
-        type="submit"
-        style={{
-          width: "100%",
-          marginTop: 25,
-          padding: 14,
-          fontSize: 18,
-          cursor: "pointer",
-        }}
-      >
-        Place Order
-      </button>
     </aside>
   );
 }
