@@ -25,6 +25,20 @@ export class SettingsRepository {
     return rows[0] ?? null;
   }
 
+  static async setKannadaUiEnabled(enabled: boolean) {
+    const { rows } = await db.query(
+      `
+      UPDATE settings
+      SET kannada_ui_enabled = $1, updated_at = CURRENT_TIMESTAMP
+      WHERE id = 1
+      RETURNING kannada_ui_enabled
+      `,
+      [enabled]
+    );
+
+    return rows[0] ?? null;
+  }
+
   static async updateSettings(data: {
     store_name: string;
     contact_email?: string | null;

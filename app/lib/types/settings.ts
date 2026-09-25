@@ -7,6 +7,8 @@ export interface StoreSettings {
   gst_number: string | null;
   /** Show prices/cart/buy inside the Android app (see migration 025). */
   app_commerce_enabled: boolean;
+  /** Translate the website interface when ಕನ್ನಡ is chosen (migration 027). */
+  kannada_ui_enabled: boolean;
   updated_at: string;
 }
 

@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS: StoreSettings = {
   address: null,
   gst_number: null,
   app_commerce_enabled: false,
+  kannada_ui_enabled: false,
   updated_at: new Date().toISOString(),
 };
 
@@ -33,6 +34,34 @@ export class SettingsService {
     } catch {
       return false;
     }
+  }
+
+  /**
+   * Whether choosing ಕನ್ನಡ also translates the website interface (it
+   * always filters books). Off unless the admin turns it on; any read
+   * failure means off (English UI).
+   */
+  static async isKannadaUiEnabled(): Promise<boolean> {
+    try {
+      const settings = await SettingsRepository.getSettings();
+      return settings?.kannada_ui_enabled === true;
+    } catch {
+      return false;
+    }
+  }
+
+  static async setKannadaUiEnabled(enabled: boolean) {
+    const updated = await SettingsRepository.setKannadaUiEnabled(enabled);
+
+    if (!updated) {
+      throw new Error("Settings row not found.");
+    }
+
+    console.log(
+      `[settings] Kannada website interface ${enabled ? "ENABLED" : "disabled"}`
+    );
+
+    return updated.kannada_ui_enabled as boolean;
   }
 
   static async setAppCommerceEnabled(enabled: boolean) {
