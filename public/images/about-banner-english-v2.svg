@@ -50,7 +50,7 @@
   <text x="600" y="270" font-family="Georgia, 'Times New Roman', serif" font-size="20" fill="#92400E" text-anchor="middle" letter-spacing="2">A HOME FOR DEVOTIONAL READING</text>
 
   <text x="600" y="352" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="600" fill="#7C2D12" text-anchor="middle" font-style="italic">"There is indomitable power in devotion,</text>
-  <text x="600" y="400" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="600" fill="#7C2D12" text-anchor="middle" font-style="italic">This gives peace of mind..."</text>
+  <text x="600" y="400" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="600" fill="#7C2D12" text-anchor="middle" font-style="italic">which gives peace of mind..."</text>
 
   <line x1="450" y1="430" x2="750" y2="430" stroke="#D97706" stroke-width="1.5"/>
   <circle cx="600" cy="430" r="4" fill="#D97706"/>
