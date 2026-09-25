@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 import Spinner from "@/app/components/ui/Spinner";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
 
   const [step, setStep] = useState<"phone" | "reset">("phone");
+  const { t } = useT();
   const [phone, setPhone] = useState("");
 
   const [otp, setOtp] = useState("");
@@ -44,7 +46,7 @@ export default function ForgotPasswordPage() {
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message ?? "Something went wrong. Please try again."
+          data.message ?? t("forgot.error")
         );
       }
 
@@ -57,7 +59,7 @@ export default function ForgotPasswordPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Something went wrong. Please try again."
+          : t("forgot.error")
       );
     } finally {
       setLoading(false);
@@ -70,7 +72,7 @@ export default function ForgotPasswordPage() {
     setError("");
 
     if (newPassword !== confirmPassword) {
-      setError("Passwords don't match.");
+      setError(t("forgot.mismatch"));
       return;
     }
 
@@ -98,7 +100,7 @@ export default function ForgotPasswordPage() {
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message ?? "Unable to reset password."
+          data.message ?? t("forgot.failed")
         );
       }
 
@@ -109,7 +111,7 @@ export default function ForgotPasswordPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Unable to reset password."
+          : t("forgot.failed")
       );
     } finally {
       setLoading(false);
@@ -120,20 +122,18 @@ export default function ForgotPasswordPage() {
     <div style={pageWrapStyle}>
       <div style={cardStyle}>
         <h1 style={titleStyle}>
-          Forgot Your Password?
+          {t("forgot.title")}
         </h1>
 
         {step === "phone" ? (
           <>
             <p style={textStyle}>
-              Enter the phone number on your account —
-              we&rsquo;ll email a reset code to the address on
-              file.
+              {t("forgot.text")}
             </p>
 
             <form onSubmit={handleRequestOtp}>
               <label style={labelStyle}>
-                Phone Number
+                {t("auth.phone")}
               </label>
 
               <input
@@ -155,7 +155,7 @@ export default function ForgotPasswordPage() {
                 style={{ marginTop: 18 }}
               >
                 {loading && <Spinner />}
-                {loading ? "Sending..." : "Send Reset Code"}
+                {loading ? t("forgot.sending") : t("forgot.send")}
               </button>
             </form>
           </>
@@ -165,7 +165,7 @@ export default function ForgotPasswordPage() {
 
             <form onSubmit={handleResetPassword}>
               <label style={labelStyle}>
-                6-Digit Code
+                {t("forgot.code")}
               </label>
 
               <input
@@ -183,7 +183,7 @@ export default function ForgotPasswordPage() {
               />
 
               <label style={{ ...labelStyle, marginTop: 16 }}>
-                New Password
+                {t("forgot.newPw")}
               </label>
 
               <input
@@ -198,7 +198,7 @@ export default function ForgotPasswordPage() {
               />
 
               <label style={{ ...labelStyle, marginTop: 16 }}>
-                Confirm New Password
+                {t("forgot.confirmPw")}
               </label>
 
               <input
@@ -223,7 +223,7 @@ export default function ForgotPasswordPage() {
                 style={{ marginTop: 18 }}
               >
                 {loading && <Spinner />}
-                {loading ? "Resetting..." : "Reset Password"}
+                {loading ? t("forgot.resetting") : t("forgot.reset")}
               </button>
             </form>
 
@@ -234,7 +234,7 @@ export default function ForgotPasswordPage() {
                 marginTop: 16,
               }}
             >
-              Didn&rsquo;t get a code?{" "}
+              {t("forgot.noCode")}{" "}
               <button
                 type="button"
                 onClick={() => setStep("phone")}
@@ -247,7 +247,7 @@ export default function ForgotPasswordPage() {
                   padding: 0,
                 }}
               >
-                Try again
+                {t("forgot.tryAgain")}
               </button>
             </p>
 
@@ -259,8 +259,7 @@ export default function ForgotPasswordPage() {
                 marginTop: 6,
               }}
             >
-              Still stuck, or don&rsquo;t have an email on your
-              account?{" "}
+              {t("forgot.stuck")}{" "}
               <Link
                 href="/contact"
                 style={{
@@ -268,15 +267,15 @@ export default function ForgotPasswordPage() {
                   fontWeight: 600,
                 }}
               >
-                Contact us
+                {t("forgot.contact")}
               </Link>{" "}
-              for help.
+              {t("forgot.forHelp")}
             </p>
           </>
         )}
 
         <Link href="/account/login" style={backLinkStyle}>
-          ← Back to Sign In
+          {t("forgot.back")}
         </Link>
       </div>
     </div>

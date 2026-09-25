@@ -3,8 +3,10 @@
 import Link from "next/link";
 
 import { useCart } from "@/app/hooks/useCart";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function CartSummary() {
+  const { t } = useT();
   const {
     total,
     clearCart,
@@ -21,7 +23,7 @@ export default function CartSummary() {
         top: 20,
       }}
     >
-      <h2>Order Summary</h2>
+      <h2>{t("cart.summary")}</h2>
 
       <hr />
 
@@ -32,7 +34,7 @@ export default function CartSummary() {
           marginTop: 15,
         }}
       >
-        <span>Subtotal</span>
+        <span>{t("cart.subtotal")}</span>
         <strong>₹{total}</strong>
       </div>
 
@@ -43,7 +45,7 @@ export default function CartSummary() {
           marginTop: 10,
         }}
       >
-        <span>GST</span>
+        <span>{t("cart.gst")}</span>
         <span>₹0</span>
       </div>
 
@@ -54,7 +56,7 @@ export default function CartSummary() {
           marginTop: 10,
         }}
       >
-        <span>Delivery</span>
+        <span>{t("cart.delivery")}</span>
         <span>₹0</span>
       </div>
 
@@ -69,7 +71,7 @@ export default function CartSummary() {
           marginTop: 20,
         }}
       >
-        <span>Total</span>
+        <span>{t("cart.total")}</span>
         <span>₹{total}</span>
       </div>
 
@@ -81,7 +83,7 @@ export default function CartSummary() {
           marginTop: 20,
         }}
       >
-        Clear Cart
+        {t("cart.clear")}
       </button>
 
       <Link
@@ -93,7 +95,7 @@ export default function CartSummary() {
           marginTop: 20,
         }}
       >
-        Proceed to Checkout
+        {t("cart.proceed")}
       </Link>
 
       <p
@@ -104,8 +106,7 @@ export default function CartSummary() {
           marginTop: 10,
         }}
       >
-        You&rsquo;ll need to sign in or create an account to complete your
-        order.
+        {t("cart.signInNote")}
       </p>
     </aside>
   );

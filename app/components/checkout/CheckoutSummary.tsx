@@ -1,8 +1,10 @@
 "use client";
 
 import { useCart } from "@/app/hooks/useCart";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function CheckoutSummary() {
+  const { t } = useT();
   const {
     items,
     total,
@@ -17,7 +19,7 @@ export default function CheckoutSummary() {
         alignSelf: "start",
       }}
     >
-      <h2>Order Summary</h2>
+      <h2>{t("cart.summary")}</h2>
 
       <hr />
 
@@ -50,7 +52,7 @@ export default function CheckoutSummary() {
           fontWeight: "bold",
         }}
       >
-        <span>Total</span>
+        <span>{t("cart.total")}</span>
 
         <span>₹{total}</span>
       </div>

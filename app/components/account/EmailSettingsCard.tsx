@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { useToast } from "@/app/context/ToastContext";
 import Spinner from "@/app/components/ui/Spinner";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function EmailSettingsCard({
   currentEmail,
@@ -17,6 +18,7 @@ export default function EmailSettingsCard({
   const [editing, setEditing] = useState(!currentEmail);
   const [email, setEmail] = useState(currentEmail ?? "");
   const [saving, setSaving] = useState(false);
+  const { t } = useT();
 
   async function handleSave() {
     setSaving(true);
@@ -39,18 +41,18 @@ export default function EmailSettingsCard({
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message ?? "Unable to update email."
+          data.message ?? t("email.failed")
         );
       }
 
-      showToast("Email updated.");
+      showToast(t("email.updated"));
       setEditing(false);
       router.refresh();
     } catch (error) {
       showToast(
         error instanceof Error
           ? error.message
-          : "Unable to update email.",
+          : t("email.failed"),
         "error"
       );
     } finally {
@@ -83,8 +85,7 @@ export default function EmailSettingsCard({
             fontWeight: 600,
           }}
         >
-          ⚠️ No email on file — add one so you can reset your
-          password yourself if you ever forget it.
+          {t("email.missing")}
         </p>
       )}
 
@@ -97,7 +98,7 @@ export default function EmailSettingsCard({
           color: "var(--color-text-muted)",
         }}
       >
-        Email
+        {t("signup.email")}
       </p>
 
       {editing ? (
@@ -129,7 +130,7 @@ export default function EmailSettingsCard({
             className="btn btn-primary"
           >
             {saving && <Spinner />}
-            {saving ? "Saving..." : "Save"}
+            {saving ? t("pw.saving") : t("email.save")}
           </button>
 
           {currentEmail && (
@@ -141,7 +142,7 @@ export default function EmailSettingsCard({
               }}
               className="btn btn-outline"
             >
-              Cancel
+              {t("email.cancel")}
             </button>
           )}
         </div>
@@ -163,7 +164,7 @@ export default function EmailSettingsCard({
             className="btn btn-outline"
             style={{ fontSize: 13 }}
           >
-            Change
+            {t("email.change")}
           </button>
         </div>
       )}

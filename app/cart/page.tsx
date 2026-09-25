@@ -7,8 +7,10 @@ import CartSummary from "../components/cart/CartSummary";
 import EmptyCart from "../components/cart/EmptyCart";
 
 import { useCart } from "../hooks/useCart";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function CartPage() {
+  const { t } = useT();
   const { items } =
     useCart();
 
@@ -30,7 +32,7 @@ export default function CartPage() {
             marginBottom: 40,
           }}
         >
-          Shopping Cart
+          {t("cart.title")}
         </h1>
 
         <div

@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function EmptyCart() {
+  const { t } = useT();
   return (
     <div
       className="empty-cart"
@@ -9,15 +13,15 @@ export default function EmptyCart() {
         padding: "80px 20px",
       }}
     >
-      <h1>Your Shopping Cart</h1>
+      <h1>{t("cart.yourCart")}</h1>
 
-      <p>Your cart is currently empty.</p>
+      <p>{t("cart.empty")}</p>
 
       <Link
         href="/books"
         className="book-button"
       >
-        Browse Books
+        {t("cart.browse")}
       </Link>
     </div>
   );

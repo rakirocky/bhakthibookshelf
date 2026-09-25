@@ -10,6 +10,7 @@ import CheckoutSummary from "../components/checkout/CheckoutSummary";
 import { useCart } from "../hooks/useCart";
 import EmptyCart from "../components/cart/EmptyCart";
 import { useIsReadOnlyApp, isReadOnlyApp } from "../lib/offline/appMode";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function CheckoutClient({
   signedIn,
@@ -18,6 +19,7 @@ export default function CheckoutClient({
 }) {
   const { items } = useCart();
   const readOnlyApp = useIsReadOnlyApp();
+  const { t } = useT();
   const router = useRouter();
 
   // A stale/superseded login still passes proxy.ts, so without this the
@@ -53,7 +55,7 @@ export default function CheckoutClient({
           marginBottom: 40,
         }}
       >
-        Checkout
+        {t("checkout.title")}
       </h1>
 
       <div

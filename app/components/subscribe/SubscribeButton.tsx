@@ -7,6 +7,7 @@ import Spinner from "@/app/components/ui/Spinner";
 import { useToast } from "@/app/context/ToastContext";
 import { openRazorpayCheckout } from "@/app/lib/razorpayClient";
 import { useIsReadOnlyApp } from "@/app/lib/offline/appMode";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function SubscribeButton({
   planId,
@@ -18,6 +19,7 @@ export default function SubscribeButton({
   const readOnlyApp = useIsReadOnlyApp();
 
   const [loading, setLoading] = useState(false);
+  const { t } = useT();
 
   // Same reasoning as CheckoutForm — once a subscription + Razorpay
   // order exist, a cancelled payment must retry against the SAME
@@ -58,13 +60,13 @@ export default function SubscribeButton({
 
     if (!data.success) {
       showToast(
-        data.message ?? "Payment verification failed.",
+        data.message ?? t("sub.verifyFailed"),
         "error"
       );
       return;
     }
 
-    showToast("Subscription activated — welcome aboard!");
+    showToast(t("sub.activated"));
 
     setPendingPayment(null);
     router.refresh();
@@ -98,7 +100,7 @@ export default function SubscribeButton({
       showToast(
         error instanceof Error
           ? error.message
-          : "Payment failed. Please try again.",
+          : t("checkout.payFailed"),
         "error"
       );
     }
@@ -125,7 +127,7 @@ export default function SubscribeButton({
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message ?? "Unable to subscribe."
+          data.message ?? t("news.error")
         );
       }
 
@@ -133,7 +135,7 @@ export default function SubscribeButton({
       // integration existed.
       if (!data.razorpayOrderId) {
         showToast(
-          "Subscription request submitted — we'll confirm once payment is received."
+          t("sub.submitted")
         );
         router.refresh();
         return;
@@ -154,7 +156,7 @@ export default function SubscribeButton({
       showToast(
         error instanceof Error
           ? error.message
-          : "Unable to subscribe.",
+          : t("news.error"),
         "error"
       );
     } finally {
@@ -176,8 +178,7 @@ export default function SubscribeButton({
             marginBottom: 14,
           }}
         >
-          Your subscription is saved and waiting for
-          payment.
+          {t("sub.saved")}
         </p>
 
         <button
@@ -185,7 +186,7 @@ export default function SubscribeButton({
           className="btn btn-primary btn-block"
           onClick={() => openPaymentFor(pendingPayment)}
         >
-          Retry Payment
+          {t("checkout.retry")}
         </button>
       </div>
     );
@@ -199,7 +200,7 @@ export default function SubscribeButton({
       className="btn btn-primary btn-block"
     >
       {loading && <Spinner />}
-      {loading ? "Submitting..." : "Subscribe Now"}
+      {loading ? t("sub.submitting") : t("sub.now")}
     </button>
   );
 }

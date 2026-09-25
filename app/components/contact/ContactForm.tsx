@@ -3,8 +3,10 @@
 import { FormEvent, useState } from "react";
 
 import Spinner from "@/app/components/ui/Spinner";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function ContactForm() {
+  const { t } = useT();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -33,7 +35,7 @@ export default function ContactForm() {
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message ?? "Unable to send your message."
+          data.message ?? t("contact.failed")
         );
       }
 
@@ -45,7 +47,7 @@ export default function ContactForm() {
       setError(
         err instanceof Error
           ? err.message
-          : "Unable to send your message."
+          : t("contact.failed")
       );
     } finally {
       setLoading(false);
@@ -68,7 +70,7 @@ export default function ContactForm() {
         </div>
 
         <p style={{ margin: 0, fontWeight: 600 }}>
-          Thank you — your message has been sent.
+          {t("contact.sent")}
         </p>
 
         <p
@@ -78,7 +80,7 @@ export default function ContactForm() {
             opacity: 0.85,
           }}
         >
-          We&rsquo;ll get back to you soon.
+          {t("contact.soon")}
         </p>
 
         <button
@@ -87,7 +89,7 @@ export default function ContactForm() {
           className="btn btn-outline"
           style={{ marginTop: 16 }}
         >
-          Send another message
+          {t("contact.another")}
         </button>
       </div>
     );
@@ -96,7 +98,7 @@ export default function ContactForm() {
   return (
     <form onSubmit={handleSubmit}>
       <div style={{ marginBottom: 18 }}>
-        <label style={labelStyle}>Name</label>
+        <label style={labelStyle}>{t("signup.name")}</label>
 
         <input
           required
@@ -107,7 +109,7 @@ export default function ContactForm() {
       </div>
 
       <div style={{ marginBottom: 18 }}>
-        <label style={labelStyle}>Email</label>
+        <label style={labelStyle}>{t("signup.email")}</label>
 
         <input
           required
@@ -119,7 +121,7 @@ export default function ContactForm() {
       </div>
 
       <div style={{ marginBottom: 22 }}>
-        <label style={labelStyle}>Message</label>
+        <label style={labelStyle}>{t("contact.message")}</label>
 
         <textarea
           required
@@ -148,7 +150,7 @@ export default function ContactForm() {
         className="btn btn-primary"
       >
         {loading && <Spinner />}
-        {loading ? "Sending..." : "Send Message"}
+        {loading ? t("contact.sending") : t("contact.send")}
       </button>
     </form>
   );

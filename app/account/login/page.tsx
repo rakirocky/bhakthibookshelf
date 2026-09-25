@@ -7,21 +7,24 @@ import { FormEvent, Suspense, useState } from "react";
 import Spinner from "@/app/components/ui/Spinner";
 import { readReferralCookie } from "@/app/lib/referral/readReferralCookie";
 import { safeReturnPath } from "@/app/lib/auth/safeReturnPath";
+import { useT } from "@/app/lib/i18n/I18nProvider";
+import type { I18nKey } from "@/app/lib/i18n/dictionary";
 
-function noticeForPath(from: string | null): string | null {
+function noticeForPath(from: string | null): I18nKey | null {
   if (!from) {
     return null;
   }
 
   if (from.startsWith("/checkout")) {
-    return "Please sign in to continue with your purchase — we'll bring you right back here.";
+    return "auth.noticeCheckout";
   }
 
-  return "Please sign in to continue — we'll bring you right back to where you were.";
+  return "auth.noticeGeneric";
 }
 
 function LoginForm() {
   const searchParams = useSearchParams();
+  const { t } = useT();
 
   const from = searchParams.get("from");
   const notice = noticeForPath(from);
@@ -80,7 +83,7 @@ function LoginForm() {
         }
 
         throw new Error(
-          data.message ?? "Login failed."
+          data.message ?? t("auth.loginFailed")
         );
       }
 
@@ -93,7 +96,7 @@ function LoginForm() {
       setError(
         err instanceof Error
           ? err.message
-          : "Login failed."
+          : t("auth.loginFailed")
       );
 
       setLoading(false);
@@ -110,16 +113,16 @@ function LoginForm() {
     <div style={pageWrapStyle}>
       <div style={cardStyle}>
         <h1 style={titleStyle}>
-          Welcome Back
+          {t("auth.welcome")}
         </h1>
 
         <p style={subtitleStyle}>
-          Sign in to access your books and orders.
+          {t("auth.welcomeSub")}
         </p>
 
         {notice && (
           <div style={noticeStyle}>
-            {notice}
+            {t(notice)}
           </div>
         )}
 
@@ -131,14 +134,14 @@ function LoginForm() {
               color: "var(--color-success-text)",
             }}
           >
-            ✓ Password reset — sign in with your new password.
+            {t("auth.resetDone")}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: 18 }}>
             <label style={labelStyle}>
-              Phone Number
+              {t("auth.phone")}
             </label>
 
             <input
@@ -155,7 +158,7 @@ function LoginForm() {
 
           <div style={{ marginBottom: 10 }}>
             <label style={labelStyle}>
-              Password
+              {t("auth.password")}
             </label>
 
             <input
@@ -172,14 +175,14 @@ function LoginForm() {
 
           <div style={{ marginBottom: 18 }}>
             <label style={labelStyle}>
-              Referral code{" "}
+              {t("auth.referral")}{" "}
               <span
                 style={{
                   fontWeight: 400,
                   color: "var(--color-text-muted)",
                 }}
               >
-                (optional)
+                {t("auth.optional")}
               </span>
             </label>
 
@@ -200,8 +203,7 @@ function LoginForm() {
                 marginTop: 6,
               }}
             >
-              Were you referred by someone? Enter their code — it only
-              ever applies once, the first time you use it.
+              {t("auth.referralHintLogin")}
             </p>
           </div>
 
@@ -214,7 +216,7 @@ function LoginForm() {
                 fontWeight: 600,
               }}
             >
-              Forgot password?
+              {t("auth.forgot")}
             </Link>
           </div>
 
@@ -231,9 +233,7 @@ function LoginForm() {
               }}
             >
               <p style={{ margin: "0 0 10px" }}>
-                This account is already signed in on
-                another device — only one device can be
-                signed in at a time.
+                {t("auth.conflict")}
               </p>
 
               <button
@@ -245,8 +245,8 @@ function LoginForm() {
               >
                 {loading && <Spinner />}
                 {loading
-                  ? "Signing out that device..."
-                  : "Sign out that device & continue here"}
+                  ? t("auth.signingOutOther")
+                  : t("auth.signOutOther")}
               </button>
 
               <p
@@ -255,9 +255,7 @@ function LoginForm() {
                   fontSize: 12,
                 }}
               >
-                Only do this if that device is genuinely
-                lost or you no longer use it — it will be
-                signed out immediately.
+                {t("auth.conflictWarn")}
               </p>
             </div>
           )}
@@ -268,17 +266,17 @@ function LoginForm() {
             className="btn btn-primary btn-block"
           >
             {loading && <Spinner />}
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? t("auth.signingIn") : t("auth.signIn")}
           </button>
         </form>
 
         <p style={footerTextStyle}>
-          New here?{" "}
+          {t("auth.newHere")}{" "}
           <Link
             href={signupHref}
             style={{ color: "var(--color-primary)", fontWeight: 600 }}
           >
-            Create an account
+            {t("auth.createAccountLink")}
           </Link>
         </p>
       </div>

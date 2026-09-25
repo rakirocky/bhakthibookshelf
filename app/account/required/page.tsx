@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { getT } from "@/app/lib/i18n/server";
 
 function buildHref(base: string, from: string) {
   if (!from) {
@@ -16,6 +17,7 @@ async function RequiredNotice({
 }) {
   const params = await searchParams;
   const from = params.from ?? "";
+  const t = await getT();
 
   return (
     <div style={pageWrapStyle}>
@@ -29,12 +31,10 @@ async function RequiredNotice({
           🔒
         </div>
 
-        <h1 style={titleStyle}>Sign In Required</h1>
+        <h1 style={titleStyle}>{t("required.title")}</h1>
 
         <p style={textStyle}>
-          You&rsquo;ll need an account to continue. If you already have
-          one, sign in below — if not, creating one only takes a
-          minute.
+          {t("required.text")}
         </p>
 
         <Link
@@ -42,7 +42,7 @@ async function RequiredNotice({
           className="btn btn-primary btn-block"
           style={{ textDecoration: "none" }}
         >
-          Log In
+          {t("required.login")}
         </Link>
 
         <Link
@@ -53,7 +53,7 @@ async function RequiredNotice({
             marginTop: 12,
           }}
         >
-          Create an Account
+          {t("required.create")}
         </Link>
       </div>
     </div>

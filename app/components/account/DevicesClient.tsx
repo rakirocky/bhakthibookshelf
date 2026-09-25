@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { getOrCreateDeviceId } from "@/app/lib/offline/device";
 import { useIsNativeApp } from "@/app/lib/offline/useNative";
 import { useToast } from "@/app/context/ToastContext";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 // Mirror of MAX_DEVICES_PER_ACCOUNT in app/lib/services/downloadService.ts —
 // the server is the source of truth; this is just for the "N of 3" hint.
@@ -35,6 +36,7 @@ function fmtDate(value: string): string {
 
 export default function DevicesClient() {
   const native = useIsNativeApp();
+  const { t } = useT();
   const { showToast } = useToast();
 
   const [devices, setDevices] = useState<Device[] | null>(null);
@@ -50,7 +52,7 @@ export default function DevicesClient() {
       .then(async (res) => {
         const body = await res.json();
         if (!res.ok || !body.success) {
-          throw new Error(body.message ?? "Could not load your devices.");
+          throw new Error(body.message ?? t("devices.loadFailed"));
         }
         return body.devices as Device[];
       })
@@ -65,14 +67,14 @@ export default function DevicesClient() {
         setError(
           err instanceof Error
             ? err.message
-            : "Could not load your devices."
+            : t("devices.loadFailed")
         );
       });
 
     return () => {
       alive = false;
     };
-  }, [reloadKey]);
+  }, [reloadKey, t]);
 
   useEffect(() => {
     if (!native) return;
@@ -84,12 +86,9 @@ export default function DevicesClient() {
   async function deauthorize(device: Device) {
     const isThis = device.deviceId === thisDeviceId;
     const confirmed = window.confirm(
-      `Remove "${device.label ?? "this device"}"?\n\n` +
-        "It frees a slot so you can set up downloads on another device. " +
-        "Books already saved on it keep working offline" +
-        (isThis
-          ? " — including on this one, until you remove them here."
-          : ".")
+      t(isThis ? "devices.confirmThis" : "devices.confirm", {
+        name: device.label ?? t("devices.thisDeviceLower"),
+      })
     );
 
     if (!confirmed) return;
@@ -103,14 +102,14 @@ export default function DevicesClient() {
       const body = await res.json().catch(() => ({}));
 
       if (!res.ok || !body.success) {
-        throw new Error(body.message ?? "Could not remove the device.");
+        throw new Error(body.message ?? t("devices.removeFailed"));
       }
 
-      showToast("Device removed.");
+      showToast(t("devices.removed"));
       setReloadKey((k) => k + 1);
     } catch (err) {
       showToast(
-        err instanceof Error ? err.message : "Could not remove the device.",
+        err instanceof Error ? err.message : t("devices.removeFailed"),
         "error"
       );
     } finally {
@@ -126,10 +125,10 @@ export default function DevicesClient() {
         href="/account"
         style={{ fontSize: 14, color: "var(--color-text-secondary)" }}
       >
-        ← Back to My Account
+        {t("pw.back")}
       </Link>
 
-      <h1 style={{ marginTop: 16, marginBottom: 6 }}>Manage devices</h1>
+      <h1 style={{ marginTop: 16, marginBottom: 6 }}>{t("devices.title")}</h1>
 
       <p
         style={{
@@ -138,9 +137,7 @@ export default function DevicesClient() {
           lineHeight: 1.6,
         }}
       >
-        Downloads are tied to the device they were saved on. You can keep
-        them on up to {MAX_DEVICES} devices at a time. Removing a device
-        frees a slot; books already saved on it stay readable offline.
+        {t("devices.intro", { max: MAX_DEVICES })}
       </p>
 
       <div
@@ -159,19 +156,19 @@ export default function DevicesClient() {
             marginBottom: 4,
           }}
         >
-          <h2 style={{ margin: 0, fontSize: 18 }}>Your devices</h2>
+          <h2 style={{ margin: 0, fontSize: 18 }}>{t("devices.yours")}</h2>
           {devices !== null && (
             <span
               style={{ fontSize: 13, color: "var(--color-text-muted)" }}
             >
-              {active.length} of {MAX_DEVICES} in use
+              {t("devices.inUse", { n: active.length, max: MAX_DEVICES })}
             </span>
           )}
         </div>
 
         {devices === null && (
           <p style={{ color: "var(--color-text-muted)", marginBottom: 0 }}>
-            Loading…
+            {t("downloads.loading")}
           </p>
         )}
 
@@ -195,9 +192,7 @@ export default function DevicesClient() {
               marginBottom: 0,
             }}
           >
-            No devices yet. Open the Bhakthi Bookshelf app on a phone or
-            tablet and save a book for offline reading — the device is
-            registered automatically.
+            {t("devices.none")}
           </p>
         )}
 
@@ -218,7 +213,7 @@ export default function DevicesClient() {
               >
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 600 }}>
-                    {device.label ?? "Unnamed device"}
+                    {device.label ?? t("devices.unnamed")}
                     {isThis && (
                       <span
                         style={{
@@ -231,7 +226,7 @@ export default function DevicesClient() {
                           padding: "1px 7px",
                         }}
                       >
-                        This device
+                        {t("devices.thisDevice")}
                       </span>
                     )}
                   </div>
@@ -242,10 +237,7 @@ export default function DevicesClient() {
                       marginTop: 2,
                     }}
                   >
-                    {device.platform} · {device.bookCount}{" "}
-                    {device.bookCount === 1 ? "book" : "books"} · added{" "}
-                    {fmtDate(device.addedAt)} · last used{" "}
-                    {fmtDate(device.lastSeen)}
+                    {t("devices.meta", { platform: device.platform, n: device.bookCount, added: fmtDate(device.addedAt), used: fmtDate(device.lastSeen) })}
                   </div>
                 </div>
 
@@ -255,7 +247,7 @@ export default function DevicesClient() {
                   disabled={busyId === device.id}
                   onClick={() => deauthorize(device)}
                 >
-                  {busyId === device.id ? "Removing…" : "Deauthorize"}
+                  {busyId === device.id ? t("devices.removing") : t("devices.deauthorize")}
                 </button>
               </li>
             );

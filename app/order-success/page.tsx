@@ -2,6 +2,7 @@ import Link from "next/link";
 import Container from "../components/ui/Container";
 import { getCustomerSession } from "../lib/auth/getCustomerSession";
 import { OrderService } from "../lib/services/orderService";
+import { getT } from "@/app/lib/i18n/server";
 
 type Props = {
   searchParams: Promise<{
@@ -20,6 +21,7 @@ export default async function OrderSuccessPage({
   // marked it PAID by the time we land here). Scoped to the signed-in
   // customer so an order number in the URL reveals nothing on its own.
   const session = await getCustomerSession();
+  const t = await getT();
 
   const record =
     session && order
@@ -46,12 +48,12 @@ export default async function OrderSuccessPage({
           padding: "80px 20px",
         }}
       >
-        <h1>🎉 Thank You</h1>
+        <h1>{t("success.thanks")}</h1>
 
         <p>
           {paid
-            ? "Your payment was successful."
-            : "Your order has been created successfully."}
+            ? t("success.paidMsg")
+            : t("success.created")}
         </p>
 
         <h2
@@ -59,21 +61,19 @@ export default async function OrderSuccessPage({
             marginTop: 30,
           }}
         >
-          Order Number
+          {t("success.orderNumber")}
         </h2>
 
         <h3>{order}</h3>
 
         <p>
-          Payment Status:
-          <strong> {paid ? "Paid" : "Pending"}</strong>
+          {t("success.status")}
+          <strong> {paid ? t("success.paid") : t("success.pending")}</strong>
         </p>
 
         {paid && (
           <p>
-            Your {books.length === 1 ? "book is" : "books are"} ready to
-            read. A payment confirmation and invoice has been emailed
-            to you.
+            {t(books.length === 1 ? "success.readyOne" : "success.readyMany")}
           </p>
         )}
 
@@ -92,8 +92,8 @@ export default async function OrderSuccessPage({
               className="book-button"
             >
               {books.length === 1
-                ? "Read your book"
-                : "Go to your books"}
+                ? t("success.readBook")
+                : t("success.goBooks")}
             </Link>
           )}
 
@@ -101,7 +101,7 @@ export default async function OrderSuccessPage({
             href="/books"
             className="book-button"
           >
-            Continue Shopping
+            {t("success.continue")}
           </Link>
         </div>
       </div>

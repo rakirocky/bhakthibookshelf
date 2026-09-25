@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function AccountHeader({
   label,
 }: {
   label: string;
 }) {
+  const { t } = useT();
   const router = useRouter();
 
   async function handleLogout() {
@@ -68,7 +70,7 @@ export default function AccountHeader({
             fontSize: 13,
           }}
         >
-          Logout
+          {t("account.logout")}
         </button>
       </div>
     </header>

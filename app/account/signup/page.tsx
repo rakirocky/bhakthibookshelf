@@ -7,6 +7,7 @@ import { FormEvent, Suspense, useState } from "react";
 import Spinner from "@/app/components/ui/Spinner";
 import { readReferralCookie } from "@/app/lib/referral/readReferralCookie";
 import { safeReturnPath } from "@/app/lib/auth/safeReturnPath";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 function noticeForPath(from: string | null): string | null {
   if (!from) {
@@ -22,6 +23,7 @@ function noticeForPath(from: string | null): string | null {
 
 function SignupForm() {
   const searchParams = useSearchParams();
+  const { t } = useT();
 
   const from = searchParams.get("from");
   const notice = noticeForPath(from);
@@ -72,7 +74,7 @@ function SignupForm() {
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message ?? "Signup failed."
+          data.message ?? t("signup.failed")
         );
       }
 
@@ -82,7 +84,7 @@ function SignupForm() {
       setError(
         err instanceof Error
           ? err.message
-          : "Signup failed."
+          : t("signup.failed")
       );
 
       setLoading(false);
@@ -93,12 +95,11 @@ function SignupForm() {
     <div style={pageWrapStyle}>
       <div style={cardStyle}>
         <h1 style={titleStyle}>
-          Create Your Account
+          {t("signup.title")}
         </h1>
 
         <p style={subtitleStyle}>
-          Track orders, and get access to subscriber-only
-          content.
+          {t("signup.sub")}
         </p>
 
         {notice && (
@@ -109,7 +110,7 @@ function SignupForm() {
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: 18 }}>
-            <label style={labelStyle}>Name</label>
+            <label style={labelStyle}>{t("signup.name")}</label>
 
             <input
               value={name}
@@ -122,7 +123,7 @@ function SignupForm() {
 
           <div style={{ marginBottom: 18 }}>
             <label style={labelStyle}>
-              Phone Number
+              {t("auth.phone")}
             </label>
 
             <input
@@ -139,7 +140,7 @@ function SignupForm() {
 
           <div style={{ marginBottom: 18 }}>
             <label style={labelStyle}>
-              Email
+              {t("signup.email")}
             </label>
 
             <input
@@ -159,14 +160,13 @@ function SignupForm() {
                 marginTop: 6,
               }}
             >
-              Used to reset your password if you ever forget
-              it — make sure it&rsquo;s one you actually check.
+              {t("signup.emailHint")}
             </p>
           </div>
 
           <div style={{ marginBottom: 24 }}>
             <label style={labelStyle}>
-              Password
+              {t("auth.password")}
             </label>
 
             <input
@@ -181,20 +181,20 @@ function SignupForm() {
             />
 
             <p style={hintStyle}>
-              At least 8 characters.
+              {t("signup.pwHint")}
             </p>
           </div>
 
           <div style={{ marginBottom: 24 }}>
             <label style={labelStyle}>
-              Referral code{" "}
+              {t("auth.referral")}{" "}
               <span
                 style={{
                   fontWeight: 400,
                   color: "var(--color-text-muted)",
                 }}
               >
-                (optional)
+                {t("auth.optional")}
               </span>
             </label>
 
@@ -209,7 +209,7 @@ function SignupForm() {
             />
 
             <p style={hintStyle}>
-              Were you referred by someone? Enter their code here.
+              {t("signup.referralHint")}
             </p>
           </div>
 
@@ -224,18 +224,18 @@ function SignupForm() {
           >
             {loading && <Spinner />}
             {loading
-              ? "Creating account..."
-              : "Create Account"}
+              ? t("signup.creating")
+              : t("signup.create")}
           </button>
         </form>
 
         <p style={footerTextStyle}>
-          Already have an account?{" "}
+          {t("signup.already")}{" "}
           <Link
             href={loginHref}
             style={{ color: "var(--color-primary)", fontWeight: 600 }}
           >
-            Sign in
+            {t("signup.signInLink")}
           </Link>
         </p>
       </div>
