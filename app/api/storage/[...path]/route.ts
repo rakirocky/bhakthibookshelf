@@ -3,6 +3,15 @@ import path from "path";
 
 import { NextResponse } from "next/server";
 
+import { getAdminSession } from "@/app/lib/auth/getAdminSession";
+
+// Only covers and free samples are public. Everything else under
+// storage/ — above all ebooks/, the full paid PDFs — is admin-only here
+// (the admin book form links to it); customers get full books solely
+// through the per-device encrypted download API. The file names are
+// random UUIDs, but a leaked link must not be a free copy.
+const PUBLIC_FOLDERS = new Set(["covers", "samples"]);
+
 const CONTENT_TYPES: Record<string, string> = {
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
@@ -40,6 +49,16 @@ export async function GET(
     );
   }
 
+  const isPublic = segments.length > 1 && PUBLIC_FOLDERS.has(segments[0]);
+
+  if (!isPublic && !(await getAdminSession())) {
+    // 404, not 401: don't confirm that a private file exists.
+    return NextResponse.json(
+      { message: "File not found" },
+      { status: 404 }
+    );
+  }
+
   const storageRoot = path.join(process.cwd(), "storage");
   const filePath = path.join(storageRoot, ...segments);
 
@@ -60,7 +79,9 @@ export async function GET(
     return new NextResponse(new Uint8Array(fileBuffer), {
       headers: {
         "Content-Type": contentType,
-        "Cache-Control": "public, max-age=31536000, immutable",
+        "Cache-Control": isPublic
+          ? "public, max-age=31536000, immutable"
+          : "private, no-store",
       },
     });
   } catch (error) {
