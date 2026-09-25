@@ -197,6 +197,29 @@ export function generateInvoicePdf(
       .text("Total", colPrice, y, { continued: false })
       .text(`₹${order.total_amount}`, colSubtotal, y);
 
+    // Digital books unlock the moment payment succeeds — matches
+    // section 4 (Refunds & Cancellations) of /terms-conditions.
+    y += 30;
+
+    doc
+      .font("Bold")
+      .fontSize(10)
+      .fillColor("#8b1a1a")
+      .text("Note: The amount paid is non-refundable.", 50, y, {
+        width: 495,
+      });
+
+    doc
+      .font("Body")
+      .fontSize(8.5)
+      .fillColor("#555")
+      .text(
+        "Digital books are delivered instantly on payment, so purchases cannot be cancelled or refunded. See Terms & Conditions for details.",
+        50,
+        doc.y + 2,
+        { width: 495 }
+      );
+
     doc.moveDown(4);
 
     // ===== Footer =====
