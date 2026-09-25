@@ -205,7 +205,7 @@ export function generateInvoicePdf(
       .font("Bold")
       .fontSize(10)
       .fillColor("#8b1a1a")
-      .text("Note: The amount paid is non-refundable.", 50, y, {
+      .text("Note: The amount paid is non-refundable, except for billing errors.", 50, y, {
         width: 495,
       });
 
@@ -214,7 +214,7 @@ export function generateInvoicePdf(
       .fontSize(8.5)
       .fillColor("#555")
       .text(
-        "Digital books are delivered instantly on payment, so purchases cannot be cancelled or refunded. See Terms & Conditions for details.",
+        "Digital books are delivered instantly on payment, so purchases cannot be cancelled. If you were charged in error or cannot open your book, contact us within 7 days of purchase. See Terms & Conditions for details.",
         50,
         doc.y + 2,
         { width: 495 }
