@@ -3,6 +3,7 @@ import "server-only";
 import { revalidateTag, unstable_cache } from "next/cache";
 
 import * as repository from "../repositories/bookRepository";
+import { normalizeCategory } from "../categories";
 
 // The catalogue is read far more often than it's written, so these wrap
 // the DB reads in Next's data cache — still re-validated instantly on
@@ -106,13 +107,18 @@ export async function createBook(book: {
   featured: boolean;
   published: boolean;
   language: string;
+  category?: string | null;
 }) {
   // The admin form no longer asks for a slug at all — generated here,
   // from the title, guaranteed unique. Whatever the client sends for
   // `slug` (nothing, now) is ignored on purpose for new books.
   const slug = await generateUniqueSlug(book.title);
 
-  const created = await repository.createBook({ ...book, slug });
+  const created = await repository.createBook({
+    ...book,
+    slug,
+    category: normalizeCategory(book.category),
+  });
   revalidateTag("books", { expire: 0 });
   return created;
 }
@@ -124,7 +130,10 @@ export async function updateBook(
   id: number,
   book: any
 ) {
-  const updated = await repository.updateBook(id, book);
+  const updated = await repository.updateBook(id, {
+    ...book,
+    category: normalizeCategory(book.category),
+  });
   revalidateTag("books", { expire: 0 });
   return updated;
 }

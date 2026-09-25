@@ -35,6 +35,7 @@ export default async function EditBookPage({
           featured: book.featured,
           published: book.published,
           language: book.language ?? "English",
+          category: book.category ?? "",
         }}
       />
     </div>

@@ -147,6 +147,7 @@ export async function createBook(book: {
   featured: boolean;
   published: boolean;
   language: string;
+  category: string | null;
 }) {
   const { rows } = await db.query(
     `
@@ -162,12 +163,13 @@ export async function createBook(book: {
       full_pdf,
       featured,
       published,
-      language
+      language,
+      category
     )
 
     VALUES
     (
-      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11
+      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12
     )
 
     RETURNING *
@@ -184,6 +186,7 @@ export async function createBook(book: {
       book.featured,
       book.published,
       book.language,
+      book.category,
     ]
   );
 
@@ -218,6 +221,7 @@ export async function updateBook(
     featured: boolean;
     published: boolean;
     language: string;
+    category: string | null;
   }
 ) {
   const { rows } = await db.query(
@@ -235,8 +239,9 @@ export async function updateBook(
       featured=$9,
       published=$10,
       language=$11,
+      category=$12,
       updated_at=NOW()
-    WHERE id=$12
+    WHERE id=$13
     RETURNING *;
     `,
     [
@@ -251,6 +256,7 @@ export async function updateBook(
       book.featured,
       book.published,
       book.language,
+      book.category,
       id,
     ]
   );

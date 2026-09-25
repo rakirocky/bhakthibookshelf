@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 import BookGrid from "@/app/components/books/BookGrid";
 import BookSearch from "@/app/components/books/BookSearch";
@@ -10,9 +11,13 @@ import Container from "@/app/components/ui/Container";
 
 import type { Book } from "@/app/lib/types/book";
 import { useT } from "@/app/lib/i18n/I18nProvider";
+import { BOOK_CATEGORIES, BookCategory, CATEGORY_LABEL } from "@/app/lib/categories";
+import { matchesQuery } from "@/app/lib/bookSearch";
 
 type Props = {
   books: Book[];
+  initialCategory?: BookCategory | null;
+  initialQuery?: string;
 };
 
 type SortOption =
@@ -21,21 +26,31 @@ type SortOption =
   | "price-low"
   | "price-high";
 
-export default function BooksClient({ books }: Props) {
+export default function BooksClient({
+  books,
+  initialCategory = null,
+  initialQuery = "",
+}: Props) {
   const { t } = useT();
-  const [search, setSearch] = useState("");
+  const router = useRouter();
+  const pathname = usePathname();
+  const [search, setSearch] = useState(initialQuery);
+  const [category, setCategory] = useState<BookCategory | null>(initialCategory);
+
+  // Keep ?category= in the URL (shareable; footer links land here) without
+  // a navigation/re-render round trip.
+  function chooseCategory(next: BookCategory | null) {
+    setCategory(next);
+    router.replace(next ? `${pathname}?category=${next}` : pathname, { scroll: false });
+  }
   const [sortBy, setSortBy] =
     useState<SortOption>("featured");
 
   const filteredBooks = useMemo(() => {
-    const keyword = search.trim().toLowerCase();
-
-    const result = books.filter((book) => {
-      return (
-        book.title.toLowerCase().includes(keyword) ||
-        book.author.toLowerCase().includes(keyword)
-      );
-    });
+    const result = books.filter(
+      (book) =>
+        (!category || book.category === category) && matchesQuery(book, search)
+    );
 
     switch (sortBy) {
       case "title":
@@ -68,7 +83,7 @@ export default function BooksClient({ books }: Props) {
     }
 
     return result;
-  }, [books, search, sortBy]);
+  }, [books, search, sortBy, category]);
 
   return (
     <>
@@ -76,6 +91,21 @@ export default function BooksClient({ books }: Props) {
 
       <section className="books-page">
         <Container>
+
+          <div className="category-chips" role="tablist" aria-label={t("library.categories")}>
+            {[null, ...BOOK_CATEGORIES].map((c) => (
+              <button
+                key={c ?? "all"}
+                type="button"
+                role="tab"
+                aria-selected={category === c}
+                className={category === c ? "category-chip is-on" : "category-chip"}
+                onClick={() => chooseCategory(c)}
+              >
+                {c ? t(CATEGORY_LABEL[c]) : t("library.all")}
+              </button>
+            ))}
+          </div>
 
           <div className="books-toolbar">
 

@@ -1,5 +1,8 @@
 import { Book } from "../../lib/types/book";
+import Link from "next/link";
+
 import { getT } from "../../lib/i18n/server";
+import { CATEGORY_LABEL, normalizeCategory } from "../../lib/categories";
 
 type Props = {
   book: Book;
@@ -9,6 +12,7 @@ export default async function BookInfo({
   book,
 }: Props) {
   const t = await getT();
+  const category = normalizeCategory(book.category);
   const languageLabel =
     book.language === "English" || book.language === "Kannada"
       ? t(`lang.${book.language}`)
@@ -19,6 +23,12 @@ export default async function BookInfo({
 
   return (
     <section className="book-info">
+
+      {category && (
+        <Link href={`/books?category=${category}`} className="book-category">
+          {t(CATEGORY_LABEL[category])}
+        </Link>
+      )}
 
       <h1>{book.title}</h1>
 

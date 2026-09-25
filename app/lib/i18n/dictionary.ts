@@ -321,6 +321,16 @@ const en = {
   "legal.terms": "Terms & Conditions",
   "legal.updated": "Last updated: {date}",
   "legal.englishNote": "",
+  "library.all": "All",
+  "library.categories": "Categories",
+  "search.open": "Search books",
+  "search.placeholder": "Search books, authors, topics…",
+  "search.hint": "Type a book title, author or topic",
+  "search.none": "No books match “{q}”",
+  "search.clear": "Clear search",
+  "search.close": "Close search",
+  "search.seeAll": "See all results in the Library ›",
+  "library.countOne": "1 book found",
 } as const;
 
 export type I18nKey = keyof typeof en;
@@ -629,6 +639,16 @@ const kn: Record<I18nKey, string> = {
   "legal.terms": "ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳು",
   "legal.updated": "ಕೊನೆಯ ಪರಿಷ್ಕರಣೆ: {date}",
   "legal.englishNote": "ಈ ದಾಖಲೆ ಸದ್ಯಕ್ಕೆ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಮಾತ್ರ ಲಭ್ಯವಿದೆ; ಇಂಗ್ಲಿಷ್ ಆವೃತ್ತಿಯೇ ಅಧಿಕೃತ.",
+  "library.all": "ಎಲ್ಲ",
+  "library.categories": "ವರ್ಗಗಳು",
+  "search.open": "ಪುಸ್ತಕ ಹುಡುಕಿ",
+  "search.placeholder": "ಪುಸ್ತಕ, ಲೇಖಕ, ವಿಷಯ ಹುಡುಕಿ…",
+  "search.hint": "ಪುಸ್ತಕದ ಹೆಸರು, ಲೇಖಕ ಅಥವಾ ವಿಷಯವನ್ನು ಟೈಪ್ ಮಾಡಿ",
+  "search.none": "“{q}” ಗೆ ಹೊಂದುವ ಪುಸ್ತಕ ಸಿಗಲಿಲ್ಲ",
+  "search.clear": "ಹುಡುಕಾಟ ಅಳಿಸಿ",
+  "search.close": "ಹುಡುಕಾಟ ಮುಚ್ಚಿ",
+  "search.seeAll": "ಎಲ್ಲ ಫಲಿತಾಂಶಗಳನ್ನು ಗ್ರಂಥಾಲಯದಲ್ಲಿ ನೋಡಿ ›",
+  "library.countOne": "1 ಪುಸ್ತಕ ಸಿಕ್ಕಿದೆ",
 };
 
 const DICTS: Record<UiLang, Record<I18nKey, string>> = { en, kn };

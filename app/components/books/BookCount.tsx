@@ -10,7 +10,7 @@ export default function BookCount({ count }: Props) {
   const { t } = useT();
   return (
     <div className="book-count">
-      <p>{t("library.count", { n: count })}</p>
+      <p>{count === 1 ? t("library.countOne") : t("library.count", { n: count })}</p>
     </div>
   );
 }

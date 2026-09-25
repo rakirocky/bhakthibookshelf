@@ -20,6 +20,7 @@ interface BookFormValues {
   featured: boolean;
   published: boolean;
   language: string;
+  category: string;
 }
 
 interface BookFormProps {
@@ -40,6 +41,7 @@ const emptyForm: BookFormValues = {
   featured: false,
   published: true,
   language: "English",
+  category: "",
 };
 
 export default function BookForm({
@@ -181,6 +183,24 @@ export default function BookForm({
           >
             <option value="English">English</option>
             <option value="Kannada">Kannada (ಕನ್ನಡ)</option>
+          </select>
+        </div>
+
+        <div style={{ marginBottom: 20 }}>
+          <label>Category</label>
+
+          <select
+            value={form.category}
+            onChange={(e) =>
+              update("category", e.target.value)
+            }
+            style={inputStyle}
+          >
+            <option value="">— None —</option>
+            <option value="scriptures">Scriptures</option>
+            <option value="epics">Epics</option>
+            <option value="prayers">Prayers</option>
+            <option value="devotional">Devotional</option>
           </select>
         </div>
 

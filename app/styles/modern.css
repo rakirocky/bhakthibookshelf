@@ -256,3 +256,275 @@ html[data-native] .temple-frame {
     font-size: 26px;
   }
 }
+
+/* ---------- Search & categories (sprint: #9) ---------- */
+
+/* Library category chips */
+.category-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.category-chip {
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(180, 83, 9, 0.35);
+  background: #fffbf1;
+  color: #7c2d12;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.category-chip:hover {
+  border-color: #b45309;
+}
+
+.category-chip.is-on {
+  background: #7c2d12;
+  border-color: #7c2d12;
+  color: #fde68a;
+}
+
+/* Library search: clear (✕) button inside the field */
+.book-search {
+  position: relative;
+}
+
+.book-search input {
+  padding-right: 42px;
+}
+
+.book-search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.book-search__clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(180, 83, 9, 0.12);
+  color: #7c2d12;
+  cursor: pointer;
+}
+
+/* Header search button: in the menu row on desktop, top-right on phones */
+.nav-search {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(180, 83, 9, 0.35);
+  background: #fffbf1;
+  color: #7c2d12;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-search:hover {
+  background: #7c2d12;
+  color: #fde68a;
+}
+
+.nav-search--mobile {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .nav-search--mobile {
+    display: inline-flex;
+    margin-left: auto;
+    margin-right: 6px;
+  }
+
+  .nav-search--desktop {
+    display: none;
+  }
+}
+
+/* Instant search overlay */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: calc(70px + env(safe-area-inset-top, 0px)) 16px 16px;
+  background: rgba(28, 20, 12, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.search-panel {
+  width: 100%;
+  max-width: 640px;
+  max-height: calc(100vh - 110px);
+  display: flex;
+  flex-direction: column;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fffbf1;
+  border: 1px solid rgba(217, 119, 6, 0.45);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+}
+
+.search-panel__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(217, 119, 6, 0.25);
+}
+
+.search-panel__bar input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 17px;
+  color: var(--color-text);
+}
+
+.search-panel__bar input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.search-panel__bar button {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(180, 83, 9, 0.12);
+  color: #7c2d12;
+  cursor: pointer;
+}
+
+.search-panel__body {
+  overflow: auto;
+  padding: 8px;
+}
+
+.search-panel__hint {
+  margin: 14px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.search-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.search-result {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.search-result img {
+  width: 44px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 3px 6px 6px 3px;
+  box-shadow: 0 4px 10px rgba(60, 30, 10, 0.25);
+}
+
+.search-result span {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.search-result strong {
+  font-family: var(--font-heading), var(--font-heading-kn), Georgia, serif;
+  font-weight: 400;
+  font-size: 17px;
+  color: #7c2d12;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-result small {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.search-result.is-active {
+  background: rgba(217, 119, 6, 0.12);
+}
+
+.search-panel__all {
+  display: block;
+  margin: 6px 10px 10px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
+  color: #b45309;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.search-panel__all:hover {
+  background: rgba(217, 119, 6, 0.08);
+}
+
+/* category label on the book page */
+.book-category {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(124, 45, 18, 0.08);
+  color: #7c2d12;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* the search button made the desktop menu one item wider — tighter
+   spacing keeps logo + menu on a single row at common laptop widths */
+@media (min-width: 861px) {
+  .nav-links {
+    gap: 18px;
+  }
+
+  .nav-search {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* smaller laptops (e.g. 1280px): a slightly more compact header so it
+   still fits on one row */
+@media (min-width: 861px) and (max-width: 1320px) {
+  .brand h2 {
+    font-size: 24px;
+  }
+
+  .brand img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .nav-links {
+    gap: 13px;
+    font-size: 14.5px;
+  }
+}

@@ -15,11 +15,22 @@ export default function BookSearch({
   return (
     <div className="book-search">
       <input
-        type="text"
-        placeholder={t("library.search")}
+        type="search"
+        placeholder={t("search.placeholder")}
+        aria-label={t("search.open")}
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
+      {value && (
+        <button
+          type="button"
+          className="book-search__clear"
+          aria-label={t("search.clear")}
+          onClick={() => onChange("")}
+        >
+          ✕
+        </button>
+      )}
     </div>
   );
 }

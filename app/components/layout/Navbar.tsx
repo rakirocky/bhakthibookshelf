@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import CartBadge from "../cart/CartBadge";
 import LanguageSwitcher from "./LanguageSwitcher";
+import SearchOverlay from "./SearchOverlay";
 import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function Navbar() {
@@ -14,6 +15,24 @@ export default function Navbar() {
   const { t } = useT();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  const searchButton = (extraClass: string) => (
+    <button
+      type="button"
+      className={`nav-search ${extraClass}`}
+      aria-label={t("search.open")}
+      onClick={() => {
+        setMenuOpen(false);
+        setSearchOpen(true);
+      }}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+      </svg>
+    </button>
+  );
 
   // The admin section has its own header/sidebar — showing the storefront
   // navbar on top of it just wastes space and duplicates branding.
@@ -52,6 +71,8 @@ export default function Navbar() {
           </div>
 
         </Link>
+
+        {searchButton("nav-search--mobile")}
 
         <button
           type="button"
@@ -117,6 +138,8 @@ export default function Navbar() {
             {t("nav.myAccount")}
           </Link>
 
+          {searchButton("nav-search--desktop")}
+
           <LanguageSwitcher />
 
           <span data-web-only style={{ display: "contents" }}>
@@ -127,6 +150,7 @@ export default function Navbar() {
 
       </div>
 
+      {searchOpen && <SearchOverlay onClose={() => setSearchOpen(false)} />}
     </header>
   );
 }

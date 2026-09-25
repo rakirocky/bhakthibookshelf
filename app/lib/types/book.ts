@@ -12,6 +12,7 @@ export interface Book {
   publisher: string | null;
 
   language: string;
+  category?: string | null;
 
   pages: number | null;
 

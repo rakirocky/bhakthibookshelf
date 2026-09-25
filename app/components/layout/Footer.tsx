@@ -114,13 +114,13 @@ export default async function Footer() {
           <div className="footer-links">
             <h3>{t("footer.categories")}</h3>
 
-            <Link href="/books">{t("footer.scriptures")}</Link>
+            <Link href="/books?category=scriptures">{t("footer.scriptures")}</Link>
 
-            <Link href="/books">{t("footer.epics")}</Link>
+            <Link href="/books?category=epics">{t("footer.epics")}</Link>
 
-            <Link href="/books">{t("footer.prayers")}</Link>
+            <Link href="/books?category=prayers">{t("footer.prayers")}</Link>
 
-            <Link href="/books">{t("footer.devotional")}</Link>
+            <Link href="/books?category=devotional">{t("footer.devotional")}</Link>
           </div>
 
           <div className="footer-links">
