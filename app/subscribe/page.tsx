@@ -3,11 +3,13 @@ import Link from "next/link";
 import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
 import { SubscriptionService } from "@/app/lib/services/subscriptionService";
 import SubscribeButton from "@/app/components/subscribe/SubscribeButton";
+import { getT } from "@/app/lib/i18n/server";
 
 // Plan list and subscription status are both live data.
 export const dynamic = "force-dynamic";
 
 export default async function SubscribePage() {
+  const t = await getT();
   const [plans, session] = await Promise.all([
     SubscriptionService.getActivePlans(),
     getCustomerSession(),
@@ -28,7 +30,7 @@ export default async function SubscribePage() {
             marginBottom: 10,
           }}
         >
-          Unlock the Full Library
+          {t("sub.title")}
         </h1>
 
         <p
@@ -38,9 +40,7 @@ export default async function SubscribePage() {
             marginBottom: 40,
           }}
         >
-          Pay once, read forever — every book in the
-          library, including new releases added after you
-          join.
+          {t("sub.text")}
         </p>
 
         {plans.map((plan: any) => (
@@ -71,8 +71,8 @@ export default async function SubscribePage() {
               >
                 {" "}
                 {plan.duration_days
-                  ? `/ ${plan.duration_days} days`
-                  : "one-time payment"}
+                  ? t("sub.perDays", { days: plan.duration_days })
+                  : t("sub.oneTime")}
               </span>
             </p>
 
@@ -84,16 +84,16 @@ export default async function SubscribePage() {
                 lineHeight: 1.9,
               }}
             >
-              <li>Access to every book in the library</li>
+              <li>{t("sub.every")}</li>
               <li>
                 {plan.duration_days
-                  ? "Includes new titles added during your subscription"
-                  : "Includes every new title added, for as long as the library exists"}
+                  ? t("sub.newDuring")
+                  : t("sub.newForever")}
               </li>
               <li>
                 {plan.duration_days
-                  ? "Read on any device"
-                  : "No renewal, ever — read on any device"}
+                  ? t("sub.anyDevice")
+                  : t("sub.noRenewal")}
               </li>
             </ul>
 
@@ -103,24 +103,21 @@ export default async function SubscribePage() {
                 className="btn btn-primary btn-block"
                 style={{ textDecoration: "none" }}
               >
-                Sign In to Subscribe
+                {t("sub.signIn")}
               </Link>
             )}
 
             {session && status?.status === "ACTIVE" && (
               <div style={statusBoxStyle("var(--color-success-bg)", "var(--color-success-text)")}>
                 {status.subscription!.ends_at
-                  ? `✓ Active until ${new Date(
-                      status.subscription!.ends_at as string
-                    ).toLocaleDateString("en-IN")}`
-                  : "✓ Lifetime access — yours forever"}
+                  ? t("account.activeUntil", { date: new Date(status.subscription!.ends_at as string).toLocaleDateString("en-IN") })
+                  : t("account.lifetime")}
               </div>
             )}
 
             {session && status?.status === "PENDING" && (
               <div style={statusBoxStyle("var(--color-warning-bg)", "var(--color-warning-text)")}>
-                Payment pending — we&rsquo;ll activate your
-                subscription once it&rsquo;s confirmed.
+                {t("sub.pending")}
               </div>
             )}
 

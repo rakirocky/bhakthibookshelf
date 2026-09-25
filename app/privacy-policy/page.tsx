@@ -1,9 +1,12 @@
 import Footer from "../components/layout/Footer";
 import { SettingsService } from "@/app/lib/services/settingsService";
+import { getT, getUiLang } from "@/app/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function PrivacyPolicyPage() {
+  const t = await getT();
+  const uiLang = await getUiLang();
   const settings = await SettingsService.getSettings();
 
   const storeName = settings.store_name || "Bhakthi Bookshelf";
@@ -21,8 +24,13 @@ export default async function PrivacyPolicyPage() {
     <>
       <main className="page-container">
         <section className="page-header">
-          <h1>Privacy Policy</h1>
-          <p>Last updated: {lastUpdated}</p>
+          <h1>{t("legal.privacy")}</h1>
+          <p>{t("legal.updated", { date: lastUpdated })}</p>
+          {uiLang === "kn" && (
+            <p lang="kn" style={{ fontSize: 14, color: "var(--color-warning-text)" }}>
+              {t("legal.englishNote")}
+            </p>
+          )}
         </section>
 
         <section

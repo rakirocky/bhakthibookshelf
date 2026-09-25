@@ -5,6 +5,7 @@ import Image from "next/image";
 import { CartItem as Item } from "@/app/context/CartContext";
 import { useCart } from "@/app/hooks/useCart";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 type Props = {
   item: Item;
@@ -13,6 +14,7 @@ type Props = {
 export default function CartItem({
   item,
 }: Props) {
+  const { t } = useT();
   const {
     removeItem,
   } = useCart();
@@ -63,7 +65,7 @@ export default function CartItem({
               removeItem(item.id)
             }
           >
-            Remove
+            {t("downloads.remove")}
           </button>
         </div>
       </div>

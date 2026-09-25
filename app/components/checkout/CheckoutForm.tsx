@@ -6,8 +6,10 @@ import { useRouter } from "next/navigation";
 import Spinner from "@/app/components/ui/Spinner";
 import { useCart } from "@/app/hooks/useCart";
 import { openRazorpayCheckout } from "@/app/lib/razorpayClient";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function CheckoutForm() {
+  const { t } = useT();
   const router = useRouter();
 
   const {
@@ -70,7 +72,7 @@ export default function CheckoutForm() {
     if (!data.success) {
       setPaymentError(
         data.message ??
-          "Payment verification failed. If money was deducted, contact support with your order number."
+          t("checkout.verifyFailed")
       );
       return;
     }
@@ -117,7 +119,7 @@ export default function CheckoutForm() {
       setPaymentError(
         err instanceof Error
           ? err.message
-          : "Payment failed. Please try again."
+          : t("checkout.payFailed")
       );
     }
   }
@@ -232,7 +234,7 @@ export default function CheckoutForm() {
       console.error(err);
 
       alert(
-        "Unable to place order."
+        t("checkout.placeFailed")
       );
     } finally {
       setLoading(false);
@@ -248,8 +250,7 @@ export default function CheckoutForm() {
         }}
       >
         <p style={{ marginBottom: 8 }}>
-          Order <strong>{pendingPayment.orderNumber}</strong>{" "}
-          is saved and waiting for payment.
+          {t("checkout.saved", { order: pendingPayment.orderNumber })}
         </p>
 
         <p
@@ -259,8 +260,7 @@ export default function CheckoutForm() {
             marginBottom: 20,
           }}
         >
-          If the payment window closed before you finished,
-          no charge was made — click below to try again.
+          {t("checkout.retryNote")}
         </p>
 
         {paymentError && (
@@ -280,7 +280,7 @@ export default function CheckoutForm() {
           className="btn btn-primary"
           onClick={() => openPaymentFor(pendingPayment)}
         >
-          Retry Payment
+          {t("checkout.retry")}
         </button>
       </div>
     );
@@ -298,7 +298,7 @@ export default function CheckoutForm() {
       <div>
 
         <label>
-          Full Name
+          {t("checkout.fullName")}
         </label>
 
         <input
@@ -311,7 +311,7 @@ export default function CheckoutForm() {
       <div>
 
         <label>
-          Email
+          {t("signup.email")}
         </label>
 
         <input
@@ -325,7 +325,7 @@ export default function CheckoutForm() {
       <div>
 
         <label>
-          Mobile
+          {t("checkout.mobile")}
         </label>
 
         <input
@@ -338,7 +338,7 @@ export default function CheckoutForm() {
       <div>
 
         <label>
-          Address
+          {t("checkout.address")}
         </label>
 
         <textarea
@@ -359,13 +359,13 @@ export default function CheckoutForm() {
       >
         <input
           name="city"
-          placeholder="City"
+          placeholder={t("checkout.city")}
           required
         />
 
         <input
           name="state"
-          placeholder="State"
+          placeholder={t("checkout.state")}
           required
         />
       </div>
@@ -380,7 +380,7 @@ export default function CheckoutForm() {
       >
         <input
           name="pincode"
-          placeholder="Pincode"
+          placeholder={t("checkout.pincode")}
           required
         />
 
@@ -393,7 +393,7 @@ export default function CheckoutForm() {
       <div>
 
         <label>
-          GST Number
+          {t("checkout.gst")}
         </label>
 
         <input
@@ -409,8 +409,8 @@ export default function CheckoutForm() {
       >
         {loading && <Spinner />}
         {loading
-          ? "Creating Order..."
-          : "Place Order"}
+          ? t("checkout.creating")
+          : t("checkout.place")}
       </button>
 
     </form>

@@ -5,11 +5,13 @@ import ContactForm from "../components/contact/ContactForm";
 import { SOCIAL_LINKS } from "../components/layout/SocialLinks";
 import { PhoneIcon, MailIcon, ClockIcon, PinIcon } from "../components/ui/Icons";
 import { SettingsService } from "@/app/lib/services/settingsService";
+import { getT } from "@/app/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
 export default async function ContactPage() {
   const settings = await SettingsService.getSettings();
+  const t = await getT();
 
   return (
     <>
@@ -81,7 +83,7 @@ export default async function ContactPage() {
               position: "relative",
             }}
           >
-            Contact Us
+            {t("contact.title")}
           </h1>
 
           <p
@@ -92,8 +94,7 @@ export default async function ContactPage() {
               position: "relative",
             }}
           >
-            We&rsquo;d love to hear from you — questions, feedback, or just to
-            say namaste.
+            {t("contact.sub")}
           </p>
         </section>
 
@@ -113,19 +114,19 @@ export default async function ContactPage() {
           {/* Get in touch card */}
           <div className="contact-card">
             <h2 style={{ marginTop: 0, marginBottom: 24 }}>
-              Get in Touch
+              {t("contact.getInTouch")}
             </h2>
 
             <ContactInfoRow
               icon={<PhoneIcon color="var(--color-primary)" />}
-              label="Phone"
+              label={t("contact.phone")}
               value={settings.contact_phone || "+91 78921 19482"}
               href={`tel:${settings.contact_phone || "+917892119482"}`}
             />
 
             <ContactInfoRow
               icon={<MailIcon color="var(--color-primary)" />}
-              label="Email"
+              label={t("signup.email")}
               value={
                 settings.contact_email ||
                 "BhakthiBookshelf@gmail.com"
@@ -138,14 +139,14 @@ export default async function ContactPage() {
 
             <ContactInfoRow
               icon={<ClockIcon color="var(--color-primary)" />}
-              label="Office Hours"
-              value="Monday – Saturday, 9:00 AM – 6:00 PM"
+              label={t("contact.hours")}
+              value={t("contact.hoursValue")}
             />
 
             {settings.address && (
               <ContactInfoRow
                 icon={<PinIcon color="var(--color-primary)" />}
-                label="Address"
+                label={t("contact.address")}
                 value={settings.address}
               />
             )}
@@ -167,7 +168,7 @@ export default async function ContactPage() {
                   color: "var(--color-text-muted)",
                 }}
               >
-                Follow us
+                {t("contact.followUs")}
               </p>
 
               <div className="contact-social">
@@ -193,7 +194,7 @@ export default async function ContactPage() {
           {/* Message form card */}
           <div className="contact-card">
             <h2 style={{ marginTop: 0, marginBottom: 24 }}>
-              Send Us a Message
+              {t("contact.sendUs")}
             </h2>
 
             <ContactForm />

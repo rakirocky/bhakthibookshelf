@@ -7,9 +7,11 @@ import { OrderService } from "@/app/lib/services/orderService";
 import { CustomerRepository } from "@/app/lib/repositories/customerRepository";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import EmailSettingsCard from "@/app/components/account/EmailSettingsCard";
+import { getT } from "@/app/lib/i18n/server";
 
 export default async function AccountPage() {
   const session = await getCustomerSession();
+  const t = await getT();
 
   const customer = session
     ? await CustomerRepository.getById(session.customerId)
@@ -35,7 +37,7 @@ export default async function AccountPage() {
           marginBottom: 10,
         }}
       >
-        My Account
+        {t("account.title")}
       </h1>
 
       <p
@@ -44,8 +46,7 @@ export default async function AccountPage() {
           marginBottom: 30,
         }}
       >
-        Welcome back
-        {session?.name ? `, ${session.name}` : ""}.
+        {session?.name ? t("account.welcomeName", { name: session.name }) : t("account.welcomeBack")}
       </p>
 
       <EmailSettingsCard
@@ -70,22 +71,20 @@ export default async function AccountPage() {
             fontSize: 18,
           }}
         >
-          Subscription
+          {t("account.subscription")}
         </h2>
 
         {status?.status === "ACTIVE" && (
           <p style={{ margin: 0, color: "var(--color-success-text)" }}>
             {status.subscription!.ends_at
-              ? `✓ Active until ${new Date(
-                  status.subscription!.ends_at as string
-                ).toLocaleDateString("en-IN")}`
-              : "✓ Lifetime access — yours forever"}
+              ? t("account.activeUntil", { date: new Date(status.subscription!.ends_at as string).toLocaleDateString("en-IN") })
+              : t("account.lifetime")}
           </p>
         )}
 
         {status?.status === "PENDING" && (
           <p style={{ margin: 0, color: "var(--color-warning-text)" }}>
-            Payment pending confirmation.
+            {t("account.pending")}
           </p>
         )}
 
@@ -99,8 +98,8 @@ export default async function AccountPage() {
               }}
             >
               {status?.status === "EXPIRED"
-                ? "Your subscription has expired."
-                : "You don't have an active subscription."}
+                ? t("account.expired")
+                : t("account.noSub")}
             </p>
 
             <Link
@@ -109,7 +108,7 @@ export default async function AccountPage() {
               className="btn btn-primary"
               style={{ textDecoration: "none" }}
             >
-              View Plans
+              {t("account.viewPlans")}
             </Link>
           </>
         )}
@@ -130,13 +129,12 @@ export default async function AccountPage() {
             fontSize: 18,
           }}
         >
-          My Library
+          {t("account.library")}
         </h2>
 
         {status?.status === "ACTIVE" ? (
           <p style={{ margin: 0, color: "var(--color-text-strong)" }}>
-            Your subscription gives you access to every
-            book in the library.{" "}
+            {t("account.subAll")}{" "}
             <Link
               href="/books"
               style={{
@@ -144,7 +142,7 @@ export default async function AccountPage() {
                 fontWeight: 600,
               }}
             >
-              Browse all books →
+              {t("account.browseAll")}
             </Link>
           </p>
         ) : purchasedBooks.length === 0 ? (
@@ -155,7 +153,7 @@ export default async function AccountPage() {
               fontSize: 14,
             }}
           >
-            Books on your account will show up here.
+            {t("account.libraryEmpty")}
           </p>
         ) : (
           <div
@@ -217,7 +215,7 @@ export default async function AccountPage() {
             color: "var(--color-text-strong)",
           }}
         >
-          Phone: {session?.phone}
+          {t("account.phone", { phone: session?.phone ?? "" })}
         </p>
 
         <div
@@ -233,7 +231,7 @@ export default async function AccountPage() {
             className="btn btn-outline"
             style={{ textDecoration: "none" }}
           >
-            Change Password
+            {t("pw.title")}
           </Link>
 
           <Link
@@ -241,7 +239,7 @@ export default async function AccountPage() {
             className="btn btn-outline"
             style={{ textDecoration: "none" }}
           >
-            Manage Devices
+            {t("account.manageDevices")}
           </Link>
         </div>
 
@@ -253,7 +251,7 @@ export default async function AccountPage() {
             fontSize: 14,
           }}
         >
-          Order history is coming here next.
+          {t("account.ordersSoon")}
         </p>
       </div>
     </div>

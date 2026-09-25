@@ -5,9 +5,11 @@ import { FormEvent, useState } from "react";
 
 import Spinner from "@/app/components/ui/Spinner";
 import { useToast } from "@/app/context/ToastContext";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function ChangePasswordPage() {
   const { showToast } = useToast();
+  const { t } = useT();
 
   const [currentPassword, setCurrentPassword] =
     useState("");
@@ -21,7 +23,7 @@ export default function ChangePasswordPage() {
 
     if (newPassword !== confirmPassword) {
       showToast(
-        "New password and confirmation don't match.",
+        t("pw.mismatch"),
         "error"
       );
 
@@ -51,11 +53,11 @@ export default function ChangePasswordPage() {
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message ?? "Unable to change password."
+          data.message ?? t("pw.failed")
         );
       }
 
-      showToast("Password changed successfully.");
+      showToast(t("pw.done"));
 
       setCurrentPassword("");
       setNewPassword("");
@@ -64,7 +66,7 @@ export default function ChangePasswordPage() {
       showToast(
         error instanceof Error
           ? error.message
-          : "Unable to change password.",
+          : t("pw.failed"),
         "error"
       );
     } finally {
@@ -81,7 +83,7 @@ export default function ChangePasswordPage() {
           color: "var(--color-text-secondary)",
         }}
       >
-        ← Back to My Account
+        {t("pw.back")}
       </Link>
 
       <h1
@@ -90,7 +92,7 @@ export default function ChangePasswordPage() {
           marginBottom: 24,
         }}
       >
-        Change Password
+        {t("pw.title")}
       </h1>
 
       <div
@@ -105,7 +107,7 @@ export default function ChangePasswordPage() {
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: 18 }}>
             <label style={labelStyle}>
-              Current Password
+              {t("pw.current")}
             </label>
 
             <input
@@ -122,7 +124,7 @@ export default function ChangePasswordPage() {
 
           <div style={{ marginBottom: 18 }}>
             <label style={labelStyle}>
-              New Password
+              {t("forgot.newPw")}
             </label>
 
             <input
@@ -143,13 +145,13 @@ export default function ChangePasswordPage() {
                 marginTop: 6,
               }}
             >
-              At least 8 characters.
+              {t("signup.pwHint")}
             </p>
           </div>
 
           <div style={{ marginBottom: 24 }}>
             <label style={labelStyle}>
-              Confirm New Password
+              {t("forgot.confirmPw")}
             </label>
 
             <input
@@ -171,8 +173,8 @@ export default function ChangePasswordPage() {
           >
             {loading && <Spinner />}
             {loading
-              ? "Saving..."
-              : "Change Password"}
+              ? t("pw.saving")
+              : t("pw.title")}
           </button>
         </form>
       </div>
