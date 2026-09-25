@@ -43,8 +43,10 @@ export default function AboutPage() {
             style={{
               position: "relative",
               display: "inline-flex",
-              padding: 8,
-              borderRadius: "50%",
+              padding: 6,
+              // rounded square, not a circle — the logo is square and its
+              // tagline runs into the corners ("A … Reading" got clipped)
+              borderRadius: 24,
               background:
                 "linear-gradient(135deg, var(--color-primary), var(--color-accent-gold))",
               marginBottom: 26,
@@ -54,16 +56,16 @@ export default function AboutPage() {
             <div
               style={{
                 background: "var(--color-white)",
-                borderRadius: "50%",
-                padding: 10,
+                borderRadius: 19,
+                padding: 4,
               }}
             >
               <Image
                 src="/images/logo.png"
                 alt="Bhakthi Bookshelf"
-                width={130}
-                height={130}
-                style={{ borderRadius: "50%", display: "block" }}
+                width={164}
+                height={160}
+                style={{ borderRadius: 15, display: "block" }}
                 priority
               />
             </div>
