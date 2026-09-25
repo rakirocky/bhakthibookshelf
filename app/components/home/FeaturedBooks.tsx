@@ -6,17 +6,19 @@ import LanguageComingSoon from "./LanguageComingSoon";
 
 import { getFeaturedBooksOrLatest } from "../../lib/services/book-service";
 import { getLanguagePreference } from "../../lib/language";
+import { getT } from "../../lib/i18n/server";
 
 export default async function FeaturedBooks() {
   const language = await getLanguagePreference();
+  const t = await getT();
   const books = await getFeaturedBooksOrLatest(language);
 
   return (
     <section className="featured-books">
       <Container>
         <SectionHeader
-          title="Featured Books"
-          subtitle="Begin your spiritual journey with our carefully selected devotional books."
+          title={t("featured.title")}
+          subtitle={t("featured.subtitle")}
         />
 
         {books.length === 0 && (
@@ -40,7 +42,7 @@ export default async function FeaturedBooks() {
         <div className="view-all-books">
           <Button
             href="/books"
-            text="View All Books"
+            text={t("featured.viewAll")}
           />
         </div>
       </Container>

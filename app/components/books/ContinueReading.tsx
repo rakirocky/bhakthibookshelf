@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { LocalBook, listBooks } from "@/app/lib/offline/library";
 import { BookProgress, getAllProgress } from "@/app/lib/offline/readingProgress";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 /**
  * "Continue reading" — the book most recently open in the reader on
@@ -13,6 +14,7 @@ import { BookProgress, getAllProgress } from "@/app/lib/offline/readingProgress"
  */
 export default function ContinueReading({ compact = false }: { compact?: boolean }) {
   const [item, setItem] = useState<{ book: LocalBook; progress: BookProgress } | null>(null);
+  const { t } = useT();
 
   useEffect(() => {
     let alive = true;
@@ -40,18 +42,18 @@ export default function ContinueReading({ compact = false }: { compact?: boolean
       <div className="continue-reading__icon" aria-hidden="true">📖</div>
       <div className="continue-reading__body">
         <span className="continue-reading__label">
-          {finished ? "Finished — read again?" : "Continue reading"}
+          {finished ? t("continue.finished") : t("continue.label")}
         </span>
         <strong className="continue-reading__title">{book.title}</strong>
         <span className="continue-reading__meta">
-          Page {progress.page} of {progress.total} · {pct}%
+          {t("continue.meta", { page: progress.page, total: progress.total, pct })}
         </span>
         <span className="continue-reading__bar" aria-hidden="true">
           <span style={{ width: `${pct}%` }} />
         </span>
       </div>
       <Link href={`/reader/${book.downloadId}`} className="btn btn-primary continue-reading__cta">
-        {finished ? "Open" : "Resume ›"}
+        {finished ? t("continue.open") : t("continue.resume")}
       </Link>
     </div>
   );

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import ContinueReading from "@/app/components/books/ContinueReading";
 import OfflineSaveButton from "@/app/components/books/OfflineSaveButton";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 import { formatBytes } from "@/app/lib/offline/bytes";
 import {
   LocalBookDetail,
@@ -34,6 +35,7 @@ export default function DownloadsClient({
   const [syncing, setSyncing] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const { t } = useT();
 
   const refresh = useCallback(async () => {
     const { books: list, totalBytes: total } = await listBooksDetailed();
@@ -116,10 +118,10 @@ export default function DownloadsClient({
       }}
     >
       <h1 style={{ fontSize: 24, color: "var(--color-navy)", marginBottom: 4 }}>
-        Downloads
+        {t("downloads.title")}
       </h1>
       <p style={{ color: "var(--color-text-secondary)", marginBottom: 6 }}>
-        Saved on this device · readable offline
+        {t("downloads.subtitle")}
       </p>
 
       <p
@@ -130,9 +132,9 @@ export default function DownloadsClient({
         }}
       >
         {books && books.length > 0
-          ? `Using ${formatBytes(totalBytes)} on this device`
+          ? t("downloads.using", { size: formatBytes(totalBytes) })
           : ""}
-        {syncing ? (books && books.length ? " · syncing…" : "Syncing…") : ""}
+        {syncing ? (books && books.length ? ` · ${t("downloads.syncing")}` : t("downloads.syncing")) : ""}
       </p>
 
       <ContinueReading />
@@ -150,7 +152,7 @@ export default function DownloadsClient({
       )}
 
       {books === null && !syncing && (
-        <p style={{ color: "var(--color-text-muted)" }}>Loading…</p>
+        <p style={{ color: "var(--color-text-muted)" }}>{t("downloads.loading")}</p>
       )}
 
       {books !== null &&
@@ -158,8 +160,8 @@ export default function DownloadsClient({
         notSaved.length === 0 &&
         !syncing && (
         <p style={{ color: "var(--color-text-secondary)", lineHeight: 1.6 }}>
-          No downloads yet. Open a book you own and tap{" "}
-          <strong>Save for offline reading</strong>.
+          {t("downloads.empty")}{" "}
+          <strong>{t("offline.save")}</strong>.
         </p>
       )}
 
@@ -193,7 +195,7 @@ export default function DownloadsClient({
               className="btn btn-primary"
               style={{ textDecoration: "none", padding: "8px 16px" }}
             >
-              Read
+              {t("downloads.read")}
             </Link>
             <button
               type="button"
@@ -201,7 +203,7 @@ export default function DownloadsClient({
               disabled={busy}
               onClick={() => handleRemove(b.downloadId)}
             >
-              Remove
+              {t("downloads.remove")}
             </button>
           </li>
         ))}
@@ -216,7 +218,7 @@ export default function DownloadsClient({
               marginBottom: 4,
             }}
           >
-            Your books — not on this device yet
+            {t("downloads.notSavedTitle")}
           </h2>
           <p
             style={{
@@ -225,7 +227,7 @@ export default function DownloadsClient({
               marginBottom: 6,
             }}
           >
-            Save a book to read it here, even offline.
+            {t("downloads.notSavedHint")}
           </p>
 
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
@@ -281,7 +283,7 @@ export default function DownloadsClient({
           href="/account/devices"
           style={{ fontSize: 14, color: "var(--color-primary)", fontWeight: 600 }}
         >
-          Manage devices
+          {t("downloads.manageDevices")}
         </Link>
 
         {books && books.length > 0 && (
@@ -291,7 +293,7 @@ export default function DownloadsClient({
             disabled={busy}
             onClick={handleRemoveAll}
           >
-            Remove all downloads
+            {t("downloads.removeAll")}
           </button>
         )}
       </div>

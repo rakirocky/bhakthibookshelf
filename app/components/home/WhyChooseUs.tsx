@@ -1,6 +1,10 @@
 import { BookMarked, Zap, ShieldCheck, Sparkles } from "lucide-react";
 
-export default function WhyChooseUs() {
+import { getT } from "../../lib/i18n/server";
+
+export default async function WhyChooseUs() {
+  const t = await getT();
+
   return (
     <section className="why-choose">
 
@@ -8,10 +12,10 @@ export default function WhyChooseUs() {
 
         <div className="section-header">
 
-          <h2>Why Choose Bhakthi Bookshelf?</h2>
+          <h2>{t("why.title")}</h2>
 
           <p>
-            A trusted destination for spiritual seekers and devotees.
+            {t("why.subtitle")}
           </p>
 
         </div>
@@ -20,37 +24,37 @@ export default function WhyChooseUs() {
 
           <div className="why-card">
             <div className="why-icon"><BookMarked /></div>
-            <h3>Authentic Scriptures</h3>
+            <h3>{t("why.authentic")}</h3>
 
             <p>
-              Carefully curated devotional books from trusted sources.
+              {t("why.authenticText")}
             </p>
           </div>
 
           <div className="why-card" data-web-only>
             <div className="why-icon"><Zap /></div>
-            <h3>Instant Downloads</h3>
+            <h3>{t("why.instant")}</h3>
 
             <p>
-              Purchase today and download immediately after payment.
+              {t("why.instantText")}
             </p>
           </div>
 
           <div className="why-card" data-web-only>
             <div className="why-icon"><ShieldCheck /></div>
-            <h3>Secure Payments</h3>
+            <h3>{t("why.secure")}</h3>
 
             <p>
-              Safe and reliable online payment experience.
+              {t("why.secureText")}
             </p>
           </div>
 
           <div className="why-card">
             <div className="why-icon"><Sparkles /></div>
-            <h3>Spiritual Growth</h3>
+            <h3>{t("why.growth")}</h3>
 
             <p>
-              Build your personal digital library of sacred knowledge.
+              {t("why.growthText")}
             </p>
           </div>
 

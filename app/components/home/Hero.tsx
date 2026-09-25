@@ -6,6 +6,7 @@ import LanguageComingSoon from "./LanguageComingSoon";
 
 import { getAllBooks } from "../../lib/services/book-service";
 import { getLanguagePreference } from "../../lib/language";
+import { getT } from "../../lib/i18n/server";
 
 // How many of the newest covers feed the slider — getAllBooks() is already
 // ordered by created_at DESC, so slicing here just means the latest admin
@@ -13,6 +14,7 @@ import { getLanguagePreference } from "../../lib/language";
 const HERO_BOOK_LIMIT = 10;
 
 export default async function Hero() {
+  const t = await getT();
   const language = await getLanguagePreference();
   const allBooks = await getAllBooks(language);
 
@@ -29,18 +31,15 @@ export default async function Hero() {
         <div className="hero-wrapper">
           <div className="hero-intro">
             <p className="hero-tag">
-              🪔 Trusted Digital Spiritual Library
+              🪔 {t("hero.tag")}
             </p>
 
             <h1>
-              Bhakthi <span>Bookshelf</span>
+              {t("hero.title1")} <span>{t("hero.title2")}</span>
             </h1>
 
             <p className="hero-description">
-              Discover timeless Hindu scriptures, devotional books,
-              epics, prayers and spiritual wisdom. Build your own
-              digital library and carry divine knowledge wherever
-              you go.
+              {t("hero.description")}
             </p>
           </div>
 
@@ -58,19 +57,19 @@ export default async function Hero() {
             <div className="hero-buttons">
               <Button
                 href="/books"
-                text="Explore Library"
+                text={t("hero.explore")}
               />
 
               <Button
                 href="/books"
-                text="Browse Collection"
+                text={t("hero.browse")}
               />
             </div>
 
             <div className="hero-features">
-              <FeatureItem text="Curated Collection" />
-              <FeatureItem text="Instant Downloads" />
-              <FeatureItem text="Secure Payments" webOnly />
+              <FeatureItem text={t("hero.feature.curated")} />
+              <FeatureItem text={t("hero.feature.instant")} />
+              <FeatureItem text={t("hero.feature.secure")} webOnly />
             </div>
           </div>
         </div>

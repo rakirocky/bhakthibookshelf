@@ -1,15 +1,19 @@
 import Link from "next/link";
 
+import { getT } from "../../lib/i18n/server";
+
 // Shown where the slider / featured grid would be when the chosen
 // language (navbar All / EN / ಕನ್ನಡ) has no published books yet.
-export default function LanguageComingSoon({
+export default async function LanguageComingSoon({
   language,
   compact = false,
 }: {
   language: string;
   compact?: boolean;
 }) {
+  const t = await getT();
   const kannada = language.toLowerCase() === "kannada";
+  const langName = kannada ? t("lang.Kannada") : language === "English" ? t("lang.English") : language;
 
   return (
     <div
@@ -24,18 +28,12 @@ export default function LanguageComingSoon({
       }}
     >
       <div style={{ fontSize: compact ? 28 : 40, marginBottom: 8 }}>🪔</div>
-      <p
-        lang={kannada ? "kn" : undefined}
-        style={{ margin: "0 0 6px", fontWeight: 700, color: "#7c2d12" }}
-      >
-        {kannada
-          ? "ಕನ್ನಡ ಪುಸ್ತಕಗಳು ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿವೆ"
-          : `${language} books are coming soon`}
+      <p style={{ margin: "0 0 6px", fontWeight: 700, color: "#7c2d12" }}>
+        {t("soon.title", { lang: langName })}
       </p>
-      <p style={{ margin: 0, fontSize: 14, color: "var(--color-text-secondary)" }}>
-        {kannada ? "Kannada books are coming soon. " : ""}
+      <p style={{ margin: 0, fontSize: 14 }}>
         <Link href="/books" style={{ color: "var(--color-primary)", fontWeight: 600 }}>
-          Browse the library
+          {t("soon.browse")}
         </Link>
       </p>
     </div>

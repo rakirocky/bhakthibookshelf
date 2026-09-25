@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
 import { fileUrl } from "@/app/lib/upload/fileUrl";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 const NEW_BADGE_WINDOW_DAYS = 14;
 
@@ -31,6 +34,7 @@ export default function BookCard({
   cover,
   createdAt,
 }: Props) {
+  const { t } = useT();
   return (
     <article className="book-card">
       <Link href={`/books/${slug}`}>
@@ -38,7 +42,7 @@ export default function BookCard({
         <div className="book-image">
 
           {isRecentlyAdded(createdAt) && (
-            <span className="book-badge">New</span>
+            <span className="book-badge">{t("card.new")}</span>
           )}
 
           <Image
@@ -75,7 +79,7 @@ export default function BookCard({
           href={`/books/${slug}`}
           className="book-button"
         >
-          View Details
+          {t("card.viewDetails")}
         </Link>
 
       </div>

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 // Minimal shape of what we use from pdfjs (same as ReaderClient).
 interface PdfDoc {
@@ -30,11 +31,12 @@ export default function LookInside({
   sampleUrl: string;
 }) {
   const [open, setOpen] = useState(false);
+  const { t } = useT();
 
   return (
     <>
       <button type="button" className="look-inside-btn" onClick={() => setOpen(true)}>
-        <span aria-hidden="true">📖</span> Look inside
+        <span aria-hidden="true">📖</span> {t("book.lookInside")}
       </button>
       {/* portalled to <body> so no transformed/animated ancestor can
           turn the full-screen overlay into a boxed one */}

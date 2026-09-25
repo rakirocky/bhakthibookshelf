@@ -243,3 +243,16 @@ textarea {
 html[data-native] .temple-frame {
   --tf-s: 0.2;
 }
+
+/* Kannada interface: the menu words are longer — tighter spacing keeps
+   the desktop header on one row with the logo */
+@media (min-width: 861px) {
+  html[lang="kn"] .nav-links {
+    gap: 14px;
+    font-size: 14.5px;
+  }
+
+  html[lang="kn"] .brand h2 {
+    font-size: 26px;
+  }
+}

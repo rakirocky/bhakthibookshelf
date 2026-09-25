@@ -8,6 +8,7 @@ import {
   downloadBook,
   listBooks,
 } from "@/app/lib/offline/library";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 /**
  * "Save for offline reading" — the only way to get a purchased book onto
@@ -28,6 +29,7 @@ export default function OfflineSaveButton({
   const [downloadId, setDownloadId] = useState<number | null>(null);
   const [message, setMessage] = useState("");
   const [atDeviceLimit, setAtDeviceLimit] = useState(false);
+  const { t } = useT();
 
   useEffect(() => {
     void listBooks().then((books) => {
@@ -68,7 +70,7 @@ export default function OfflineSaveButton({
         className="btn btn-primary"
         style={{ textDecoration: "none" }}
       >
-        Read offline
+        {t("offline.read")}
       </Link>
     );
   }
@@ -81,7 +83,7 @@ export default function OfflineSaveButton({
         onClick={save}
         disabled={state === "saving"}
       >
-        {state === "saving" ? "Saving…" : "Save for offline reading"}
+        {state === "saving" ? t("offline.saving") : t("offline.save")}
       </button>
       {state === "error" && (
         <span style={{ fontSize: 12, color: "var(--color-danger-text)" }}>
@@ -93,7 +95,7 @@ export default function OfflineSaveButton({
                 href="/account/devices"
                 style={{ color: "var(--color-primary)", fontWeight: 600 }}
               >
-                Manage devices
+                {t("downloads.manageDevices")}
               </Link>
             </>
           )}

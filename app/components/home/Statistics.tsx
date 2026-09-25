@@ -5,43 +5,45 @@ import SectionHeader from "../ui/SectionHeader";
 import StatCard from "../ui/StatCard";
 
 import { getSiteStats } from "../../lib/services/site-stats-service";
+import { getT } from "../../lib/i18n/server";
 
 export default async function Statistics() {
   const { bookCount, customerCount } = await getSiteStats();
+  const t = await getT();
 
   return (
     <section className="statistics">
       <Container>
         <SectionHeader
-          title="Our Promise"
-          subtitle="Every book we publish is chosen with devotion, authenticity and the desire to share timeless spiritual wisdom."
+          title={t("promise.title")}
+          subtitle={t("promise.subtitle")}
         />
 
         <div className="stats-grid">
           <StatCard
             icon={<BookOpen />}
             number={`${bookCount}+`}
-            label="Devotional books in our growing library."
+            label={t("promise.books")}
           />
 
           <StatCard
             icon={<Users />}
             number={`${customerCount}+`}
-            label="Readers who've joined Bhakthi Bookshelf."
+            label={t("promise.readers")}
           />
 
           <StatCard
             webOnly
             icon={<Zap />}
-            number="Instant"
-            label="Download your books immediately after purchase."
+            number={t("promise.instant")}
+            label={t("promise.instantText")}
           />
 
           <StatCard
             webOnly
             icon={<ShieldCheck />}
-            number="Secure"
-            label="Safe, encrypted payments on every order."
+            number={t("promise.secure")}
+            label={t("promise.secureText")}
           />
         </div>
       </Container>

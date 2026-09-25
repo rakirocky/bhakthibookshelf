@@ -7,9 +7,11 @@ import { useState } from "react";
 
 import CartBadge from "../cart/CartBadge";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { t } = useT();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -44,7 +46,7 @@ export default function Navbar() {
             </h2>
 
             <span>
-              A Home for Devotional Reading
+              {t("brand.tagline")}
             </span>
 
           </div>
@@ -69,28 +71,28 @@ export default function Navbar() {
           }
         >
           <Link href="/" onClick={() => setMenuOpen(false)}>
-            Home
+            {t("nav.home")}
           </Link>
 
           <Link
             href="/books"
             onClick={() => setMenuOpen(false)}
           >
-            Library
+            {t("nav.library")}
           </Link>
 
           <Link
             href="/about"
             onClick={() => setMenuOpen(false)}
           >
-            About
+            {t("nav.about")}
           </Link>
 
           <Link
             href="/contact"
             onClick={() => setMenuOpen(false)}
           >
-            Contact
+            {t("nav.contact")}
           </Link>
 
           <Link
@@ -98,21 +100,21 @@ export default function Navbar() {
             onClick={() => setMenuOpen(false)}
             data-web-only
           >
-            Subscribe
+            {t("nav.subscribe")}
           </Link>
 
           <Link
             href="/downloads"
             onClick={() => setMenuOpen(false)}
           >
-            Downloads
+            {t("nav.downloads")}
           </Link>
 
           <Link
             href="/account"
             onClick={() => setMenuOpen(false)}
           >
-            My Account
+            {t("nav.myAccount")}
           </Link>
 
           <LanguageSwitcher />

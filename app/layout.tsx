@@ -12,6 +12,8 @@ import AppModeGuard from "./components/native/AppModeGuard";
 import TempleFrame from "./components/layout/TempleFrame";
 import { AnnouncementService } from "./lib/services/announcementService";
 import { SettingsService } from "./lib/services/settingsService";
+import { getUiLang } from "./lib/i18n/server";
+import { I18nProvider } from "./lib/i18n/I18nProvider";
 
 // Update NEXT_PUBLIC_SITE_URL in your .env once the real domain is live —
 // everything below (canonical URL, OG image URL) resolves against this.
@@ -108,12 +110,13 @@ export default async function RootLayout({
     await AnnouncementService.getActive();
 
   const appCommerce = await SettingsService.isAppCommerceEnabled();
+  const uiLang = await getUiLang();
 
   return (
     // suppressHydrationWarning: APP_MODE_SCRIPT sets data-app on <html>
     // before React hydrates, which React would otherwise flag.
     <html
-      lang="en"
+      lang={uiLang}
       className={fontVariables}
       suppressHydrationWarning
       data-app-commerce={appCommerce ? "" : undefined}
@@ -124,6 +127,7 @@ export default async function RootLayout({
         />
       </head>
       <body>
+        <I18nProvider lang={uiLang}>
         <Providers>
           <AnnouncementBar announcements={announcements} />
           <Navbar />
@@ -133,6 +137,7 @@ export default async function RootLayout({
           <ReconcileOnResume />
           <AppModeGuard />
         </Providers>
+        </I18nProvider>
       </body>
     </html>
   );

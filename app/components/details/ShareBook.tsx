@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 // WhatsApp is how most of our readers share; the link unfurls into the
 // book's preview card (./opengraph-image.tsx). No price in the message
@@ -13,6 +14,7 @@ export default function ShareBook({
   slug: string;
 }) {
   const [copied, setCopied] = useState(false);
+  const { t } = useT();
 
   const url = () => `${window.location.origin}/books/${slug}`;
 
@@ -37,7 +39,7 @@ export default function ShareBook({
 
   return (
     <div className="share-book">
-      <span className="share-book__label">Share</span>
+      <span className="share-book__label">{t("book.share")}</span>
 
       <button
         type="button"
@@ -52,7 +54,7 @@ export default function ShareBook({
       </button>
 
       <button type="button" className="share-book__btn" onClick={copyLink}>
-        {copied ? "✓ Link copied" : "Copy link"}
+        {copied ? t("book.linkCopied") : t("book.copyLink")}
       </button>
     </div>
   );

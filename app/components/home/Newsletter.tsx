@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
@@ -8,6 +9,7 @@ export default function Newsletter() {
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [message, setMessage] = useState("");
+  const { t } = useT();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -29,12 +31,12 @@ export default function Newsletter() {
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message ?? "Unable to subscribe."
+          data.message ?? t("news.error")
         );
       }
 
       setStatus("success");
-      setMessage("You're subscribed — thank you!");
+      setMessage(t("news.success"));
       setEmail("");
     } catch (error) {
       setStatus("error");
@@ -51,12 +53,9 @@ export default function Newsletter() {
 
       <div className="container">
 
-        <h2>Stay Connected</h2>
+        <h2>{t("news.title")}</h2>
 
-        <p>
-          Subscribe to receive updates about new devotional books,
-          festival collections and special offers.
-        </p>
+        <p>{t("news.text")}</p>
 
         <form
           className="newsletter-form"
@@ -65,7 +64,7 @@ export default function Newsletter() {
           <input
             type="email"
             required
-            placeholder="Enter your email address"
+            placeholder={t("news.placeholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={status === "loading"}
@@ -76,8 +75,8 @@ export default function Newsletter() {
             disabled={status === "loading"}
           >
             {status === "loading"
-              ? "Subscribing..."
-              : "Subscribe"}
+              ? t("news.loading")
+              : t("news.button")}
           </button>
         </form>
 

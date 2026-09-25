@@ -10,6 +10,7 @@ import LookInside from "./LookInside";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import { useCart } from "@/app/hooks/useCart";
 import { useIsReadOnlyApp } from "@/app/lib/offline/appMode";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 type Props = {
   book: Book;
@@ -23,6 +24,7 @@ export default function BookActions({
   const router = useRouter();
   const { addItem } = useCart();
   const readOnlyApp = useIsReadOnlyApp();
+  const { t } = useT();
 
   // "Download Full Book — ₹x" is a buy-now shortcut for a book you don't
   // own yet: adds to cart and goes straight to checkout, sitting alongside
@@ -56,7 +58,7 @@ export default function BookActions({
         // Read-only app: no buy button, price or "buy on the web" pointer
         // (Play anti-steering policy) — just state it isn't owned.
         <p style={{ margin: 0, color: "var(--color-text-secondary)" }}>
-          This book isn&apos;t in your library yet.
+          {t("book.notInLibrary")}
         </p>
       ) : (
         <span data-web-only style={{ display: "contents" }}>
@@ -67,8 +69,7 @@ export default function BookActions({
             className="btn btn-primary"
             onClick={handleBuyAndCheckout}
           >
-            Download Full Book — ₹
-            {book.discount_price ?? book.price}
+            {t("book.buyNow", { price: String(book.discount_price ?? book.price) })}
           </button>
         </span>
       )}

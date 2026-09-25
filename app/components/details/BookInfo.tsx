@@ -1,12 +1,18 @@
 import { Book } from "../../lib/types/book";
+import { getT } from "../../lib/i18n/server";
 
 type Props = {
   book: Book;
 };
 
-export default function BookInfo({
+export default async function BookInfo({
   book,
 }: Props) {
+  const t = await getT();
+  const languageLabel =
+    book.language === "English" || book.language === "Kannada"
+      ? t(`lang.${book.language}`)
+      : book.language;
 
   const sellingPrice =
     Number(book.discount_price ?? book.price);
@@ -23,22 +29,22 @@ export default function BookInfo({
       <div className="book-meta">
 
         <p>
-          <strong>Author</strong><br />
+          <strong>{t("book.author")}</strong><br />
           {book.author}
         </p>
 
         <p>
-          <strong>Publisher</strong><br />
+          <strong>{t("book.publisher")}</strong><br />
           {book.publisher || "-"}
         </p>
 
         <p>
-          <strong>Language</strong><br />
-          {book.language}
+          <strong>{t("book.language")}</strong><br />
+          {languageLabel}
         </p>
 
         <p>
-          <strong>Pages</strong><br />
+          <strong>{t("book.pages")}</strong><br />
           {book.pages || "-"}
         </p>
 

@@ -1,12 +1,15 @@
 import Link from "next/link";
+import { getT } from "../../lib/i18n/server";
 
 type Props = {
   title: string;
 };
 
-export default function Breadcrumb({
+export default async function Breadcrumb({
   title,
 }: Props) {
+  const t = await getT();
+
   return (
     <nav
       style={{
@@ -14,12 +17,12 @@ export default function Breadcrumb({
         fontSize: 15,
       }}
     >
-      <Link href="/">Home</Link>
+      <Link href="/">{t("crumb.home")}</Link>
 
       {" / "}
 
       <Link href="/books">
-        Books
+        {t("crumb.books")}
       </Link>
 
       {" / "}

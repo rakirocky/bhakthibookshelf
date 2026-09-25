@@ -2,6 +2,7 @@
 
 import { Book } from "@/app/lib/types/book";
 import { useCart } from "@/app/hooks/useCart";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 type Props = {
   book: Book;
@@ -10,6 +11,7 @@ type Props = {
 export default function AddToCartButton({
   book,
 }: Props) {
+  const { t } = useT();
   const { addItem } = useCart();
 
   function handleAddToCart() {
@@ -30,7 +32,7 @@ export default function AddToCartButton({
       className="buy-button"
       onClick={handleAddToCart}
     >
-      Add To Cart
+      {t("book.addToCart")}
     </button>
   );
 }

@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { useCart } from "@/app/hooks/useCart";
 
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useT } from "@/app/lib/i18n/I18nProvider";
+import type { I18nKey } from "@/app/lib/i18n/dictionary";
 
 /**
  * App-style bottom tab bar for small screens / the Capacitor shell.
@@ -25,7 +27,7 @@ import LanguageSwitcher from "./LanguageSwitcher";
 
 type Tab = {
   href: string;
-  label: string;
+  label: I18nKey;
   icon: React.ReactNode;
   /** match nested routes too, e.g. /books/123 still lights up "Library" */
   matchPrefix?: boolean;
@@ -34,14 +36,14 @@ type Tab = {
 const TABS: Tab[] = [
   {
     href: "/",
-    label: "Home",
+    label: "nav.home",
     icon: (
       <path d="M3 10.5 12 3l9 7.5M5 9.5V21h5v-6h4v6h5V9.5" />
     ),
   },
   {
     href: "/books",
-    label: "Library",
+    label: "nav.library",
     matchPrefix: true,
     icon: (
       <>
@@ -52,7 +54,7 @@ const TABS: Tab[] = [
   },
   {
     href: "/account",
-    label: "Account",
+    label: "nav.account",
     matchPrefix: true,
     icon: (
       <>
@@ -63,11 +65,11 @@ const TABS: Tab[] = [
   },
 ];
 
-const MORE_LINKS = [
-  { href: "/downloads", label: "Downloads" },
-  { href: "/subscribe", label: "Subscribe", webOnly: true },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+const MORE_LINKS: { href: string; label: I18nKey; webOnly?: boolean }[] = [
+  { href: "/downloads", label: "nav.downloads" },
+  { href: "/subscribe", label: "nav.subscribe", webOnly: true },
+  { href: "/about", label: "nav.about" },
+  { href: "/contact", label: "nav.contact" },
 ];
 
 function TabIcon({ children }: { children: React.ReactNode }) {
@@ -88,6 +90,7 @@ function TabIcon({ children }: { children: React.ReactNode }) {
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const { t } = useT();
   const { cartCount } = useCart();
   const [moreOpen, setMoreOpen] = useState(false);
 
@@ -128,7 +131,7 @@ export default function BottomNav() {
             aria-current={isActive(tab) ? "page" : undefined}
           >
             <TabIcon>{tab.icon}</TabIcon>
-            <span>{tab.label}</span>
+            <span>{t(tab.label)}</span>
           </Link>
         ))}
 
@@ -149,7 +152,7 @@ export default function BottomNav() {
               <path d="M4.5 16.5v2a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2" />
             </>
           </TabIcon>
-          <span>Downloads</span>
+          <span>{t("nav.downloads")}</span>
         </Link>
 
         <Link
@@ -176,7 +179,7 @@ export default function BottomNav() {
               </span>
             )}
           </span>
-          <span>Cart</span>
+          <span>{t("nav.cart")}</span>
         </Link>
 
         <button
@@ -197,7 +200,7 @@ export default function BottomNav() {
               <circle cx="19" cy="12" r="1.4" />
             </>
           </TabIcon>
-          <span>More</span>
+          <span>{t("nav.more")}</span>
         </button>
       </nav>
 
@@ -220,10 +223,10 @@ export default function BottomNav() {
                   key={link.href}
                   href={link.href}
                   className="more-sheet__link"
-                  data-web-only={"webOnly" in link ? true : undefined}
+                  data-web-only={link.webOnly || undefined}
                   onClick={() => setMoreOpen(false)}
                 >
-                  {link.label}
+                  {t(link.label)}
                 </Link>
               ))}
             </div>

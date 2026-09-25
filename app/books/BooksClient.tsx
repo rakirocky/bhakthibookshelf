@@ -9,6 +9,7 @@ import LibraryHeader from "@/app/components/books/LibraryHeader";
 import Container from "@/app/components/ui/Container";
 
 import type { Book } from "@/app/lib/types/book";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 type Props = {
   books: Book[];
@@ -21,6 +22,7 @@ type SortOption =
   | "price-high";
 
 export default function BooksClient({ books }: Props) {
+  const { t } = useT();
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] =
     useState<SortOption>("featured");
@@ -92,19 +94,19 @@ export default function BooksClient({ books }: Props) {
                 }
               >
                 <option value="featured">
-                  Featured
+                  {t("library.sortFeatured")}
                 </option>
 
                 <option value="title">
-                  Title A-Z
+                  {t("library.sortTitle")}
                 </option>
 
                 <option value="price-low" data-web-only>
-                  Price Low to High
+                  {t("library.sortPriceLow")}
                 </option>
 
                 <option value="price-high" data-web-only>
-                  Price High to Low
+                  {t("library.sortPriceHigh")}
                 </option>
               </select>
             </div>
@@ -122,11 +124,9 @@ export default function BooksClient({ books }: Props) {
                 textAlign: "center",
               }}
             >
-              <h2>No books found</h2>
+              <h2>{t("library.none")}</h2>
 
-              <p>
-                Try another search keyword.
-              </p>
+              <p>{t("library.noneHint")}</p>
             </div>
           ) : (
             <BookGrid books={filteredBooks} />

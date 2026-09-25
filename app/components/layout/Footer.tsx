@@ -3,6 +3,7 @@ import { Phone, Mail, Smartphone, Download } from "lucide-react";
 
 import Container from "../ui/Container";
 import { SOCIAL_LINKS } from "./SocialLinks";
+import { getT } from "../../lib/i18n/server";
 
 
 // lucide-react@1.47.0 (pinned) has no brand icons for either store —
@@ -40,7 +41,9 @@ const APP_DOWNLOAD_URL = "https://bhakthibookshelf.in/downloads/bhakthi-bookshel
 const PLAY_STORE_URL: string | null = null;
 const APP_STORE_URL: string | null = null;
 
-export default function Footer() {
+export default async function Footer() {
+  const t = await getT();
+
   return (
     <footer className="footer">
       <Container>
@@ -51,13 +54,11 @@ export default function Footer() {
             <h2>Bhakthi Bookshelf</h2>
 
             <p className="footer-tagline">
-              A Home for Devotional Reading
+              {t("brand.tagline")}
             </p>
 
             <p className="footer-description">
-              Discover timeless Hindu scriptures, devotional books,
-              epics, prayers and spiritual wisdom in one trusted
-              digital library.
+              {t("footer.about")}
             </p>
 
             <div className="footer-social">
@@ -99,41 +100,41 @@ export default function Footer() {
           </div>
 
           <div className="footer-links">
-            <h3>Quick Links</h3>
+            <h3>{t("footer.quickLinks")}</h3>
 
-            <Link href="/">Home</Link>
+            <Link href="/">{t("nav.home")}</Link>
 
-            <Link href="/books">Books</Link>
+            <Link href="/books">{t("footer.books")}</Link>
 
-            <Link href="/about">About</Link>
+            <Link href="/about">{t("nav.about")}</Link>
 
-            <Link href="/contact">Contact</Link>
+            <Link href="/contact">{t("nav.contact")}</Link>
           </div>
 
           <div className="footer-links">
-            <h3>Categories</h3>
+            <h3>{t("footer.categories")}</h3>
 
-            <Link href="/books">Scriptures</Link>
+            <Link href="/books">{t("footer.scriptures")}</Link>
 
-            <Link href="/books">Epics</Link>
+            <Link href="/books">{t("footer.epics")}</Link>
 
-            <Link href="/books">Prayers</Link>
+            <Link href="/books">{t("footer.prayers")}</Link>
 
-            <Link href="/books">Devotional</Link>
+            <Link href="/books">{t("footer.devotional")}</Link>
           </div>
 
           <div className="footer-links">
-            <h3>Support</h3>
+            <h3>{t("footer.support")}</h3>
 
             <p><Phone size={16} /> +91 78921 19482</p>
 
             <p><Mail size={16} /> bhakthibookshelf@gmail.com</p>
 
-            <Link href="/contact">Contact Us</Link>
+            <Link href="/contact">{t("footer.contactUs")}</Link>
 
-            <Link href="/privacy-policy">Privacy Policy</Link>
+            <Link href="/privacy-policy">{t("footer.privacy")}</Link>
 
-            <Link href="/terms-conditions">Terms & Conditions</Link>
+            <Link href="/terms-conditions">{t("footer.terms")}</Link>
           </div>
 
         </div>
@@ -142,8 +143,8 @@ export default function Footer() {
           <div className="footer-app-text">
             <Smartphone />
             <div>
-              <strong>Get the Bhakthi Bookshelf app</strong>
-              <p>Read offline, download once, carry your library anywhere.</p>
+              <strong>{t("footer.appTitle")}</strong>
+              <p>{t("footer.appText")}</p>
             </div>
           </div>
 
@@ -152,12 +153,12 @@ export default function Footer() {
             className="footer-app-button"
           >
             <Download size={18} />
-            Download for Android
+            {t("footer.appButton")}
           </a>
         </div>
 
         <div className="footer-bottom">
-          © 2026 Bhakthi Bookshelf. All Rights Reserved.
+          {t("footer.rights")}
         </div>
 
       </Container>
