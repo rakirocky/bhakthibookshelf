@@ -7,8 +7,26 @@
 // real filesystem). This avoids the problem instead of working around
 // it with bundler config that Turbopack doesn't fully honor yet.
 import PDFDocument from "pdfkit/js/pdfkit.standalone.js";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
 import { StoreSettings } from "../types/settings";
+
+// pdfkit's built-in Helvetica has no ₹ glyph (it printed as "¹"), so the
+// invoice embeds Noto Sans (OFL, /assets/fonts), which has it and
+// matches the website's body font. Read once, on first use.
+let fonts: { regular: Buffer; bold: Buffer } | null = null;
+
+function invoiceFonts() {
+  if (!fonts) {
+    const dir = path.join(/*turbopackIgnore: true*/ process.cwd(), "assets", "fonts");
+    fonts = {
+      regular: readFileSync(path.join(/*turbopackIgnore: true*/ dir, "NotoSans-Regular.ttf")),
+      bold: readFileSync(path.join(/*turbopackIgnore: true*/ dir, "NotoSans-Bold.ttf")),
+    };
+  }
+  return fonts;
+}
 
 interface InvoiceOrder {
   id: number;
@@ -48,13 +66,19 @@ export function generateInvoicePdf(
     doc.on("end", () => resolve(Buffer.concat(chunks)));
     doc.on("error", reject);
 
+    const { regular, bold } = invoiceFonts();
+    doc.registerFont("Body", regular);
+    doc.registerFont("Bold", bold);
+    doc.font("Body");
+
     // ===== Header: store details =====
     doc
+      .font("Bold")
       .fontSize(20)
       .fillColor("#d97706")
       .text(settings.store_name, { continued: false });
 
-    doc.fontSize(9).fillColor("#555");
+    doc.font("Body").fontSize(9).fillColor("#555");
 
     if (settings.address) {
       doc.text(settings.address);
@@ -79,11 +103,13 @@ export function generateInvoicePdf(
 
     // ===== Title + invoice meta =====
     doc
+      .font("Bold")
       .fontSize(14)
       .fillColor("#111")
       .text("TAX INVOICE", { align: "right" });
 
     doc
+      .font("Body")
       .fontSize(9)
       .fillColor("#555")
       .text(`Invoice / Order #: ${order.order_number}`, {
@@ -99,9 +125,10 @@ export function generateInvoicePdf(
     doc.moveDown(1.5);
 
     // ===== Bill to =====
-    doc.fontSize(10).fillColor("#111").text("Bill To:");
+    doc.font("Bold").fontSize(10).fillColor("#111").text("Bill To:");
 
     doc
+      .font("Body")
       .fontSize(9)
       .fillColor("#333")
       .text(order.customer_name)
@@ -132,6 +159,7 @@ export function generateInvoicePdf(
       .fill("#0B1B3B");
 
     doc
+      .font("Bold")
       .fillColor("#fff")
       .text("Book", colBook + 5, tableTop + 6)
       .text("Qty", colQty, tableTop + 6)
@@ -140,7 +168,7 @@ export function generateInvoicePdf(
 
     let y = tableTop + 25;
 
-    doc.fontSize(9).fillColor("#222");
+    doc.font("Body").fontSize(9).fillColor("#222");
 
     for (const item of order.items) {
       doc
@@ -163,6 +191,7 @@ export function generateInvoicePdf(
     y += 10;
 
     doc
+      .font("Bold")
       .fontSize(11)
       .fillColor("#111")
       .text("Total", colPrice, y, { continued: false })
@@ -172,6 +201,7 @@ export function generateInvoicePdf(
 
     // ===== Footer =====
     doc
+      .font("Body")
       .fontSize(8)
       .fillColor("#999")
       .text(
