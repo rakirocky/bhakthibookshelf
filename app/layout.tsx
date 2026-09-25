@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Marcellus, Noto_Sans, Noto_Sans_Kannada, Noto_Serif_Kannada } from "next/font/google";
+import { Marcellus, Noto_Sans, Noto_Sans_Kannada, Noto_Serif_Devanagari, Noto_Serif_Kannada } from "next/font/google";
 import "./styles/globals.css";
 
 import Providers from "./providers";
@@ -97,7 +97,9 @@ const headingFont = Marcellus({ subsets: ["latin"], weight: "400", variable: "--
 const bodyFont = Noto_Sans({ subsets: ["latin"], variable: "--font-body" });
 const bodyFontKn = Noto_Sans_Kannada({ subsets: ["kannada"], variable: "--font-body-kn" });
 const headingFontKn = Noto_Serif_Kannada({ subsets: ["kannada"], weight: ["600"], variable: "--font-heading-kn" });
-const fontVariables = [headingFont, bodyFont, bodyFontKn, headingFontKn]
+// Devanagari for the daily shloka card
+const devanagariFont = Noto_Serif_Devanagari({ subsets: ["devanagari"], weight: ["500"], variable: "--font-deva" });
+const fontVariables = [headingFont, bodyFont, bodyFontKn, headingFontKn, devanagariFont]
   .map((f) => f.variable)
   .join(" ");
 

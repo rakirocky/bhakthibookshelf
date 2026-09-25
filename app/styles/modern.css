@@ -513,7 +513,7 @@ html[data-native] .temple-frame {
 
 /* smaller laptops (e.g. 1280px): a slightly more compact header so it
    still fits on one row */
-@media (min-width: 861px) and (max-width: 1320px) {
+@media (min-width: 861px) and (max-width: 1400px) {
   .brand h2 {
     font-size: 24px;
   }
@@ -526,5 +526,12 @@ html[data-native] .temple-frame {
   .nav-links {
     gap: 13px;
     font-size: 14.5px;
+  }
+}
+
+/* never let the brand name and the menu touch */
+@media (min-width: 861px) {
+  .navbar .container {
+    gap: 24px;
   }
 }

@@ -586,3 +586,91 @@
   padding: 28px 20px 0;
   background: #fdf0d5;
 }
+
+/* ==========================================
+   DAILY SHLOKA (DailyShloka.tsx)
+========================================== */
+.daily-shloka {
+  padding: 50px 20px 10px;
+  background: linear-gradient(180deg, #fdf0d5 0%, #fdf0d5 60%, #fdf0d5 100%);
+}
+
+.daily-shloka__card {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 34px 30px 30px;
+  text-align: center;
+  border-radius: 20px;
+  background:
+    url("/images/mandala.svg") center / 520px no-repeat,
+    radial-gradient(ellipse 70% 60% at 50% 0%, rgba(245, 158, 11, 0.18), transparent 70%),
+    #fffbf1;
+  border: 1px solid rgba(217, 119, 6, 0.45);
+  box-shadow:
+    0 18px 44px rgba(124, 45, 18, 0.12),
+    inset 0 0 0 7px #fffbf1,
+    inset 0 0 0 8px rgba(217, 119, 6, 0.3);
+}
+
+.daily-shloka__label {
+  display: inline-block;
+  margin: 0 0 18px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(180, 83, 9, 0.4);
+  color: #b45309;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.daily-shloka__verse {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-deva), "Noto Serif Devanagari", serif;
+  font-weight: 500;
+  font-size: clamp(19px, 3.2vw, 26px);
+  line-height: 1.7;
+  color: #7c2d12;
+}
+
+.daily-shloka__source {
+  margin: 14px 0 0;
+  font-family: var(--font-heading), var(--font-heading-kn), Georgia, serif;
+  color: #b45309;
+  font-size: 15px;
+}
+
+.daily-shloka__divider {
+  width: 200px;
+  max-width: 70%;
+  height: 26px;
+  margin: 18px auto;
+  background: url("/images/lotus-divider.svg") center / contain no-repeat;
+}
+
+.daily-shloka__meaning {
+  max-width: 600px;
+  margin: 0 auto 22px;
+  color: #3f2f24;
+  line-height: 1.75;
+  font-size: 16px;
+}
+
+.daily-shloka__meaning strong {
+  color: #7c2d12;
+}
+
+.daily-shloka__share {
+  margin: 0 auto;
+}
+
+@media (max-width: 560px) {
+  .daily-shloka__card {
+    padding: 28px 18px 24px;
+  }
+}

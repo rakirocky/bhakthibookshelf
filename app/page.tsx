@@ -5,6 +5,7 @@ import Newsletter from "./components/home/Newsletter";
 import Footer from "./components/layout/Footer";
 import Statistics from "./components/home/Statistics";
 import ContinueReading from "./components/books/ContinueReading";
+import DailyShloka from "./components/home/DailyShloka";
 
 // Featured Books reads live data from the DB, and this page should never
 // be frozen as static HTML at build time — see the same note in
@@ -22,6 +23,8 @@ export default function Home() {
     <section className="home-continue">
       <ContinueReading compact />
     </section>
+
+    <DailyShloka />
 
     <FeaturedBooks />
 

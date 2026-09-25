@@ -331,6 +331,8 @@ const en = {
   "search.close": "Close search",
   "search.seeAll": "See all results in the Library ›",
   "library.countOne": "1 book found",
+  "shloka.title": "Today's Shloka",
+  "shloka.share": "Share on WhatsApp",
 } as const;
 
 export type I18nKey = keyof typeof en;
@@ -649,6 +651,8 @@ const kn: Record<I18nKey, string> = {
   "search.close": "ಹುಡುಕಾಟ ಮುಚ್ಚಿ",
   "search.seeAll": "ಎಲ್ಲ ಫಲಿತಾಂಶಗಳನ್ನು ಗ್ರಂಥಾಲಯದಲ್ಲಿ ನೋಡಿ ›",
   "library.countOne": "1 ಪುಸ್ತಕ ಸಿಕ್ಕಿದೆ",
+  "shloka.title": "ಇಂದಿನ ಶ್ಲೋಕ",
+  "shloka.share": "ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ",
 };
 
 const DICTS: Record<UiLang, Record<I18nKey, string>> = { en, kn };
