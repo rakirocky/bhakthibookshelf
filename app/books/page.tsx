@@ -3,6 +3,13 @@ import { getLanguagePreference } from "@/app/lib/language";
 import { normalizeCategory } from "@/app/lib/categories";
 
 import BooksClient from "./BooksClient";
+import { pageMetadata } from "@/app/lib/seo/pageMetadata";
+
+export const metadata = pageMetadata(
+  "Library — Devotional Books & Scriptures",
+  "Browse the Bhakthi Bookshelf library: Bhagavad Gita, Ramayana, stotras, puranas and devotional books in English and Kannada, to read online or offline.",
+  "/books"
+);
 
 // Reads live data from the DB — see the same note in app/admin/layout.tsx.
 export const dynamic = "force-dynamic";

@@ -1,6 +1,13 @@
 import Footer from "../components/layout/Footer";
 import { SettingsService } from "@/app/lib/services/settingsService";
 import { getT, getUiLang } from "@/app/lib/i18n/server";
+import { pageMetadata } from "@/app/lib/seo/pageMetadata";
+
+export const metadata = pageMetadata(
+  "Terms & Conditions",
+  "Terms and conditions for purchasing and reading books on Bhakthi Bookshelf.",
+  "/terms-conditions"
+);
 
 export const dynamic = "force-dynamic";
 

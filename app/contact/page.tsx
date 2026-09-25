@@ -6,6 +6,13 @@ import { SOCIAL_LINKS } from "../components/layout/SocialLinks";
 import { PhoneIcon, MailIcon, ClockIcon, PinIcon } from "../components/ui/Icons";
 import { SettingsService } from "@/app/lib/services/settingsService";
 import { getT } from "@/app/lib/i18n/server";
+import { pageMetadata } from "@/app/lib/seo/pageMetadata";
+
+export const metadata = pageMetadata(
+  "Contact Us",
+  "Get in touch with Bhakthi Bookshelf for help with orders, downloads, subscriptions or book suggestions.",
+  "/contact"
+);
 
 export const dynamic = "force-dynamic";
 

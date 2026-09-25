@@ -4,6 +4,13 @@ import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
 import { SubscriptionService } from "@/app/lib/services/subscriptionService";
 import SubscribeButton from "@/app/components/subscribe/SubscribeButton";
 import { getT } from "@/app/lib/i18n/server";
+import { pageMetadata } from "@/app/lib/seo/pageMetadata";
+
+export const metadata = pageMetadata(
+  "Lifetime Subscription",
+  "One-time lifetime subscription to Bhakthi Bookshelf — read every devotional book in the library, including new additions.",
+  "/subscribe"
+);
 
 // Plan list and subscription status are both live data.
 export const dynamic = "force-dynamic";

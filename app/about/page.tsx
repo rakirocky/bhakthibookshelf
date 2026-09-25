@@ -1,6 +1,13 @@
 import Image from "next/image";
 
 import Footer from "../components/layout/Footer";
+import { pageMetadata } from "@/app/lib/seo/pageMetadata";
+
+export const metadata = pageMetadata(
+  "About Us",
+  "Bhakthi Bookshelf is a home for devotional reading — sacred scriptures and spiritual literature in English and Kannada, made easy to read anywhere.",
+  "/about"
+);
 
 export default function AboutPage() {
   return (

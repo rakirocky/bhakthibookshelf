@@ -1,6 +1,13 @@
 import Footer from "../components/layout/Footer";
 import { SettingsService } from "@/app/lib/services/settingsService";
 import { getT, getUiLang } from "@/app/lib/i18n/server";
+import { pageMetadata } from "@/app/lib/seo/pageMetadata";
+
+export const metadata = pageMetadata(
+  "Privacy Policy",
+  "How Bhakthi Bookshelf collects, uses and protects your personal information.",
+  "/privacy-policy"
+);
 
 export const dynamic = "force-dynamic";
 

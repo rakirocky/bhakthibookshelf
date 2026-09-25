@@ -18,6 +18,8 @@ import BookInfo from "@/app/components/details/BookInfo";
 import BookDescription from "@/app/components/details/BookDescription";
 import BookActions from "@/app/components/details/BookActions";
 import RelatedBooks from "@/app/components/details/RelatedBooks";
+import JsonLd from "@/app/lib/seo/JsonLd";
+import { absoluteUrl } from "@/app/lib/seo/siteUrl";
 
 // Reads live data from the DB — see the same note in app/admin/layout.tsx.
 export const dynamic = "force-dynamic";
@@ -52,6 +54,8 @@ export async function generateMetadata(
     title,
     description,
     alternates: { canonical: `/books/${book.slug}` },
+    // an unpublished book is still reachable by slug — keep it out of search
+    ...(book.published === false ? { robots: { index: false } } : {}),
     openGraph: {
       title,
       description,
@@ -92,8 +96,41 @@ export default async function BookDetailsPage({
       )
     : false;
 
+  const cover = fileUrl(book.cover_image);
+  const price = Number(book.discount_price ?? book.price);
+  const bookJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Book",
+    name: book.title,
+    url: absoluteUrl(`/books/${book.slug}`),
+    ...(book.author ? { author: { "@type": "Person", name: book.author } } : {}),
+    ...(book.publisher ? { publisher: { "@type": "Organization", name: book.publisher } } : {}),
+    ...(book.description ? { description: String(book.description).replace(/\s+/g, " ").trim().slice(0, 500) } : {}),
+    ...(cover ? { image: absoluteUrl(cover) } : {}),
+    ...(book.pages ? { numberOfPages: book.pages } : {}),
+    ...(/^(kn|kan|kannada)$/i.test(String(book.language ?? "").trim())
+      ? { inLanguage: "kn" }
+      : /^(en|eng|english)$/i.test(String(book.language ?? "").trim())
+        ? { inLanguage: "en" }
+        : {}),
+    bookFormat: "https://schema.org/EBook",
+    ...(Number.isFinite(price)
+      ? {
+          offers: {
+            "@type": "Offer",
+            price: price.toFixed(2),
+            priceCurrency: "INR",
+            availability: "https://schema.org/InStock",
+            url: absoluteUrl(`/books/${book.slug}`),
+          },
+        }
+      : {}),
+  };
+
   return (
     <main className="book-details-page">
+
+      <JsonLd data={bookJsonLd} />
 
       <Breadcrumb
         title={book.title}
