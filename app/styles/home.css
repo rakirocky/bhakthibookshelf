@@ -655,7 +655,7 @@
 
 .daily-shloka__meaning {
   max-width: 600px;
-  margin: 0 auto 22px;
+  margin: 0 auto 12px;
   color: #3f2f24;
   line-height: 1.75;
   font-size: 16px;
@@ -665,8 +665,12 @@
   color: #7c2d12;
 }
 
+.daily-shloka__meaning[lang="kn"] {
+  font-family: var(--font-body-kn), var(--font-body), sans-serif;
+}
+
 .daily-shloka__share {
-  margin: 0 auto;
+  margin: 12px auto 0;
 }
 
 @media (max-width: 560px) {

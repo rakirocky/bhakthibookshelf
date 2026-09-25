@@ -2,7 +2,7 @@
  * Daily shloka (home page card) — one per day in India time, cycling
  * through this list. The card shows each verse in Kannada script
  * (converted from this Devanagari by app/lib/kannadaScript.ts) with the
- * English meaning. `meaning.kn` is kept for a possible Kannada meaning.
+ * meaning in Kannada and English.
  *
  * Verified 2026-09-25 against published texts: Bhagavad Gita verses vs
  * holy-bhagavad-gita.org (18.66 uses the common "त्वां"; some editions

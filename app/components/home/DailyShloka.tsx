@@ -6,7 +6,7 @@ import ShareShloka from "./ShareShloka";
 /**
  * Home page "Today's Shloka" — a new verse each day (India date), shown
  * in Kannada script (converted from the verified Devanagari in
- * app/data/shlokas.ts) with its English translation.
+ * app/data/shlokas.ts) with its meaning in Kannada and English.
  */
 export default async function DailyShloka() {
   const t = await getT();
@@ -31,12 +31,16 @@ export default async function DailyShloka() {
 
         <div className="daily-shloka__divider" aria-hidden="true" />
 
+        <p className="daily-shloka__meaning" lang="kn">
+          <strong>ಅರ್ಥ:</strong> {shloka.meaning.kn}
+        </p>
+
         <p className="daily-shloka__meaning" lang="en">
           <strong>Meaning:</strong> {shloka.meaning.en}
         </p>
 
         <ShareShloka
-          text={`🪔 Today's Shloka\n\n${lines.join("\n")}\n— ${shloka.source.en}\n\nMeaning: ${shloka.meaning.en}`}
+          text={`🪔 ಇಂದಿನ ಶ್ಲೋಕ · Today's Shloka\n\n${lines.join("\n")}\n— ${shloka.source.kn}\n\nಅರ್ಥ: ${shloka.meaning.kn}\n\nMeaning: ${shloka.meaning.en}`}
           label={t("shloka.share")}
         />
       </div>
