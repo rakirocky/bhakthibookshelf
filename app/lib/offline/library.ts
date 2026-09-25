@@ -327,6 +327,10 @@ export async function listBooksDetailed(): Promise<{
 export async function removeBook(downloadId: number): Promise<void> {
   await removeBookLocal(downloadId);
 
+  // Its last page / bookmarks go with it (readingProgress.ts).
+  const { forgetProgress } = await import("./readingProgress");
+  await forgetProgress(downloadId);
+
   // Best-effort server cleanup — revokes the licence so it isn't restored
   // on the next reconcile and frees the device's book slot.
   fetch(`/api/customer/downloads/${downloadId}`, { method: "DELETE" }).catch(

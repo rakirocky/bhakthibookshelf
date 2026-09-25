@@ -580,3 +580,9 @@
     inset 0 0 0 7px #fffbf1,
     inset 0 0 0 8px rgba(217, 119, 6, 0.3);
 }
+
+/* home "Continue reading" strip — empty (no padding) until the card renders */
+.home-continue:has(.continue-reading) {
+  padding: 28px 20px 0;
+  background: #fdf0d5;
+}

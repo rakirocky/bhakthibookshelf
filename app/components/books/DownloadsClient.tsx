@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
+import ContinueReading from "@/app/components/books/ContinueReading";
 import OfflineSaveButton from "@/app/components/books/OfflineSaveButton";
 import { formatBytes } from "@/app/lib/offline/bytes";
 import {
@@ -133,6 +134,8 @@ export default function DownloadsClient({
           : ""}
         {syncing ? (books && books.length ? " · syncing…" : "Syncing…") : ""}
       </p>
+
+      <ContinueReading />
 
       {notice && (
         <p

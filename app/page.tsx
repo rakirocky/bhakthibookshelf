@@ -7,6 +7,7 @@ import Newsletter from "./components/home/Newsletter";
 import Footer from "./components/layout/Footer";
 import Statistics from "./components/home/Statistics";
 import ThemePreviewBar from "./components/home/ThemePreviewBar";
+import ContinueReading from "./components/books/ContinueReading";
 
 // Featured Books reads live data from the DB, and this page should never
 // be frozen as static HTML at build time — see the same note in
@@ -45,6 +46,11 @@ export default async function Home({
       before rolling it out to other pages. */}
   <div className={variant ? `${variant} ${fonts}` : "home-sacred"}>
     <Hero />
+
+    {/* only renders once a book has been opened in the reader */}
+    <section className="home-continue">
+      <ContinueReading compact />
+    </section>
 
     <FeaturedBooks />
 

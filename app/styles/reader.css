@@ -52,12 +52,16 @@
   overflow: auto;
   display: flex;
   align-items: flex-start;
-  justify-content: center;
+  /* not justify-content:center — a zoomed page wider than the screen
+     would lose its left edge; margin:auto centres it only when it fits */
+  justify-content: flex-start;
   padding: 14px;
 }
 
 .reader__canvas {
-  max-width: 100%;
+  margin: 0 auto;
+  /* width is set per render (zoom can make it wider than the stage) */
+  max-width: none;
   height: auto;
   background: #fff;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
@@ -97,4 +101,133 @@
   padding: 30px;
   opacity: 0.8;
   line-height: 1.6;
+}
+
+/* ---------- Reading comfort (sprint 2) ---------- */
+
+.reader__tools {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.reader__tools button {
+  min-width: 36px;
+  font-size: 16px;
+}
+
+.reader__tools button.is-on {
+  color: #fbbf24;
+}
+
+.reader__progress {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.reader__progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #d97706, #fbbf24);
+  transition: width 0.3s ease;
+}
+
+.reader__panel {
+  position: absolute;
+  top: calc(52px + env(safe-area-inset-top, 0px));
+  right: 12px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 240px;
+  max-width: calc(100vw - 24px);
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(28, 24, 32, 0.96);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+}
+
+.reader__panel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.reader__panel button,
+.reader__marks button {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reader__panel button:disabled {
+  opacity: 0.35;
+}
+
+.reader__swatch--day { background: #ffffff !important; color: #222 !important; }
+.reader__swatch--sepia { background: #f1e3c6 !important; color: #5b4636 !important; }
+.reader__swatch--night { background: #1a1a1a !important; color: #e8e2d6 !important; }
+
+.reader__panel .is-on,
+.reader__marks .is-on {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+.reader__marks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 50vh;
+  overflow: auto;
+}
+
+.reader__marks button {
+  flex: 0 0 auto;
+}
+
+.reader__toast {
+  position: absolute;
+  left: 50%;
+  top: calc(64px + env(safe-area-inset-top, 0px));
+  transform: translateX(-50%);
+  z-index: 6;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(251, 191, 36, 0.95);
+  color: #1c1433;
+  font-size: 13px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+/* Page themes: tint the rendered page (works for any PDF — the pages
+   are images on a canvas, so there's no text colour to change). */
+.reader--sepia {
+  background: #2a2118;
+}
+
+.reader--sepia .reader__canvas {
+  filter: sepia(0.45) saturate(1.1) brightness(0.96) contrast(0.97);
+}
+
+.reader--night {
+  background: #000;
+}
+
+/* Dim + warm rather than inverted: these books are mostly illustrated,
+   and colour inversion turns pictures into photo negatives. */
+.reader--night .reader__canvas {
+  filter: brightness(0.66) sepia(0.2) contrast(1.05);
+  box-shadow: none;
 }
