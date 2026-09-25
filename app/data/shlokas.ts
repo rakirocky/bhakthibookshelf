@@ -1,11 +1,15 @@
 /**
  * Daily shloka (home page card) — one per day in India time, cycling
- * through this list. Text in Devanagari, meaning in English and Kannada.
+ * through this list. The card shows each verse in Kannada script
+ * (converted from this Devanagari by app/lib/kannadaScript.ts) with the
+ * English meaning. `meaning.kn` is kept for a possible Kannada meaning.
  *
- * PENDING REVIEW: compiled 2026-09-25 from well-known sources; please
- * have the client (or a knowledgeable reviewer) check every line before
- * relying on it. Add, remove or reorder entries freely — the rotation
- * adapts to the list length.
+ * Verified 2026-09-25 against published texts: Bhagavad Gita verses vs
+ * holy-bhagavad-gita.org (18.66 uses the common "त्वां"; some editions
+ * such as Gita Press print "त्वा"), the other verses vs shlokam.org,
+ * greenmesg.org, vedicheritage.gov.in and Wikipedia (Gayatri Mantra).
+ * Still worth a read-through by the client. Add, remove or reorder
+ * entries freely — the rotation adapts to the list length.
  */
 
 export interface Shloka {
@@ -105,7 +109,7 @@ export const SHLOKAS: Shloka[] = [
     },
   },
   {
-    lines: ["सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज ।", "अहं त्वा सर्वपापेभ्यो मोक्षयिष्यामि मा शुचः ॥"],
+    lines: ["सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज ।", "अहं त्वां सर्वपापेभ्यो मोक्षयिष्यामि मा शुचः ॥"],
     source: { en: "Bhagavad Gita 18.66", kn: "ಭಗವದ್ಗೀತೆ 18.66" },
     meaning: {
       en: "Abandoning all dharmas, take refuge in Me alone. I shall free you from all sins; do not grieve.",
