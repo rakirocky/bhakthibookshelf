@@ -6,6 +6,7 @@ import { Book } from "@/app/lib/types/book";
 
 import AddToCartButton from "../cart/AddToCartButton";
 import OfflineSaveButton from "../books/OfflineSaveButton";
+import LookInside from "./LookInside";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import { useCart } from "@/app/hooks/useCart";
 import { useIsReadOnlyApp } from "@/app/lib/offline/appMode";
@@ -73,14 +74,7 @@ export default function BookActions({
       )}
 
       {book.sample_pdf && (
-        <a
-          href={fileUrl(book.sample_pdf)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="sample-button"
-        >
-          Download Sample PDF
-        </a>
+        <LookInside title={book.title} sampleUrl={fileUrl(book.sample_pdf)} />
       )}
     </div>
   );

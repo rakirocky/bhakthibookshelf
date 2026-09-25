@@ -136,8 +136,11 @@ textarea {
 /* ---------- 6. Page transitions + image shimmer ---------- */
 @media (prefers-reduced-motion: no-preference) {
   /* each client-side navigation mounts new page content → it glides in */
+  /* fill-mode "backwards", not "both": a transform left filled after
+     the animation makes this element the containing block for any
+     position:fixed descendant (overlays, the theme switcher) */
   .temple-frame__content > * {
-    animation: page-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation: page-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
   }
 }
 
