@@ -524,9 +524,17 @@ html[data-native] .temple-frame {
   }
 
   .nav-links {
-    gap: 13px;
+    gap: 11px;
     font-size: 14.5px;
   }
+}
+
+/* ♡ wishlist + 🛒 cart counts sit together as one tight group */
+.nav-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
 }
 
 /* never let the brand name and the menu touch */

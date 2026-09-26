@@ -67,6 +67,7 @@ const TABS: Tab[] = [
 
 const MORE_LINKS: { href: string; label: I18nKey; webOnly?: boolean }[] = [
   { href: "/downloads", label: "nav.downloads" },
+  { href: "/wishlist", label: "wishlist.title", webOnly: true },
   { href: "/subscribe", label: "nav.subscribe", webOnly: true },
   { href: "/about", label: "nav.about" },
   { href: "/contact", label: "nav.contact" },

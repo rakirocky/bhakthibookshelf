@@ -345,6 +345,17 @@ const en = {
   "festivals.note": "Dates are as observed in Karnataka, from the panchanga. Some families and regions observe a festival a day earlier or later.",
   "festivals.empty": "The festival calendar is being updated — please check back soon.",
   "festivals.cardLink": "Upcoming festivals ›",
+  "wishlist.title": "My Wishlist",
+  "wishlist.subtitle": "Books you've saved for later",
+  "wishlist.add": "Save to wishlist",
+  "wishlist.saved": "Saved to wishlist",
+  "wishlist.remove": "Remove from wishlist",
+  "wishlist.removeShort": "Remove",
+  "wishlist.added": "Saved to your wishlist ♡",
+  "wishlist.removed": "Removed from your wishlist",
+  "wishlist.addedToCart": "Added to cart",
+  "wishlist.empty": "Your wishlist is empty. Tap ♡ on any book to save it for later.",
+  "wishlist.browse": "Browse the Library",
 } as const;
 
 export type I18nKey = keyof typeof en;
@@ -677,6 +688,17 @@ const kn: Record<I18nKey, string> = {
   "festivals.note": "ದಿನಾಂಕಗಳನ್ನು ಪಂಚಾಂಗದ ಪ್ರಕಾರ, ಕರ್ನಾಟಕದಲ್ಲಿ ಆಚರಿಸುವಂತೆ ನೀಡಲಾಗಿದೆ. ಕೆಲವು ಕುಟುಂಬಗಳು ಮತ್ತು ಪ್ರದೇಶಗಳಲ್ಲಿ ಒಂದು ದಿನ ಮುಂಚೆ ಅಥವಾ ನಂತರ ಆಚರಿಸಬಹುದು.",
   "festivals.empty": "ಹಬ್ಬಗಳ ಕ್ಯಾಲೆಂಡರ್ ನವೀಕರಣಗೊಳ್ಳುತ್ತಿದೆ — ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ನೋಡಿ.",
   "festivals.cardLink": "ಮುಂಬರುವ ಹಬ್ಬಗಳು ›",
+  "wishlist.title": "ನನ್ನ ಇಷ್ಟದ ಪಟ್ಟಿ",
+  "wishlist.subtitle": "ನಂತರ ಓದಲು ನೀವು ಉಳಿಸಿದ ಪುಸ್ತಕಗಳು",
+  "wishlist.add": "ಇಷ್ಟದ ಪಟ್ಟಿಗೆ ಸೇರಿಸಿ",
+  "wishlist.saved": "ಇಷ್ಟದ ಪಟ್ಟಿಯಲ್ಲಿದೆ",
+  "wishlist.remove": "ಇಷ್ಟದ ಪಟ್ಟಿಯಿಂದ ತೆಗೆಯಿರಿ",
+  "wishlist.removeShort": "ತೆಗೆಯಿರಿ",
+  "wishlist.added": "ಇಷ್ಟದ ಪಟ್ಟಿಗೆ ಸೇರಿಸಲಾಗಿದೆ ♡",
+  "wishlist.removed": "ಇಷ್ಟದ ಪಟ್ಟಿಯಿಂದ ತೆಗೆಯಲಾಗಿದೆ",
+  "wishlist.addedToCart": "ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಲಾಗಿದೆ",
+  "wishlist.empty": "ನಿಮ್ಮ ಇಷ್ಟದ ಪಟ್ಟಿ ಖಾಲಿಯಾಗಿದೆ. ಯಾವುದೇ ಪುಸ್ತಕದ ಮೇಲಿನ ♡ ಒತ್ತಿ ನಂತರಕ್ಕಾಗಿ ಉಳಿಸಿ.",
+  "wishlist.browse": "ಗ್ರಂಥಾಲಯ ನೋಡಿ",
 };
 
 const DICTS: Record<UiLang, Record<I18nKey, string>> = { en, kn };

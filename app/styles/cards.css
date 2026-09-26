@@ -164,3 +164,130 @@
   background: rgba(217, 119, 6, 0.06);
   transform: translateY(-2px);
 }
+
+/* ♡ wishlist (WishlistButton / WishlistBadge) */
+.book-card {
+  position: relative;
+}
+
+.wishlist-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  font: inherit;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.wishlist-btn svg {
+  fill: none;
+  stroke: #b45309;
+  stroke-width: 1.8;
+  transition: fill 0.15s ease;
+}
+
+.wishlist-btn.is-saved svg {
+  fill: #dc2626;
+  stroke: #dc2626;
+}
+
+.wishlist-btn:active {
+  transform: scale(0.92);
+}
+
+.wishlist-btn--icon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(217, 119, 6, 0.35);
+  background: rgba(255, 251, 241, 0.94);
+  box-shadow: 0 4px 12px rgba(124, 45, 18, 0.18);
+}
+
+.wishlist-btn--full {
+  margin: 16px 0 4px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(217, 119, 6, 0.45);
+  background: #fffbf1;
+  color: #7c2d12;
+  font-weight: 600;
+}
+
+.wishlist-btn--full:hover {
+  background: #fff4e0;
+}
+
+.wishlist-badge {
+  text-decoration: none;
+  font-weight: 700;
+  color: #b91c1c;
+}
+
+.wishlist-empty {
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.wishlist-empty .book-button {
+  display: inline-block;
+  margin-top: 14px;
+}
+
+.wishlist-grid {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.wishlist-item__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.wishlist-item__cart,
+.wishlist-item__remove {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wishlist-item__cart {
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.wishlist-item__remove {
+  border: 1px solid rgba(124, 45, 18, 0.3);
+  background: transparent;
+  color: #7c2d12;
+}
+
+@media (max-width: 560px) {
+  .wishlist-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .wishlist-item__actions {
+    flex-direction: column;
+  }
+
+  .wishlist-grid .book-card h3 {
+    font-size: 15px;
+  }
+
+  .wishlist-grid .book-button {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}

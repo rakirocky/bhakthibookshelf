@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import CartBadge from "../cart/CartBadge";
+import WishlistBadge from "../wishlist/WishlistBadge";
 import LanguageSwitcher from "./LanguageSwitcher";
 import SearchOverlay from "./SearchOverlay";
 import { useT } from "@/app/lib/i18n/I18nProvider";
@@ -142,7 +143,8 @@ export default function Navbar() {
 
           <LanguageSwitcher />
 
-          <span data-web-only style={{ display: "contents" }}>
+          <span data-web-only className="nav-badges">
+            <WishlistBadge />
             <CartBadge />
           </span>
 

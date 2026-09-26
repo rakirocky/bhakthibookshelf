@@ -7,12 +7,14 @@ import { getLanguagePreference } from "@/app/lib/language";
 // catalogue is small, so the browser filters as you type) and the book
 // page's "Recently viewed" strip. Follows the navbar language filter,
 // like the Library. Public data only.
-export async function GET() {
-  const language = await getLanguagePreference();
-  const books = await getAllBooks(language);
+// ?all=1 ignores the language filter (the wishlist shows every saved book).
+export async function GET(request: Request) {
+  const all = new URL(request.url).searchParams.get("all") === "1";
+  const books = await getAllBooks(all ? "all" : await getLanguagePreference());
 
   return NextResponse.json(
     books.map((b: Record<string, unknown>) => ({
+      id: Number(b.id),
       slug: b.slug,
       title: b.title,
       subtitle: b.subtitle ?? null,

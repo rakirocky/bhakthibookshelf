@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function AccountHeader({
@@ -10,15 +9,15 @@ export default function AccountHeader({
   label: string;
 }) {
   const { t } = useT();
-  const router = useRouter();
 
   async function handleLogout() {
     await fetch("/api/customer/logout", {
       method: "POST",
     });
 
-    router.push("/");
-    router.refresh();
+    // Full page load, like login: resets client state that belongs to
+    // the account (e.g. the wishlist) so it doesn't linger on screen.
+    window.location.assign("/");
   }
 
   return (

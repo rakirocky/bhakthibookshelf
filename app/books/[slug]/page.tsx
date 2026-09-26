@@ -9,6 +9,7 @@ import {
 
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import ShareBook from "@/app/components/details/ShareBook";
+import WishlistButton from "@/app/components/wishlist/WishlistButton";
 import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
 import { AccessService } from "@/app/lib/services/accessService";
 import { OrderRepository } from "@/app/lib/repositories/orderRepository";
@@ -173,6 +174,8 @@ export default async function BookDetailsPage({
             book={book}
             hasAccess={hasAccess}
           />
+
+          {!hasAccess && <WishlistButton slug={book.slug} variant="full" />}
 
           <ShareBook title={book.title} slug={book.slug} />
 

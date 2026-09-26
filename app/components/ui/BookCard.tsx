@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import { useT } from "@/app/lib/i18n/I18nProvider";
+import WishlistButton from "../wishlist/WishlistButton";
 
 const NEW_BADGE_WINDOW_DAYS = 14;
 
@@ -37,6 +38,8 @@ export default function BookCard({
   const { t } = useT();
   return (
     <article className="book-card">
+      <WishlistButton slug={slug} />
+
       <Link href={`/books/${slug}`}>
 
         <div className="book-image">
