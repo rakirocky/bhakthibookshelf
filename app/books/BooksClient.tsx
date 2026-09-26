@@ -116,6 +116,7 @@ export default function BooksClient({
 
             <div className="books-sort">
               <select
+                aria-label={t("library.sortBy")}
                 value={sortBy}
                 onChange={(e) =>
                   setSortBy(
@@ -159,7 +160,11 @@ export default function BooksClient({
               <p>{t("library.noneHint")}</p>
             </div>
           ) : (
-            <BookGrid books={filteredBooks} />
+            <>
+              {/* keeps headings in order (h1 → h2 → the cards' h3) for screen readers */}
+              <h2 className="sr-only">{t("footer.books")}</h2>
+              <BookGrid books={filteredBooks} />
+            </>
           )}
         </Container>
       </section>

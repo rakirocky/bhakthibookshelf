@@ -68,18 +68,23 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(API, local.length ? {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ slugs: local }),
-        } : undefined);
-        if (cancelled) return;
-        if (res.ok) {
-          const data = await res.json();
-          setSlugs(data.slugs ?? []);
-          setLoggedIn(true);
+        let data = await (await fetch(API)).json();
+        if (cancelled || !data.loggedIn) return;
+
+        // first load after login: merge the guest list into the account
+        if (local.length) {
+          const res = await fetch(API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ slugs: local }),
+          });
+          if (!res.ok || cancelled) return;
+          data = await res.json();
           writeLocal([]);
         }
+
+        setSlugs(data.slugs ?? []);
+        setLoggedIn(true);
       } catch {
         /* offline — keep the local list */
       } finally {

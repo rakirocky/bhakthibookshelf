@@ -233,6 +233,9 @@ export async function openBook(downloadId: number): Promise<{
 
 export async function listBooks(): Promise<LocalBook[]> {
   const local = await readIndex();
+  // nothing downloaded on this device — no need to ask the server (and
+  // no 401 in the console for visitors who aren't logged in)
+  if (local.length === 0) return local;
 
   // Hide books that belong to a different signed-in account. If the
   // request fails (offline, or logged out) fall back to everything on

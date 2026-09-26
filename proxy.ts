@@ -26,6 +26,9 @@ const PUBLIC_CUSTOMER_PATHS = [
   "/api/customer/signup",
   "/api/customer/request-password-reset",
   "/api/customer/forgot-password",
+  // the route checks the session itself — guests get { loggedIn: false }
+  // instead of a 401 (which shows as a console error on every page)
+  "/api/customer/wishlist",
 ];
 
 async function handleAdminArea(

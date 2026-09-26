@@ -6,9 +6,10 @@ import { WishlistRepository } from "@/app/lib/repositories/wishlistRepository";
 /**
  * The logged-in customer's wishlist, as book slugs.
  *
- *   GET                       → { loggedIn, slugs }
- *                               (guests get a 401 from proxy.ts — the browser
- *                               then keeps their list in localStorage)
+ *   GET                       → { loggedIn, slugs }  (guests: loggedIn false —
+ *                               the browser keeps their list in localStorage;
+ *                               public in proxy.ts, so every handler checks
+ *                               the session itself)
  *   POST   { slugs: [...] }   → add (also merges a guest list after login)
  *   DELETE { slug }           → remove
  *
@@ -31,7 +32,7 @@ const notLoggedIn = () =>
 
 export async function GET() {
   const session = await getCustomerSession();
-  if (!session) return notLoggedIn();
+  if (!session) return NextResponse.json({ success: true, loggedIn: false, slugs: [] });
 
   const slugs = await WishlistRepository.getSlugs(session.customerId);
   return NextResponse.json({ success: true, loggedIn: true, slugs });

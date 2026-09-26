@@ -223,7 +223,7 @@ main {
   }
 
   .bottom-nav__item.is-active {
-    color: var(--color-primary);
+    color: var(--color-primary-strong);
   }
 
   .bottom-nav__icon-wrap {
@@ -337,6 +337,19 @@ main {
 }
 /* Read-only Play Store app (see APP_MODE_SCRIPT in app/layout.tsx):
    commerce UI is web-only; a few replacements are app-only. */
+/* visible to screen readers only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 html[data-app] [data-web-only] {
   display: none !important;
 }

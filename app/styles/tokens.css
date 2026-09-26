@@ -8,6 +8,10 @@
   /* Brand */
   --color-primary: #d97706;
   --color-primary-dark: #b65f00;
+  /* primary for white-text buttons and small text: #d97706 is only 3.2:1
+     against white, this is 5:1 (WCAG AA) */
+  --color-primary-strong: #b45309;
+  --color-primary-strong-hover: #9a3412;
   --color-accent-gold: #c9a227;
   --color-navy: #0b1b3b;
 

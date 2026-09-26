@@ -286,27 +286,31 @@
 .hero-slider-dots{
     display:flex;
     align-items:center;
-    gap:8px;
+    gap:0;
 }
 
+/* 8px dot drawn in the content box; the 8px padding makes a 24px tap
+   target (WCAG target size) without changing the look */
 .hero-slider-dot{
+    box-sizing:content-box;
     width:8px;
     height:8px;
-    padding:0;
+    padding:8px;
     border:none;
     border-radius:999px;
     background:var(--color-border-strong);
+    background-clip:content-box;
     cursor:pointer;
     transition:.25s;
 }
 
 .hero-slider-dot:hover{
-    background:var(--color-accent-gold);
+    background-color:var(--color-accent-gold);
 }
 
 .hero-slider-dot.is-active{
     width:26px;
-    background:var(--color-primary);
+    background-color:var(--color-primary);
 }
 
 .hero-slider-arrow{
