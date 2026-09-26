@@ -22,12 +22,7 @@ export default async function AccountLayout({
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "var(--color-bg-page)",
-      }}
-    >
+    <div className="account-page">
       <AccountHeader
         label={session.name || session.phone}
       />

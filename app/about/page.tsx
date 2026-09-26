@@ -172,7 +172,7 @@ export default function AboutPage() {
 
           <div style={{ padding: "0 30px" }}>
             <Image
-              src="/images/about-banner-english-v2.svg"
+              src="/images/about-banner-english-v3.svg"
               alt=""
               width={1200}
               height={560}

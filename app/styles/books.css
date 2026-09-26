@@ -4,7 +4,10 @@
 
 .books-page{
   padding:80px 5%;
-  background:#fff8EC;
+  /* faint lotus mandala behind the page title, like the other pages */
+  background:
+    var(--mandala-bg) center 30px / min(760px, 110%) no-repeat,
+    #fff8EC;
   min-height:100vh;
 }
 

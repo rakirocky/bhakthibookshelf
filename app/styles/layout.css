@@ -452,3 +452,12 @@ html:not([data-app]) [data-app-only] {
   font-size: 16px;
   padding: 14px 30px;
 }
+
+/* My Account area ((protected)/layout.tsx): page colour + the faint
+   lotus mandala the other pages have */
+.account-page {
+  min-height: 100vh;
+  background:
+    var(--mandala-bg) center 60px / min(760px, 110%) no-repeat,
+    var(--color-bg-page);
+}
