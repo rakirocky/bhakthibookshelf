@@ -107,10 +107,10 @@ export default function AboutPage() {
         >
           <div style={{ padding: "40px 30px 10px" }}>
             <Image
-              src="/images/about-banner-kannada.svg"
+              src="/images/about-banner-kannada-v2.svg"
               alt=""
               width={1200}
-              height={560}
+              height={610}
               style={{
                 width: "100%",
                 height: "auto",
