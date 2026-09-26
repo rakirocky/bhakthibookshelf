@@ -1,6 +1,8 @@
 import { shlokaOfTheDay } from "../../data/festivals";
 import { devanagariToKannada } from "../../lib/kannadaScript";
 import { getT } from "../../lib/i18n/server";
+import Link from "next/link";
+
 import ShareShloka from "./ShareShloka";
 
 /**
@@ -56,6 +58,10 @@ export default async function DailyShloka() {
           }\n\n${lines.join("\n")}\n— ${shloka.source.kn}\n\nಅರ್ಥ: ${shloka.meaning.kn}\n\nMeaning: ${shloka.meaning.en}`}
           label={t("shloka.share")}
         />
+
+        <Link href="/festivals" className="daily-shloka__calendar">
+          📅 {t("festivals.cardLink")}
+        </Link>
       </div>
     </section>
   );

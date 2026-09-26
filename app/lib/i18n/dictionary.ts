@@ -106,7 +106,8 @@ const en = {
   "book.language": "Language",
   "book.pages": "Pages",
   "book.description": "Description",
-  "book.related": "Related Books",
+  "book.related": "You May Also Like",
+  "book.recentlyViewed": "Recently Viewed",
   "book.descriptionSoon": "Description will be updated soon.",
   "soon.title": "{lang} books are coming soon",
   "soon.browse": "Browse the library",
@@ -334,6 +335,16 @@ const en = {
   "shloka.title": "Today's Shloka",
   "shloka.festivalTitle": "Festival Shloka",
   "shloka.share": "Share on WhatsApp",
+  "festivals.title": "Festival Calendar",
+  "festivals.subtitle": "Upcoming Hindu festivals, with a shloka for each one",
+  "festivals.next": "Next Festival",
+  "festivals.today": "Today",
+  "festivals.tomorrow": "Tomorrow",
+  "festivals.inDays": "in {n} days",
+  "festivals.readBooks": "Read",
+  "festivals.note": "Dates are as observed in Karnataka, from the panchanga. Some families and regions observe a festival a day earlier or later.",
+  "festivals.empty": "The festival calendar is being updated — please check back soon.",
+  "festivals.cardLink": "Upcoming festivals ›",
 } as const;
 
 export type I18nKey = keyof typeof en;
@@ -428,7 +439,8 @@ const kn: Record<I18nKey, string> = {
   "book.language": "ಭಾಷೆ",
   "book.pages": "ಪುಟಗಳು",
   "book.description": "ವಿವರಣೆ",
-  "book.related": "ಸಂಬಂಧಿತ ಪುಸ್ತಕಗಳು",
+  "book.related": "ನಿಮಗೆ ಇಷ್ಟವಾಗಬಹುದಾದ ಪುಸ್ತಕಗಳು",
+  "book.recentlyViewed": "ಇತ್ತೀಚೆಗೆ ನೋಡಿದ ಪುಸ್ತಕಗಳು",
   "book.descriptionSoon": "ವಿವರಣೆಯನ್ನು ಶೀಘ್ರದಲ್ಲೇ ಸೇರಿಸಲಾಗುವುದು.",
   "soon.title": "{lang} ಪುಸ್ತಕಗಳು ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿವೆ",
   "soon.browse": "ಗ್ರಂಥಾಲಯ ನೋಡಿ",
@@ -655,6 +667,16 @@ const kn: Record<I18nKey, string> = {
   "shloka.title": "ಇಂದಿನ ಶ್ಲೋಕ",
   "shloka.festivalTitle": "ಹಬ್ಬದ ಶ್ಲೋಕ",
   "shloka.share": "ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಿ",
+  "festivals.title": "ಹಬ್ಬಗಳ ಕ್ಯಾಲೆಂಡರ್",
+  "festivals.subtitle": "ಮುಂಬರುವ ಹಬ್ಬಗಳು, ಪ್ರತಿ ಹಬ್ಬಕ್ಕೊಂದು ಶ್ಲೋಕ",
+  "festivals.next": "ಮುಂದಿನ ಹಬ್ಬ",
+  "festivals.today": "ಇಂದು",
+  "festivals.tomorrow": "ನಾಳೆ",
+  "festivals.inDays": "{n} ದಿನಗಳಲ್ಲಿ",
+  "festivals.readBooks": "ಓದಿ",
+  "festivals.note": "ದಿನಾಂಕಗಳನ್ನು ಪಂಚಾಂಗದ ಪ್ರಕಾರ, ಕರ್ನಾಟಕದಲ್ಲಿ ಆಚರಿಸುವಂತೆ ನೀಡಲಾಗಿದೆ. ಕೆಲವು ಕುಟುಂಬಗಳು ಮತ್ತು ಪ್ರದೇಶಗಳಲ್ಲಿ ಒಂದು ದಿನ ಮುಂಚೆ ಅಥವಾ ನಂತರ ಆಚರಿಸಬಹುದು.",
+  "festivals.empty": "ಹಬ್ಬಗಳ ಕ್ಯಾಲೆಂಡರ್ ನವೀಕರಣಗೊಳ್ಳುತ್ತಿದೆ — ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ನೋಡಿ.",
+  "festivals.cardLink": "ಮುಂಬರುವ ಹಬ್ಬಗಳು ›",
 };
 
 const DICTS: Record<UiLang, Record<I18nKey, string>> = { en, kn };

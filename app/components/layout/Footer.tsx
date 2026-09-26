@@ -106,6 +106,8 @@ export default async function Footer() {
 
             <Link href="/books">{t("footer.books")}</Link>
 
+            <Link href="/festivals">{t("festivals.title")}</Link>
+
             <Link href="/about">{t("nav.about")}</Link>
 
             <Link href="/contact">{t("nav.contact")}</Link>

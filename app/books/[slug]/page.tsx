@@ -11,6 +11,8 @@ import { fileUrl } from "@/app/lib/upload/fileUrl";
 import ShareBook from "@/app/components/details/ShareBook";
 import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
 import { AccessService } from "@/app/lib/services/accessService";
+import { OrderRepository } from "@/app/lib/repositories/orderRepository";
+import { SubscriptionRepository } from "@/app/lib/repositories/subscriptionRepository";
 import { getLanguagePreference } from "@/app/lib/language";
 
 import Breadcrumb from "@/app/components/details/Breadcrumb";
@@ -18,6 +20,7 @@ import BookInfo from "@/app/components/details/BookInfo";
 import BookDescription from "@/app/components/details/BookDescription";
 import BookActions from "@/app/components/details/BookActions";
 import RelatedBooks from "@/app/components/details/RelatedBooks";
+import RecentlyViewed from "@/app/components/details/RecentlyViewed";
 import JsonLd from "@/app/lib/seo/JsonLd";
 import { absoluteUrl } from "@/app/lib/seo/siteUrl";
 
@@ -84,9 +87,6 @@ export default async function BookDetailsPage({
 
   const language = await getLanguagePreference();
 
-  const relatedBooks =
-    await getRelatedBooks(book.slug, 4, language);
-
   const session = await getCustomerSession();
 
   const hasAccess = session
@@ -95,6 +95,18 @@ export default async function BookDetailsPage({
         book.id
       )
     : false;
+
+  // Don't suggest books the customer already bought (a subscriber owns
+  // everything, so for them the suggestions stay as they are).
+  const ownedIds = new Set<number>();
+  if (session && !(await SubscriptionRepository.getActiveForCustomer(session.customerId))) {
+    for (const owned of await OrderRepository.getPurchasedBooksForCustomer(session.customerId)) {
+      ownedIds.add(Number(owned.id));
+    }
+  }
+
+  const relatedBooks =
+    await getRelatedBooks(book, 4, language, ownedIds);
 
   const cover = fileUrl(book.cover_image);
   const price = Number(book.discount_price ?? book.price);
@@ -175,6 +187,8 @@ export default async function BookDetailsPage({
       <RelatedBooks
         books={relatedBooks}
       />
+
+      <RecentlyViewed current={{ slug: book.slug }} />
 
     </main>
   );

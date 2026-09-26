@@ -26,6 +26,14 @@ export interface Festival {
   /** last day, inclusive; omit for a single-day festival */
   to?: string;
   shlokas: Shloka[];
+  /**
+   * Words that mark a book as good reading for this festival — matched
+   * against book titles/subtitles/descriptions on the festival calendar
+   * page. English words must match a whole word ("lakshmi" doesn't hit
+   * "Lakshmikanth", so list "ramayana" separately from "rama"); Kannada
+   * ones match anywhere.
+   */
+  keywords: string[];
 }
 
 /** a verse already in the daily rotation, looked up by its source */
@@ -180,76 +188,91 @@ const NAVARATRI: FestivalKind = {
   name: { en: "Navaratri", kn: "ನವರಾತ್ರಿ" },
   greeting: { en: "Happy Navaratri", kn: "ನವರಾತ್ರಿಯ ಶುಭಾಶಯಗಳು" },
   shlokas: [DEVI_SHAKTI, SARVA_MANGALA, DEVI_MATRU, DEVI_BUDDHI, DEVI_SHANTI, DEVI_LAKSHMI],
+  keywords: ["devi", "durga", "lalitha", "lalita", "chandi", "shakti", "ದೇವಿ", "ದುರ್ಗಾ", "ಲಲಿತಾ"],
 };
 const AYUDHA_PUJA: FestivalKind = {
   name: { en: "Mahanavami · Ayudha Puja", kn: "ಮಹಾನವಮಿ · ಆಯುಧ ಪೂಜೆ" },
   greeting: { en: "Happy Ayudha Puja", kn: "ಆಯುಧ ಪೂಜೆಯ ಶುಭಾಶಯಗಳು" },
   shlokas: [SARASWATI],
+  keywords: ["saraswati", "sarasvati", "durga", "devi", "ಸರಸ್ವತಿ", "ದುರ್ಗಾ"],
 };
 const VIJAYADASHAMI: FestivalKind = {
   name: { en: "Vijayadashami", kn: "ವಿಜಯದಶಮಿ" },
   greeting: { en: "Happy Vijayadashami", kn: "ವಿಜಯದಶಮಿಯ ಶುಭಾಶಯಗಳು" },
   shlokas: [SHAMI],
+  keywords: ["durga", "devi", "chamundi", "rama", "ramayana", "ದುರ್ಗಾ", "ಚಾಮುಂಡಿ", "ರಾಮ"],
 };
 const DEEPAVALI: FestivalKind = {
   name: { en: "Deepavali", kn: "ದೀಪಾವಳಿ" },
   greeting: { en: "Happy Deepavali", kn: "ದೀಪಾವಳಿಯ ಶುಭಾಶಯಗಳು" },
   shlokas: [DEEPA_JYOTI, MAHALAKSHMI],
+  keywords: ["lakshmi", "krishna", "ಲಕ್ಷ್ಮಿ", "ಲಕ್ಷ್ಮೀ", "ಕೃಷ್ಣ"],
 };
 const BALI_PADYAMI: FestivalKind = {
   name: { en: "Balipadyami", kn: "ಬಲಿಪಾಡ್ಯಮಿ" },
   greeting: { en: "Happy Balipadyami", kn: "ಬಲಿಪಾಡ್ಯಮಿಯ ಶುಭಾಶಯಗಳು" },
   shlokas: [SHUBHAM_KAROTI],
+  keywords: ["vishnu", "vamana", "ವಿಷ್ಣು", "ವಾಮನ"],
 };
 const VAIKUNTHA_EKADASHI: FestivalKind = {
   name: { en: "Vaikuntha Ekadashi", kn: "ವೈಕುಂಠ ಏಕಾದಶಿ" },
   greeting: { en: "Vaikuntha Ekadashi blessings", kn: "ವೈಕುಂಠ ಏಕಾದಶಿಯ ಶುಭಾಶಯಗಳು" },
   shlokas: [SHANTAKARAM],
+  keywords: ["vishnu", "bhagavad", "gita", "ವಿಷ್ಣು", "ಗೀತೆ", "ಗೀತಾ"],
 };
 const SANKRANTI: FestivalKind = {
   name: { en: "Makara Sankranti", kn: "ಮಕರ ಸಂಕ್ರಾಂತಿ" },
   greeting: { en: "Happy Makara Sankranti", kn: "ಮಕರ ಸಂಕ್ರಾಂತಿಯ ಶುಭಾಶಯಗಳು" },
   shlokas: [SURYA],
+  keywords: ["surya", "aditya", "ಸೂರ್ಯ", "ಆದಿತ್ಯ"],
 };
 const SHIVARATRI: FestivalKind = {
   name: { en: "Maha Shivaratri", kn: "ಮಹಾ ಶಿವರಾತ್ರಿ" },
   greeting: { en: "Maha Shivaratri blessings", kn: "ಮಹಾ ಶಿವರಾತ್ರಿಯ ಶುಭಾಶಯಗಳು" },
   shlokas: [MAHAMRITYUNJAYA],
+  keywords: ["shiva", "siva", "rudra", "ಶಿವ", "ರುದ್ರ"],
 };
 const UGADI: FestivalKind = {
   name: { en: "Ugadi", kn: "ಯುಗಾದಿ" },
   greeting: { en: "Happy Ugadi", kn: "ಯುಗಾದಿ ಹಬ್ಬದ ಶುಭಾಶಯಗಳು" },
   shlokas: [UGADI_NEEM],
+  keywords: ["panchanga", "ಪಂಚಾಂಗ"],
 };
 const RAMA_NAVAMI: FestivalKind = {
   name: { en: "Sri Rama Navami", kn: "ಶ್ರೀ ರಾಮನವಮಿ" },
   greeting: { en: "Happy Sri Rama Navami", kn: "ಶ್ರೀ ರಾಮನವಮಿಯ ಶುಭಾಶಯಗಳು" },
   shlokas: [RAMA],
+  keywords: ["rama", "ramayana", "hanuman", "ರಾಮ", "ಹನುಮ"],
 };
 const AKSHAYA_TRITIYA: FestivalKind = {
   name: { en: "Akshaya Tritiya", kn: "ಅಕ್ಷಯ ತೃತೀಯ" },
   greeting: { en: "Happy Akshaya Tritiya", kn: "ಅಕ್ಷಯ ತೃತೀಯದ ಶುಭಾಶಯಗಳು" },
   shlokas: [MAHALAKSHMI],
+  keywords: ["lakshmi", "ಲಕ್ಷ್ಮಿ", "ಲಕ್ಷ್ಮೀ"],
 };
 const GURU_PURNIMA: FestivalKind = {
   name: { en: "Guru Purnima", kn: "ಗುರು ಪೂರ್ಣಿಮೆ" },
   greeting: { en: "Happy Guru Purnima", kn: "ಗುರು ಪೂರ್ಣಿಮೆಯ ಶುಭಾಶಯಗಳು" },
   shlokas: [GURU],
+  keywords: ["guru", "bhagavad", "gita", "ಗುರು", "ಗೀತೆ"],
 };
 const VARAMAHALAKSHMI: FestivalKind = {
   name: { en: "Varamahalakshmi Vrata", kn: "ವರಮಹಾಲಕ್ಷ್ಮೀ ವ್ರತ" },
   greeting: { en: "Happy Varamahalakshmi", kn: "ವರಮಹಾಲಕ್ಷ್ಮೀ ಹಬ್ಬದ ಶುಭಾಶಯಗಳು" },
   shlokas: [DEVI_LAKSHMI, MAHALAKSHMI],
+  keywords: ["lakshmi", "ಲಕ್ಷ್ಮಿ", "ಲಕ್ಷ್ಮೀ"],
 };
 const JANMASHTAMI: FestivalKind = {
   name: { en: "Sri Krishna Janmashtami", kn: "ಶ್ರೀ ಕೃಷ್ಣ ಜನ್ಮಾಷ್ಟಮಿ" },
   greeting: { en: "Happy Krishna Janmashtami", kn: "ಶ್ರೀ ಕೃಷ್ಣ ಜನ್ಮಾಷ್ಟಮಿಯ ಶುಭಾಶಯಗಳು" },
   shlokas: [KRISHNA],
+  keywords: ["krishna", "bhagavad", "gita", "ಕೃಷ್ಣ", "ಗೀತೆ"],
 };
 const GANESHA_CHATURTHI: FestivalKind = {
   name: { en: "Ganesha Chaturthi", kn: "ಗಣೇಶ ಚತುರ್ಥಿ" },
   greeting: { en: "Happy Ganesha Chaturthi", kn: "ಗಣೇಶ ಚತುರ್ಥಿಯ ಶುಭಾಶಯಗಳು" },
   shlokas: [GANESHA],
+  keywords: ["ganesha", "ganesh", "ganapati", "vinayaka", "ಗಣೇಶ", "ಗಣಪತಿ"],
 };
 
 export const FESTIVALS: Festival[] = [
@@ -291,6 +314,28 @@ export function festivalOnDay(dayNumber: number): { festival: Festival; shloka: 
     }
   }
   return null;
+}
+
+/** Published books that suit a festival (see Festival.keywords). */
+export function booksForFestival<
+  B extends { title?: string | null; subtitle?: string | null; description?: string | null }
+>(festival: Festival, books: B[], limit = 3): B[] {
+  const tests = festival.keywords.map((kw) =>
+    /^[a-z]+$/.test(kw)
+      ? (text: string) => new RegExp(`(^|[^a-z])${kw}($|[^a-z])`).test(text)
+      : (text: string) => text.includes(kw)
+  );
+  return books
+    .filter((b) => {
+      const text = `${b.title ?? ""} ${b.subtitle ?? ""} ${b.description ?? ""}`.toLowerCase();
+      return tests.some((test) => test(text));
+    })
+    .slice(0, limit);
+}
+
+/** Days since 1970-01-01 of a festival's first and last (IST) day. */
+export function festivalDays(festival: Festival): { start: number; end: number } {
+  return { start: dayNumberOf(festival.from), end: dayNumberOf(festival.to ?? festival.from) };
 }
 
 /** The home card's verse: the festival's on a festival day, else the daily rotation. */

@@ -526,3 +526,29 @@
   opacity: 0.8;
   text-align: center;
 }
+
+/* Book page suggestion rows: fixed-width columns, so a row of 1–2 books
+   doesn't stretch into giant cards */
+.related-books .books-grid {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.related-books {
+  margin-top: 40px;
+}
+
+@media (max-width: 560px) {
+  .related-books .books-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .related-books .book-card h3 {
+    font-size: 15px;
+  }
+
+  .related-books .book-button {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}

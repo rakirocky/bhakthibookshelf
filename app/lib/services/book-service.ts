@@ -44,16 +44,36 @@ export const getBookBySlug = unstable_cache(
   { tags: ["books"], revalidate: 300 }
 );
 
+/**
+ * "You may also like" on a book page: other published books ranked by
+ * how closely they match this one — same category, then same author,
+ * then same language, featured as a tie-breaker; otherwise newest first
+ * (getAllBooks' order). Books in `excludeIds` (ones the customer
+ * already owns) are left out.
+ */
 export async function getRelatedBooks(
-  currentSlug: string,
+  current: { slug: string; category?: string | null; author?: string | null; language?: string | null },
   limit = 4,
-  language?: string
+  language?: string,
+  excludeIds: ReadonlySet<number> = new Set()
 ) {
   const books = await getAllBooks(language);
+  const category = normalizeCategory(current.category);
+  const author = String(current.author ?? "").trim().toLowerCase();
+  const bookLanguage = String(current.language ?? "").trim().toLowerCase();
+
+  const score = (book: (typeof books)[number]) =>
+    (category && normalizeCategory(book.category) === category ? 4 : 0) +
+    (author && String(book.author ?? "").trim().toLowerCase() === author ? 2 : 0) +
+    (bookLanguage && String(book.language ?? "").trim().toLowerCase() === bookLanguage ? 1 : 0) +
+    (book.featured ? 0.5 : 0);
 
   return books
-    .filter((book) => book.slug !== currentSlug)
-    .slice(0, limit);
+    .filter((book) => book.slug !== current.slug && !excludeIds.has(Number(book.id)))
+    .map((book, index) => ({ book, index, score: score(book) }))
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .slice(0, limit)
+    .map(({ book }) => book);
 }
 
 export async function getDashboardBookCount() {

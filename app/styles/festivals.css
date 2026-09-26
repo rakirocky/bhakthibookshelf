@@ -1,0 +1,286 @@
+/* ==========================================
+   FESTIVAL CALENDAR (app/festivals/page.tsx)
+========================================== */
+
+.festivals-page {
+  padding: 70px 5% 60px;
+  background:
+    url("/images/mandala.svg") center 40px / min(760px, 110%) no-repeat,
+    linear-gradient(180deg, #fffaf0 0%, #fdf0d5 100%);
+  min-height: 100vh;
+}
+
+.festivals-page .page-header {
+  margin-bottom: 36px;
+}
+
+/* Next festival — the shloka-card look */
+.festival-next {
+  max-width: 760px;
+  margin: 0 auto 50px;
+  padding: 30px 26px 26px;
+  text-align: center;
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse 80% 65% at 50% 0%, rgba(234, 88, 12, 0.18), transparent 72%),
+    #fff8ea;
+  border: 2px solid #f59e0b;
+  box-shadow:
+    0 20px 50px rgba(194, 65, 12, 0.16),
+    inset 0 0 0 7px #fff8ea,
+    inset 0 0 0 9px rgba(234, 88, 12, 0.3);
+}
+
+.festival-next__label {
+  display: inline-block;
+  margin: 0 0 14px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ea580c, #d97706);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.festival-next h2 {
+  margin: 0;
+  font-family: var(--font-heading-kn), "Noto Serif Kannada", serif;
+  font-size: clamp(26px, 5vw, 36px);
+  color: #c2410c !important;
+}
+
+.festival-next__en {
+  margin: 2px 0 8px;
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 18px;
+  color: #9a3412;
+}
+
+.festival-next__date {
+  margin: 0 0 18px;
+  color: #3f2f24;
+}
+
+.festival-next__date strong {
+  color: #c2410c;
+}
+
+.festival-next blockquote {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-heading-kn), "Noto Serif Kannada", serif;
+  font-weight: 600;
+  font-size: clamp(17px, 2.8vw, 22px);
+  line-height: 1.7;
+  color: #7c2d12;
+}
+
+.festival-next__source {
+  margin: 10px 0 0;
+  color: #b45309;
+  font-size: 14px;
+}
+
+/* Month groups */
+.festival-month {
+  max-width: 860px;
+  margin: 0 auto 34px;
+}
+
+.festival-month h2 {
+  margin: 0 0 14px;
+  font-size: 24px;
+  color: #7c2d12;
+  border-bottom: 1px dashed rgba(217, 119, 6, 0.5);
+  padding-bottom: 8px;
+  text-align: left;
+}
+
+.festival-month h2 span {
+  font-size: 18px;
+  color: #b45309;
+}
+
+.festival-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.festival-item {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #fffbf1;
+  border: 1px solid rgba(217, 119, 6, 0.25);
+  box-shadow: 0 8px 22px rgba(124, 45, 18, 0.07);
+}
+
+.festival-item--today {
+  border: 2px solid #f59e0b;
+  background: #fff4e0;
+}
+
+.festival-item__date {
+  flex: 0 0 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ea580c, #b45309);
+  color: #fff;
+  line-height: 1.15;
+}
+
+.festival-item__day {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.festival-item__month,
+.festival-item__weekday {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.festival-item__weekday {
+  opacity: 0.85;
+}
+
+.festival-item__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.festival-item__body h3 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  color: #7c2d12;
+}
+
+.festival-item__body h3 [lang="kn"] {
+  font-family: var(--font-heading-kn), "Noto Serif Kannada", serif;
+}
+
+.festival-item__en {
+  font-family: var(--font-heading), Georgia, serif;
+  font-weight: 400;
+  color: #9a3412;
+}
+
+.festival-item__when {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #57534e;
+}
+
+.festival-item__when strong {
+  color: #c2410c;
+}
+
+.festival-item__verse {
+  margin: 0;
+  font-family: var(--font-heading-kn), "Noto Serif Kannada", serif;
+  font-size: 16px;
+  color: #7c2d12;
+}
+
+.festival-item__verse em {
+  font-family: var(--font-body), sans-serif;
+  font-style: normal;
+  font-size: 13px;
+  color: #b45309;
+}
+
+.festival-item__reads {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #57534e;
+}
+
+.festival-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid rgba(217, 119, 6, 0.35);
+  color: #7c2d12;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.festival-read:hover {
+  border-color: #d97706;
+  background: #fff4e0;
+}
+
+.festival-read img {
+  width: 22px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.festivals-empty,
+.festivals-note {
+  max-width: 760px;
+  margin: 30px auto 0;
+  text-align: center;
+  font-size: 14px;
+  color: #78716c;
+}
+
+/* link from the home shloka card */
+.daily-shloka__calendar {
+  display: block;
+  width: fit-content;
+  margin: 14px auto 0;
+  color: #b45309;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.daily-shloka__calendar:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 560px) {
+  .festivals-page {
+    padding: 40px 14px 40px;
+  }
+
+  .festival-item {
+    gap: 12px;
+    padding: 14px 12px;
+  }
+
+  .festival-item__date {
+    flex-basis: 54px;
+  }
+
+  .festival-item__day {
+    font-size: 22px;
+  }
+
+  .festival-item__body h3 {
+    font-size: 18px;
+  }
+}
