@@ -85,7 +85,9 @@ export default function HeroBookshelf({ books }: Props) {
                 src={coverSrc(activeBook)}
                 alt={activeBook.title}
                 fill
-                sizes="300px"
+                // matches .hero-slide widths in home.css, so phones don't
+                // download a desktop-sized cover
+                sizes="(max-width: 480px) 220px, (max-width: 560px) 200px, (max-width: 900px) 260px, 300px"
                 style={{ objectFit: "cover" }}
                 priority
               />

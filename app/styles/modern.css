@@ -135,11 +135,15 @@ textarea {
 
 /* ---------- 6. Page transitions + image shimmer ---------- */
 @media (prefers-reduced-motion: no-preference) {
-  /* each client-side navigation mounts new page content → it glides in */
+  /* each client-side navigation mounts new page content → it glides in.
+     Only after the first in-app navigation (html.page-anim, set in
+     instrumentation-client.ts): on the first load the content must paint
+     straight away — starting it at opacity 0 delayed the phone "largest
+     contentful paint" and repainted the whole tall page while fading. */
   /* fill-mode "backwards", not "both": a transform left filled after
      the animation makes this element the containing block for any
      position:fixed descendant (overlays, the theme switcher) */
-  .temple-frame__content > * {
+  html.page-anim .temple-frame__content > * {
     animation: page-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
   }
 }

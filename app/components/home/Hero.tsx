@@ -34,7 +34,14 @@ export default async function Hero() {
           <div className="hero-intro">
             {/* same Om as the About page banners (public/images/om.jpg) */}
             <div className="hero-om">
-              <Image src="/images/om.jpg" alt="" width={144} height={144} priority />
+              <Image
+                src="/images/om.jpg"
+                alt=""
+                width={120}
+                height={120}
+                sizes="(max-width: 560px) 96px, 120px"
+                priority
+              />
             </div>
 
             <p className="hero-tag">

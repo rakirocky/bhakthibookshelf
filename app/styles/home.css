@@ -424,8 +424,8 @@
    text, and a thin double gold rule. */
 .about-sacred {
   background:
-    url("/images/mandala.svg") center 22% / min(620px, 92%) no-repeat,
-    url("/images/mandala.svg") center 74% / min(620px, 92%) no-repeat,
+    var(--mandala-bg) center 22% / min(620px, 92%) no-repeat,
+    var(--mandala-bg) center 74% / min(620px, 92%) no-repeat,
     radial-gradient(ellipse 80% 30% at 50% 0%, rgba(245, 158, 11, 0.18), transparent 70%),
     linear-gradient(180deg, #fffbf1 0%, #fdf2dc 55%, #fbe8c4 100%);
   border: 1px solid rgba(217, 119, 6, 0.45);
@@ -486,7 +486,7 @@
 /* Hero: sunrise glow + a large faint mandala behind the book slider */
 .home-sacred .hero {
   background:
-    url("/images/mandala.svg") center 72% / min(760px, 120%) no-repeat,
+    var(--mandala-bg) center 72% / min(760px, 120%) no-repeat,
     radial-gradient(ellipse 55% 40% at 50% 68%, rgba(245, 158, 11, 0.28), transparent 70%),
     radial-gradient(ellipse 90% 35% at 50% 0%, rgba(253, 230, 138, 0.35), transparent 70%),
     linear-gradient(180deg, #fffaf0 0%, #fdf0d5 100%);
@@ -545,8 +545,8 @@
 /* Featured Books: parchment band, mandalas peeking in from the corners */
 .home-sacred .featured-books {
   background:
-    url("/images/mandala.svg") -180px -120px / 520px no-repeat,
-    url("/images/mandala.svg") calc(100% + 180px) calc(100% + 120px) / 520px no-repeat,
+    var(--mandala-bg) -180px -120px / 520px no-repeat,
+    var(--mandala-bg) calc(100% + 180px) calc(100% + 120px) / 520px no-repeat,
     linear-gradient(180deg, #fdf0d5 0%, #fffaf0 100%);
 }
 
@@ -558,7 +558,7 @@
 /* Our Promise: the same cream as the shloka band, gold-edged cards */
 .home-sacred .statistics {
   background:
-    url("/images/mandala.svg") center / 900px no-repeat,
+    var(--mandala-bg) center / 900px no-repeat,
     #fdf0d5;
 }
 
@@ -595,7 +595,7 @@
   padding: 50px 30px;
   border-radius: 18px;
   background:
-    url("/images/mandala.svg") center / 520px no-repeat,
+    var(--mandala-bg) center / 520px no-repeat,
     radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245, 158, 11, 0.16), transparent 70%),
     #fffbf1;
   border: 1px solid rgba(217, 119, 6, 0.45);
@@ -627,7 +627,7 @@
   text-align: center;
   border-radius: 20px;
   background:
-    url("/images/mandala.svg") center / 520px no-repeat,
+    var(--mandala-bg) center / 520px no-repeat,
     radial-gradient(ellipse 70% 60% at 50% 0%, rgba(245, 158, 11, 0.18), transparent 70%),
     #fffbf1;
   border: 1px solid rgba(217, 119, 6, 0.45);
@@ -653,7 +653,7 @@
 /* festival day: marigold border, warmer glow, greeting above the verse */
 .daily-shloka__card--festival {
   background:
-    url("/images/mandala.svg") center / 520px no-repeat,
+    var(--mandala-bg) center / 520px no-repeat,
     radial-gradient(ellipse 80% 65% at 50% 0%, rgba(234, 88, 12, 0.22), transparent 72%),
     #fff8ea;
   border: 2px solid #f59e0b;

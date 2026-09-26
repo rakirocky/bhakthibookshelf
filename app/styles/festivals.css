@@ -5,7 +5,7 @@
 .festivals-page {
   padding: 70px 5% 60px;
   background:
-    url("/images/mandala.svg") center 40px / min(760px, 110%) no-repeat,
+    var(--mandala-bg) center 40px / min(760px, 110%) no-repeat,
     linear-gradient(180deg, #fffaf0 0%, #fdf0d5 100%);
   min-height: 100vh;
 }

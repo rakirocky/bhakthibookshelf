@@ -13,3 +13,8 @@ try {
 } catch {
   /* never let monitoring break the page */
 }
+
+/** Turns on the page-to-page glide (modern.css) from the first in-app navigation on. */
+export function onRouterTransitionStart() {
+  document.documentElement.classList.add("page-anim");
+}

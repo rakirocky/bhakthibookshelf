@@ -37,7 +37,7 @@
 
   /* a faint lotus mandala at the top of every page (home's own hero
      background covers it) */
-  background: url("/images/mandala.svg") center 30px / min(760px, 110%) no-repeat;
+  background: var(--mandala-bg) center 30px / min(760px, 110%) no-repeat;
 }
 
 /* Hard-coded white cards */
