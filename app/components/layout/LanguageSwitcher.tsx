@@ -68,7 +68,7 @@ export default function LanguageSwitcher() {
             cursor: "pointer",
             background:
               language === option.value
-                ? "var(--color-primary)"
+                ? "var(--color-primary-strong)"
                 : "transparent",
             color:
               language === option.value
