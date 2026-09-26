@@ -464,7 +464,7 @@ html:not([data-app]) [data-app-only] {
 }
 
 /* ==========================================
-   ANNOUNCEMENT BAR (AnnouncementBar.tsx) — the message pops in every 5 s
+   ANNOUNCEMENT BAR (AnnouncementBar.tsx) — message shown 5 s, hidden 5 s
 ========================================== */
 .announcement-bar {
   background: var(--color-navy);
@@ -495,9 +495,30 @@ html:not([data-app]) [data-app-only] {
   text-underline-offset: 3px;
 }
 
+/* hidden phase: the text is invisible but keeps its space (no page jump) */
+.announcement-bar__message.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .announcement-bar__message {
+  .announcement-bar__message.is-shown {
     animation: announcement-pop 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+  }
+
+  .announcement-bar__message.is-hidden {
+    animation: announcement-fade 0.5s ease-in;
+  }
+}
+
+@keyframes announcement-fade {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(30%);
   }
 }
 

@@ -10,14 +10,15 @@ interface Announcement {
   link: string | null;
 }
 
-const POP_EVERY_MS = 5000;
+const PHASE_MS = 5000;
 
 /**
- * Site-wide announcement bar (Admin → Announcements). Always shown while
- * an announcement is active — no close button — and every 5 seconds the
- * message "pops" in again: the next announcement if there are several,
- * the same one re-animated if there's only one. Pauses while hovered or
- * focused so a message can be read and its link clicked.
+ * Site-wide announcement bar (Admin → Announcements). No close button:
+ * while an announcement is active the message is shown for 5 seconds
+ * (popping in), then fades out and the bar stays empty for 5 seconds,
+ * and so on — the next announcement each time if there are several.
+ * The navy strip itself never moves, so the page doesn't jump. Pauses
+ * while the message is hovered or focused so it can be read and clicked.
  */
 export default function AnnouncementBar({
   announcements,
@@ -26,17 +27,19 @@ export default function AnnouncementBar({
 }) {
   const pathname = usePathname();
 
-  // tick changes every 5 s; it picks the announcement and, as the
-  // message's key, remounts it so the pop animation replays
+  // tick advances every 5 s: even = shown, odd = hidden. As the message's
+  // key it remounts it, which replays the pop-in / fade-out animation.
   const [tick, setTick] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const shown = tick % 2 === 0;
+  const paused = hovered && shown;
 
   useEffect(() => {
     if (announcements.length === 0 || paused) {
       return;
     }
 
-    const timer = setInterval(() => setTick((t) => t + 1), POP_EVERY_MS);
+    const timer = setInterval(() => setTick((t) => t + 1), PHASE_MS);
     return () => clearInterval(timer);
   }, [announcements.length, paused]);
 
@@ -46,10 +49,16 @@ export default function AnnouncementBar({
     return null;
   }
 
-  const current = announcements[tick % announcements.length];
+  // the hidden phase keeps the last message in place (fading out) so the
+  // bar keeps its height
+  const current = announcements[Math.floor(tick / 2) % announcements.length];
 
   const message = (
-    <span key={tick} className="announcement-bar__message">
+    <span
+      key={tick}
+      className={`announcement-bar__message ${shown ? "is-shown" : "is-hidden"}`}
+      aria-hidden={!shown}
+    >
       📢 {current.message}
     </span>
   );
@@ -58,12 +67,12 @@ export default function AnnouncementBar({
     <div
       className="announcement-bar"
       role="status"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
     >
-      {current.link ? (
+      {current.link && shown ? (
         <Link href={current.link} className="announcement-bar__link">
           {message}
         </Link>
