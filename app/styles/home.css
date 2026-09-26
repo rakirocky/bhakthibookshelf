@@ -492,7 +492,7 @@
    the About page banners */
 .hero-om {
   width: fit-content;
-  margin: 0 auto 16px;
+  margin: -55px auto 16px;
   padding: 14px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(245, 158, 11, 0.35) 60%, rgba(245, 158, 11, 0) 72%);
@@ -506,6 +506,10 @@
 }
 
 @media (max-width: 560px) {
+  .hero-om {
+    margin-top: -35px;
+  }
+
   .hero-om img {
     width: 96px;
     height: 96px;
