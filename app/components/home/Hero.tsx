@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import Button from "../ui/Button";
 import Container from "../ui/Container";
 import FeatureItem from "../ui/FeatureItem";
@@ -30,6 +32,11 @@ export default async function Hero() {
       <Container>
         <div className="hero-wrapper">
           <div className="hero-intro">
+            {/* same Om as the About page banners (public/images/om.jpg) */}
+            <div className="hero-om">
+              <Image src="/images/om.jpg" alt="" width={144} height={144} priority />
+            </div>
+
             <p className="hero-tag">
               🪔 {t("hero.tag")}
             </p>

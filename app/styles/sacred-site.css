@@ -48,10 +48,10 @@
 
 /* Headings: maroon. !important is needed to beat inline navy/grey
    colours on individual pages; excluded where the heading sits on a
-   dark band (home hero/promise band, About/Contact banners with white
+   dark band (home hero, About/Contact banners with white
    titles, footer). */
 .temple-frame__content
-  :where(h1, h2):not(:where(.hero *, .statistics *, .footer *, [style*="color-white"], [style*="color: var(--color-white)"])) {
+  :where(h1, h2):not(:where(.hero *, .footer *, [style*="color-white"], [style*="color: var(--color-white)"])) {
   color: #7c2d12 !important;
 }
 
