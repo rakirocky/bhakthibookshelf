@@ -10,8 +10,15 @@ interface Announcement {
   link: string | null;
 }
 
-const DISMISS_KEY = "announcement_bar_dismissed";
+const POP_EVERY_MS = 5000;
 
+/**
+ * Site-wide announcement bar (Admin → Announcements). Always shown while
+ * an announcement is active — no close button — and every 5 seconds the
+ * message "pops" in again: the next announcement if there are several,
+ * the same one re-animated if there's only one. Pauses while hovered or
+ * focused so a message can be read and its link clicked.
+ */
 export default function AnnouncementBar({
   announcements,
 }: {
@@ -19,97 +26,50 @@ export default function AnnouncementBar({
 }) {
   const pathname = usePathname();
 
-  const [index, setIndex] = useState(0);
-  const [dismissed, setDismissed] = useState(false);
+  // tick changes every 5 s; it picks the announcement and, as the
+  // message's key, remounts it so the pop animation replays
+  const [tick, setTick] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    // Read the client-only dismiss flag after mount — the server has no
-    // sessionStorage, so doing this during render would break hydration.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDismissed(
-      sessionStorage.getItem(DISMISS_KEY) === "true"
-    );
-  }, []);
-
-  useEffect(() => {
-    if (announcements.length <= 1) {
+    if (announcements.length === 0 || paused) {
       return;
     }
 
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % announcements.length);
-    }, 5000);
-
+    const timer = setInterval(() => setTick((t) => t + 1), POP_EVERY_MS);
     return () => clearInterval(timer);
-  }, [announcements.length]);
+  }, [announcements.length, paused]);
 
   // Admin has its own header — no flash bar there, same reasoning as
   // hiding the storefront Navbar on /admin.
-  if (pathname?.startsWith("/admin")) {
+  if (pathname?.startsWith("/admin") || announcements.length === 0) {
     return null;
   }
 
-  if (dismissed || announcements.length === 0) {
-    return null;
-  }
+  const current = announcements[tick % announcements.length];
 
-  const current = announcements[index];
-
-  function handleDismiss() {
-    sessionStorage.setItem(DISMISS_KEY, "true");
-    setDismissed(true);
-  }
-
-  const content = (
-    <span>
+  const message = (
+    <span key={tick} className="announcement-bar__message">
       📢 {current.message}
     </span>
   );
 
   return (
     <div
-      style={{
-        background: "var(--color-navy)",
-        color: "var(--color-white)",
-        padding: "10px 20px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 16,
-        fontSize: 14,
-        fontWeight: 600,
-        position: "relative",
-      }}
+      className="announcement-bar"
+      role="status"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
     >
       {current.link ? (
-        <Link
-          href={current.link}
-          style={{ color: "var(--color-white)", textDecoration: "underline" }}
-        >
-          {content}
+        <Link href={current.link} className="announcement-bar__link">
+          {message}
         </Link>
       ) : (
-        content
+        message
       )}
-
-      <button
-        type="button"
-        onClick={handleDismiss}
-        aria-label="Dismiss"
-        style={{
-          position: "absolute",
-          right: 16,
-          background: "none",
-          border: "none",
-          color: "var(--color-white)",
-          opacity: 0.7,
-          cursor: "pointer",
-          fontSize: 16,
-          lineHeight: 1,
-        }}
-      >
-        ×
-      </button>
     </div>
   );
 }

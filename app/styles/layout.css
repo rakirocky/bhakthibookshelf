@@ -22,7 +22,8 @@ body {
      sits underneath them. Applied once, at the body level, rather than
      on individual components — AnnouncementBar and Navbar can each be
      the topmost visible element depending on runtime state (the
-     announcement bar is dismissible), and CSS can't express "whichever
+     announcement bar only shows while an announcement is active), and
+     CSS can't express "whichever
      one is first" — but the body always is. */
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -460,4 +461,56 @@ html:not([data-app]) [data-app-only] {
   background:
     var(--mandala-bg) center 60px / min(760px, 110%) no-repeat,
     var(--color-bg-page);
+}
+
+/* ==========================================
+   ANNOUNCEMENT BAR (AnnouncementBar.tsx) — the message pops in every 5 s
+========================================== */
+.announcement-bar {
+  background: var(--color-navy);
+  color: var(--color-white);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  overflow: hidden;
+}
+
+.announcement-bar__link {
+  color: var(--color-white);
+  text-decoration: underline;
+}
+
+.announcement-bar__message {
+  display: inline-block;
+}
+
+/* an inline-block doesn't inherit the link's underline — set it here so
+   linked announcements still look clickable */
+.announcement-bar__link .announcement-bar__message {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .announcement-bar__message {
+    animation: announcement-pop 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+  }
+}
+
+@keyframes announcement-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(-70%) scale(0.85);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(0) scale(1.06);
+  }
+  100% {
+    transform: none;
+  }
 }
