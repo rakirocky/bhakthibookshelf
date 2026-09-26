@@ -299,7 +299,8 @@ const pageWrapStyle = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  background: "var(--color-bg-page)",
+  // faint lotus mandala behind the card, like the rest of the site
+  background: "var(--mandala-bg) center / min(760px, 110%) no-repeat, var(--color-bg-page)",
   padding: 20,
 } as const;
 
