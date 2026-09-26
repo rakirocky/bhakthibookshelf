@@ -45,6 +45,10 @@ const menu = [
     href: "/admin/announcements",
   },
   {
+    title: "Festivals",
+    href: "/admin/festivals",
+  },
+  {
     title: "Newsletter",
     href: "/admin/newsletter",
   },

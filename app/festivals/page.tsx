@@ -2,10 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 import Footer from "../components/layout/Footer";
-import { FESTIVALS, booksForFestival, festivalDays, type Festival } from "../data/festivals";
+import { booksForFestival, festivalDays, type Festival } from "../data/festivals";
 import { istDayNumber } from "../data/shlokas";
 import { devanagariToKannada } from "../lib/kannadaScript";
 import { getAllBooks } from "../lib/services/book-service";
+import { FestivalService } from "../lib/services/festivalService";
 import { getLanguagePreference } from "../lib/language";
 import { fileUrl } from "../lib/upload/fileUrl";
 import { getT } from "../lib/i18n/server";
@@ -46,7 +47,8 @@ export default async function FestivalsPage() {
   const books = await getAllBooks(await getLanguagePreference());
 
   // only today's and upcoming festivals — past ones aren't useful here
-  const upcoming = FESTIVALS.map((festival) => ({ festival, ...festivalDays(festival) })).filter(
+  const festivals = await FestivalService.getFestivals();
+  const upcoming = festivals.map((festival) => ({ festival, ...festivalDays(festival) })).filter(
     ({ end }) => end >= today
   );
   const next = upcoming[0];
@@ -104,7 +106,7 @@ export default async function FestivalsPage() {
                       const reads = booksForFestival(festival, books);
                       return (
                         <li
-                          key={festival.from}
+                          key={`${festival.key}-${festival.from}`}
                           className={`festival-item${isToday ? " festival-item--today" : ""}`}
                         >
                           <div className="festival-item__date" aria-hidden="true">

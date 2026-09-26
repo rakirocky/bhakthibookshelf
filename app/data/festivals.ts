@@ -1,15 +1,15 @@
 /**
- * Festival-day shlokas — on these dates the home page "Today's Shloka"
- * card shows a festival greeting and a verse for the festival instead of
- * the regular daily rotation (app/data/shlokas.ts).
+ * Festival-day shlokas — on a festival day the home page "Today's
+ * Shloka" card shows a festival greeting and a verse for the festival
+ * instead of the regular daily rotation (app/data/shlokas.ts), and
+ * /festivals lists the upcoming ones.
  *
- * Dates are the India (IST) calendar day, as observed in Karnataka.
- * Hindu festivals follow the lunar calendar, so each year's dates must be
- * added here by hand from a panchanga. 2026–27 dates cross-checked
- * 2026-09-26 against drikpanchang.com, dekhopanchang.com and
- * hindupad.com. EXTEND BEFORE NOVEMBER 2027 (Vaikuntha Ekadashi 2027
- * onwards) — once the list runs out the card simply stays on the daily
- * rotation.
+ * This file holds the festivals themselves (names, greetings, verses,
+ * book keywords), each under a stable key. Their DATES live in the
+ * database (festival_dates, migration 030) and are managed in
+ * Admin → Festivals — Hindu festivals follow the lunar calendar, so each
+ * year's dates are added there from a panchanga. See
+ * app/lib/services/festivalService.ts.
  *
  * A festival spanning several days (`to`) cycles through its `shlokas`,
  * one per day. ळ is used where Kannada stotra books print ಳ
@@ -18,13 +18,9 @@
 
 import { SHLOKAS, istDayNumber, shlokaForToday, type Shloka } from "./shlokas";
 
-export interface Festival {
+export interface FestivalKind {
   name: { en: string; kn: string };
   greeting: { en: string; kn: string };
-  /** first day, YYYY-MM-DD (IST) */
-  from: string;
-  /** last day, inclusive; omit for a single-day festival */
-  to?: string;
   shlokas: Shloka[];
   /**
    * Words that mark a book as good reading for this festival — matched
@@ -34,6 +30,16 @@ export interface Festival {
    * ones match anywhere.
    */
   keywords: string[];
+}
+
+/** A festival on particular dates (a festival_dates row + its kind). */
+export interface Festival extends FestivalKind {
+  /** key into FESTIVAL_KINDS */
+  key: FestivalKey;
+  /** first day, YYYY-MM-DD (IST) */
+  from: string;
+  /** last day, inclusive; omit for a single-day festival */
+  to?: string;
 }
 
 /** a verse already in the daily rotation, looked up by its source */
@@ -182,8 +188,6 @@ const GURU = daily("Guru Stotram");
 
 /* ---------- festivals ---------- */
 
-type FestivalKind = Omit<Festival, "from" | "to">;
-
 const NAVARATRI: FestivalKind = {
   name: { en: "Navaratri", kn: "ನವರಾತ್ರಿ" },
   greeting: { en: "Happy Navaratri", kn: "ನವರಾತ್ರಿಯ ಶುಭಾಶಯಗಳು" },
@@ -275,37 +279,43 @@ const GANESHA_CHATURTHI: FestivalKind = {
   keywords: ["ganesha", "ganesh", "ganapati", "vinayaka", "ಗಣೇಶ", "ಗಣಪತಿ"],
 };
 
-export const FESTIVALS: Festival[] = [
-  // 2026
-  { ...NAVARATRI, from: "2026-10-11", to: "2026-10-18" },
-  { ...AYUDHA_PUJA, from: "2026-10-19" },
-  { ...VIJAYADASHAMI, from: "2026-10-20" },
-  { ...DEEPAVALI, from: "2026-11-08", to: "2026-11-09" },
-  { ...BALI_PADYAMI, from: "2026-11-10" },
-  { ...VAIKUNTHA_EKADASHI, from: "2026-12-20" },
-  // 2027
-  { ...SANKRANTI, from: "2027-01-15" },
-  { ...SHIVARATRI, from: "2027-03-06" },
-  { ...UGADI, from: "2027-04-07" },
-  { ...RAMA_NAVAMI, from: "2027-04-15" },
-  { ...AKSHAYA_TRITIYA, from: "2027-05-09" },
-  { ...GURU_PURNIMA, from: "2027-07-18" },
-  { ...VARAMAHALAKSHMI, from: "2027-08-13" },
-  { ...JANMASHTAMI, from: "2027-08-25" },
-  { ...GANESHA_CHATURTHI, from: "2027-09-04" },
-  { ...NAVARATRI, from: "2027-09-30", to: "2027-10-07" },
-  { ...AYUDHA_PUJA, from: "2027-10-08" },
-  { ...VIJAYADASHAMI, from: "2027-10-09" },
-  { ...DEEPAVALI, from: "2027-10-28", to: "2027-10-29" },
-  { ...BALI_PADYAMI, from: "2027-10-30" },
-];
+/**
+ * Every festival the site knows, by key. The key is what festival_dates
+ * rows store — never rename one (add a new key instead).
+ */
+export const FESTIVAL_KINDS = {
+  navaratri: NAVARATRI,
+  ayudha_puja: AYUDHA_PUJA,
+  vijayadashami: VIJAYADASHAMI,
+  deepavali: DEEPAVALI,
+  bali_padyami: BALI_PADYAMI,
+  vaikuntha_ekadashi: VAIKUNTHA_EKADASHI,
+  sankranti: SANKRANTI,
+  shivaratri: SHIVARATRI,
+  ugadi: UGADI,
+  rama_navami: RAMA_NAVAMI,
+  akshaya_tritiya: AKSHAYA_TRITIYA,
+  guru_purnima: GURU_PURNIMA,
+  varamahalakshmi: VARAMAHALAKSHMI,
+  janmashtami: JANMASHTAMI,
+  ganesha_chaturthi: GANESHA_CHATURTHI,
+} satisfies Record<string, FestivalKind>;
+
+export type FestivalKey = keyof typeof FESTIVAL_KINDS;
+
+export function isFestivalKey(value: unknown): value is FestivalKey {
+  return typeof value === "string" && Object.hasOwn(FESTIVAL_KINDS, value);
+}
 
 const DAY_MS = 86_400_000;
 const dayNumberOf = (ymd: string) => Math.floor(Date.parse(`${ymd}T00:00:00Z`) / DAY_MS);
 
 /** The festival on the given IST day number (days since 1970-01-01), if any. */
-export function festivalOnDay(dayNumber: number): { festival: Festival; shloka: Shloka } | null {
-  for (const festival of FESTIVALS) {
+export function festivalOnDay(
+  festivals: Festival[],
+  dayNumber: number
+): { festival: Festival; shloka: Shloka } | null {
+  for (const festival of festivals) {
     const start = dayNumberOf(festival.from);
     const end = dayNumberOf(festival.to ?? festival.from);
     if (dayNumber >= start && dayNumber <= end) {
@@ -339,8 +349,11 @@ export function festivalDays(festival: Festival): { start: number; end: number }
 }
 
 /** The home card's verse: the festival's on a festival day, else the daily rotation. */
-export function shlokaOfTheDay(now: Date = new Date()): { shloka: Shloka; festival: Festival | null } {
-  const onFestival = festivalOnDay(istDayNumber(now));
+export function shlokaOfTheDay(
+  festivals: Festival[],
+  now: Date = new Date()
+): { shloka: Shloka; festival: Festival | null } {
+  const onFestival = festivalOnDay(festivals, istDayNumber(now));
   if (onFestival) return onFestival;
   return { shloka: shlokaForToday(now).shloka, festival: null };
 }

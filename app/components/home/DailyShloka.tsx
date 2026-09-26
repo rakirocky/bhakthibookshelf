@@ -1,6 +1,7 @@
 import { shlokaOfTheDay } from "../../data/festivals";
 import { devanagariToKannada } from "../../lib/kannadaScript";
 import { getT } from "../../lib/i18n/server";
+import { FestivalService } from "../../lib/services/festivalService";
 import Link from "next/link";
 
 import ShareShloka from "./ShareShloka";
@@ -14,7 +15,7 @@ import ShareShloka from "./ShareShloka";
  */
 export default async function DailyShloka() {
   const t = await getT();
-  const { shloka, festival } = shlokaOfTheDay();
+  const { shloka, festival } = shlokaOfTheDay(await FestivalService.getFestivals());
   // non-breaking space before । ॥ so a danda never wraps onto its own line
   const lines = shloka.lines.map((l) => devanagariToKannada(l).replace(/ ([।॥])/g, "\u00A0$1"));
 
