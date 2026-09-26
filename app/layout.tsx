@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Analytics from "./components/analytics/Analytics";
 import { Marcellus, Noto_Sans, Noto_Sans_Kannada, Noto_Serif_Kannada } from "next/font/google";
 import "./styles/globals.css";
 
@@ -136,6 +137,9 @@ export default async function RootLayout({
           <ServiceWorkerRegister />
           <ReconcileOnResume />
           <AppModeGuard />
+          {process.env.GA_MEASUREMENT_ID && (
+            <Analytics gaId={process.env.GA_MEASUREMENT_ID} />
+          )}
         </Providers>
         </I18nProvider>
       </body>

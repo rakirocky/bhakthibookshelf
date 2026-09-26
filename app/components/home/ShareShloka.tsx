@@ -1,8 +1,11 @@
 "use client";
 
+import { track } from "@/app/lib/analytics/track";
+
 /** WhatsApp share for the daily shloka (text + a link back to the site). */
 export default function ShareShloka({ text, label }: { text: string; label: string }) {
   function share() {
+    track("share", { method: "whatsapp", content_type: "shloka" });
     const message = `${text}\n\n${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   }

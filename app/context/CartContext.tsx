@@ -9,6 +9,8 @@ import {
   ReactNode,
 } from "react";
 
+import { gaItem, track } from "../lib/analytics/track";
+
 export type CartItem = {
   id: number;
   slug: string;
@@ -69,6 +71,10 @@ export function CartProvider({
   }, [items]);
 
   function addItem(item: Omit<CartItem, "quantity">) {
+    if (!items.some((x) => x.id === item.id)) {
+      track("add_to_cart", { currency: "INR", value: item.price, items: [gaItem(item)] });
+    }
+
     setItems((prev) => {
       const existing = prev.find(
         (x) => x.id === item.id

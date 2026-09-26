@@ -3,6 +3,7 @@
 import { useWishlist } from "@/app/context/WishlistContext";
 import { useToast } from "@/app/context/ToastContext";
 import { useT } from "@/app/lib/i18n/I18nProvider";
+import { track } from "@/app/lib/analytics/track";
 
 /**
  * ♡ save-for-later toggle. "icon" sits on a book card's cover; "full" is
@@ -24,6 +25,7 @@ export default function WishlistButton({
 
   function handleClick() {
     const nowSaved = toggle(slug);
+    if (nowSaved) track("add_to_wishlist", { items: [{ item_id: slug }] });
     showToast(nowSaved ? t("wishlist.added") : t("wishlist.removed"));
   }
 

@@ -20,6 +20,9 @@ export default async function PrivacyPolicyPage() {
   const email = settings.contact_email || "BhakthiBookshelf@gmail.com";
   const phone = settings.contact_phone || "+91 78921 19482";
   const address = settings.address;
+  // these sections only appear once the service is switched on (env keys)
+  const analyticsOn = Boolean(process.env.GA_MEASUREMENT_ID);
+  const monitoringOn = Boolean(process.env.SENTRY_DSN);
 
   const lastUpdated = new Date().toLocaleDateString("en-IN", {
     year: "numeric",
@@ -97,7 +100,42 @@ export default async function PrivacyPolicyPage() {
             preference, and — where applicable — recognizing that you
             arrived via a referral link. We do not use cookies for
             third-party advertising.
+            {analyticsOn &&
+              " We also use Google Analytics cookies to understand, in aggregate, how visitors use the site (see section 3a)."}
           </p>
+
+          {(analyticsOn || monitoringOn) && (
+            <>
+              <h2>3a. Analytics and Error Monitoring</h2>
+              {analyticsOn && (
+                <p>
+                  We use Google Analytics to count visits and see which
+                  pages and books are popular, where visitors come from
+                  (for example a search engine or a shared link), and
+                  whether key steps such as adding a book to the cart or
+                  completing a purchase work well. Google Analytics uses
+                  cookies and receives technical data such as your
+                  browser, device type, approximate location (city level)
+                  and pages visited. We do not send it your name, phone
+                  number, email address or payment details. You can opt
+                  out with Google&rsquo;s browser add-on at
+                  tools.google.com/dlpage/gaoptout, or by blocking cookies
+                  in your browser.
+                </p>
+              )}
+              {monitoringOn && (
+                <p>
+                  When something goes wrong on the site or in the app, a
+                  technical error report — the error message, the page
+                  address and your browser type — is sent to our error
+                  monitoring service (Sentry) so we can fix it quickly.
+                  These reports do not include your name, phone number,
+                  email address, payment details or the contents of your
+                  books.
+                </p>
+              )}
+            </>
+          )}
 
           <h2>4. Payment Information</h2>
           <p>
@@ -113,8 +151,16 @@ export default async function PrivacyPolicyPage() {
             We share your information only where necessary to operate
             the service — for example, with our payment gateway to
             process a transaction, or with our email provider to send
-            you an invoice or order update. We do not share your data
-            with third parties for their own marketing purposes.
+            you an invoice or order update
+            {analyticsOn && monitoringOn
+              ? ", and with Google Analytics and Sentry as described in section 3a"
+              : analyticsOn
+                ? ", and with Google Analytics as described in section 3a"
+                : monitoringOn
+                  ? ", and with Sentry as described in section 3a"
+                  : ""}
+            . We do not share your data with third parties for their
+            own marketing purposes.
           </p>
 
           <h2>6. Data Security</h2>

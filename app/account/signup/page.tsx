@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { track } from "@/app/lib/analytics/track";
 import { useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useState } from "react";
 
@@ -78,6 +79,7 @@ function SignupForm() {
         );
       }
 
+      track("sign_up", { method: "phone" });
       // Full page load — see the matching comment in account/login.
       window.location.assign(safeReturnPath(from));
     } catch (err) {

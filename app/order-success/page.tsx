@@ -3,6 +3,7 @@ import Container from "../components/ui/Container";
 import { getCustomerSession } from "../lib/auth/getCustomerSession";
 import { OrderService } from "../lib/services/orderService";
 import { getT } from "@/app/lib/i18n/server";
+import TrackPurchase from "../components/analytics/TrackPurchase";
 
 type Props = {
   searchParams: Promise<{
@@ -48,6 +49,14 @@ export default async function OrderSuccessPage({
           padding: "80px 20px",
         }}
       >
+        {paid && record && (
+          <TrackPurchase
+            orderNumber={record.order_number}
+            value={Number(record.total_amount)}
+            books={books}
+          />
+        )}
+
         <h1>{t("success.thanks")}</h1>
 
         <p>

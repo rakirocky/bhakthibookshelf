@@ -336,7 +336,7 @@ export class OrderRepository {
     customerId: number
   ) {
     const { rows } = await db.query(
-      `SELECT o.order_number, o.payment_status,
+      `SELECT o.order_number, o.payment_status, o.total_amount,
          COALESCE(
            json_agg(json_build_object('slug', b.slug, 'title', b.title)
              ORDER BY oi.id) FILTER (WHERE b.id IS NOT NULL),
@@ -355,6 +355,7 @@ export class OrderRepository {
         | {
             order_number: string;
             payment_status: string;
+            total_amount: string;
             books: { slug: string; title: string }[];
           }
         | undefined) ?? null

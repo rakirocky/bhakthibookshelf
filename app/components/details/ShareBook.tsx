@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useT } from "@/app/lib/i18n/I18nProvider";
+import { track } from "@/app/lib/analytics/track";
 
 // WhatsApp is how most of our readers share; the link unfurls into the
 // book's preview card (./opengraph-image.tsx). No price in the message
@@ -19,6 +20,7 @@ export default function ShareBook({
   const url = () => `${window.location.origin}/books/${slug}`;
 
   function shareOnWhatsApp() {
+    track("share", { method: "whatsapp", content_type: "book", item_id: slug });
     const text = `📖 ${title} — read it on Bhakthi Bookshelf\n${url()}`;
     window.open(
       `https://wa.me/?text=${encodeURIComponent(text)}`,
@@ -29,6 +31,7 @@ export default function ShareBook({
 
   async function copyLink() {
     try {
+      track("share", { method: "copy_link", content_type: "book", item_id: slug });
       await navigator.clipboard.writeText(url());
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

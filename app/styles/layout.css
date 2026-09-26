@@ -434,3 +434,21 @@ html:not([data-app]) [data-app-only] {
     --tf-s: 0.3;
   }
 }
+
+/* app/error.tsx */
+.error-page {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.error-page__actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.error-page__actions > * {
+  font-size: 16px;
+  padding: 14px 30px;
+}

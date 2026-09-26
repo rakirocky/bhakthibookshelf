@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { track } from "@/app/lib/analytics/track";
 import { useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useState } from "react";
 
@@ -91,6 +92,7 @@ function LoginForm() {
       // hold a signed-out prefetch of the target (e.g. /account's
       // redirect to /account/required) and would replay it, landing a
       // just-signed-in customer on "Sign In Required".
+      track("login", { method: "phone" });
       window.location.assign(safeReturnPath(from));
     } catch (err) {
       setError(

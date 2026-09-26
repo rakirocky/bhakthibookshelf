@@ -357,6 +357,10 @@ const en = {
   "wishlist.addedToCart": "Added to cart",
   "wishlist.empty": "Your wishlist is empty. Tap ♡ on any book to save it for later.",
   "wishlist.browse": "Browse the Library",
+  "error.title": "Something went wrong",
+  "error.text": "Sorry — this page couldn't load. We've been notified. Please try again.",
+  "error.retry": "Try again",
+  "error.home": "Go to Home",
 } as const;
 
 export type I18nKey = keyof typeof en;
@@ -701,6 +705,10 @@ const kn: Record<I18nKey, string> = {
   "wishlist.addedToCart": "ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಲಾಗಿದೆ",
   "wishlist.empty": "ನಿಮ್ಮ ಇಷ್ಟದ ಪಟ್ಟಿ ಖಾಲಿಯಾಗಿದೆ. ಯಾವುದೇ ಪುಸ್ತಕದ ಮೇಲಿನ ♡ ಒತ್ತಿ ನಂತರಕ್ಕಾಗಿ ಉಳಿಸಿ.",
   "wishlist.browse": "ಗ್ರಂಥಾಲಯ ನೋಡಿ",
+  "error.title": "ಏನೋ ತಪ್ಪಾಗಿದೆ",
+  "error.text": "ಕ್ಷಮಿಸಿ — ಈ ಪುಟ ತೆರೆಯಲಾಗಲಿಲ್ಲ. ನಮಗೆ ಮಾಹಿತಿ ತಲುಪಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+  "error.retry": "ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ",
+  "error.home": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
 };
 
 const DICTS: Record<UiLang, Record<I18nKey, string>> = { en, kn };
