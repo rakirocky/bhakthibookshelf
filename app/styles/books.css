@@ -432,7 +432,7 @@
 }
 
 .look-inside__title small {
-  font-family: var(--font-body), sans-serif;
+  font-family: "Rupee Local", var(--font-body), sans-serif;
   font-size: 13px;
   opacity: 0.7;
 }

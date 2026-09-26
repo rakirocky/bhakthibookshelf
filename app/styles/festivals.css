@@ -197,7 +197,7 @@
 }
 
 .festival-item__verse em {
-  font-family: var(--font-body), sans-serif;
+  font-family: "Rupee Local", var(--font-body), sans-serif;
   font-style: normal;
   font-size: 13px;
   color: #b45309;
