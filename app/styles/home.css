@@ -626,6 +626,48 @@
   text-transform: uppercase;
 }
 
+/* festival day: marigold border, warmer glow, greeting above the verse */
+.daily-shloka__card--festival {
+  background:
+    url("/images/mandala.svg") center / 520px no-repeat,
+    radial-gradient(ellipse 80% 65% at 50% 0%, rgba(234, 88, 12, 0.22), transparent 72%),
+    #fff8ea;
+  border: 2px solid #f59e0b;
+  box-shadow:
+    0 20px 50px rgba(194, 65, 12, 0.2),
+    inset 0 0 0 7px #fff8ea,
+    inset 0 0 0 9px rgba(234, 88, 12, 0.35);
+}
+
+.daily-shloka__card--festival .daily-shloka__label {
+  background: linear-gradient(90deg, #ea580c, #d97706);
+  border-color: transparent;
+  color: #fff;
+}
+
+.daily-shloka__festival {
+  margin: -4px auto 20px;
+  padding-bottom: 16px;
+  max-width: 420px;
+  border-bottom: 1px dashed rgba(234, 88, 12, 0.45);
+}
+
+.daily-shloka__greeting {
+  margin: 0;
+  font-family: var(--font-heading-kn), "Noto Serif Kannada", serif;
+  font-weight: 700;
+  font-size: clamp(22px, 4vw, 30px);
+  line-height: 1.5;
+  color: #c2410c;
+}
+
+.daily-shloka__greeting-en {
+  margin: 2px 0 0;
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 16px;
+  color: #9a3412;
+}
+
 .daily-shloka__verse {
   margin: 0;
   display: flex;

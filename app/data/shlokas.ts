@@ -166,12 +166,18 @@ export const SHLOKAS: Shloka[] = [
   },
 ];
 
-/** Today's shloka, by the calendar date in India (IST, UTC+5:30). */
-export function shlokaForToday(now: Date = new Date()): { shloka: Shloka; index: number } {
+/** Days since 1970-01-01 of the calendar date in India (IST, UTC+5:30). */
+export function istDayNumber(now: Date = new Date()): number {
   const ist = new Date(now.getTime() + 330 * 60 * 1000);
-  const dayNumber = Math.floor(
-    Date.UTC(ist.getUTCFullYear(), ist.getUTCMonth(), ist.getUTCDate()) / 86_400_000
-  );
-  const index = dayNumber % SHLOKAS.length;
+  return Math.floor(Date.UTC(ist.getUTCFullYear(), ist.getUTCMonth(), ist.getUTCDate()) / 86_400_000);
+}
+
+/**
+ * Today's shloka from the regular rotation, by the calendar date in India.
+ * (The home card uses shlokaOfTheDay in festivals.ts, which puts festival
+ * verses ahead of this.)
+ */
+export function shlokaForToday(now: Date = new Date()): { shloka: Shloka; index: number } {
+  const index = istDayNumber(now) % SHLOKAS.length;
   return { shloka: SHLOKAS[index], index };
 }
