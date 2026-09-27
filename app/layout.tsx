@@ -23,6 +23,8 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  // same reason as translate="no" on <html>: we translate ourselves
+  other: { google: "notranslate" },
   title: "Bhakthi Bookshelf | A Home for Devotional Reading",
   description:
     "Discover timeless wisdom through sacred scriptures, devotional books and spiritual literature.",
@@ -116,8 +118,13 @@ export default async function RootLayout({
   return (
     // suppressHydrationWarning: APP_MODE_SCRIPT sets data-app on <html>
     // before React hydrates, which React would otherwise flag.
+    // translate="no": the site has its own English/ಕನ್ನಡ switch — stop
+    // Chrome/Google Translate machine-translating the Kannada interface
+    // (it turned the ಜ್ಞಾನ ಸುಧೆಯ ಭಂಡಾರ motto into "A repository of
+    // knowledge…" and kept that when the visitor switched back to EN).
     <html
       lang={uiLang}
+      translate="no"
       className={fontVariables}
       suppressHydrationWarning
       data-app-commerce={appCommerce ? "" : undefined}
