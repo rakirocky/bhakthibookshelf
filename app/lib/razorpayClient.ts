@@ -32,8 +32,10 @@ export interface RazorpayPaymentResult {
 
 /**
  * Opens the Razorpay payment widget and resolves with the payment
- * details once the customer completes payment. Resolves to `null` if
- * the customer closes the widget without paying — that's a normal,
+ * details once the customer completes payment (including after failed
+ * attempts retried in the same window). Rejects with the last failure
+ * if they then close the widget; resolves to `null` if they close it
+ * without having tried to pay — that's a normal,
  * expected outcome, not an error, and callers should treat it as "they
  * changed their mind," not "something broke."
  */
@@ -68,19 +70,28 @@ export function openRazorpayCheckout(options: {
         },
         modal: {
           ondismiss: function () {
-            resolve(null);
+            // Only report a failure once the customer gives up — see below.
+            if (lastFailure) {
+              reject(lastFailure);
+            } else {
+              resolve(null);
+            }
           },
         },
       });
 
+      // A failed attempt is not the end: Razorpay keeps its window open so
+      // the customer can retry (another card, netbanking, UPI). Settling
+      // the promise here would ignore a later successful retry — no
+      // verify-payment, no success page — so just remember the error.
+      let lastFailure: Error | null = null;
+
       razorpay.on(
         "payment.failed",
         function (response: any) {
-          reject(
-            new Error(
-              response?.error?.description ||
-                "Payment failed. Please try again."
-            )
+          lastFailure = new Error(
+            response?.error?.description ||
+              "Payment failed. Please try again."
           );
         }
       );
