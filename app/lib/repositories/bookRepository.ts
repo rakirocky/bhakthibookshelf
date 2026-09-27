@@ -274,6 +274,32 @@ export async function deleteBook(id: number) {
   );
 }
 
+// order_items.book_id has no ON DELETE, so a book that has ever been in
+// an order (paid or not) can't be deleted — order history must survive.
+export async function countOrdersForBook(id: number) {
+  const { rows } = await db.query(
+    `
+    SELECT COUNT(DISTINCT order_id)::int AS count
+    FROM order_items
+    WHERE book_id=$1
+    `,
+    [id]
+  );
+
+  return rows[0].count as number;
+}
+
+export async function unpublishBook(id: number) {
+  await db.query(
+    `
+    UPDATE books
+    SET published=FALSE
+    WHERE id=$1
+    `,
+    [id]
+  );
+}
+
 // The price actually charged for each published book — orders must
 // be priced from this, never from what the browser sends.
 export async function getPurchasablePrices(ids: number[]) {

@@ -45,10 +45,11 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    await deleteBook(Number(id));
+    const result = await deleteBook(Number(id));
 
     return NextResponse.json({
       success: true,
+      ...result,
     });
   } catch (error) {
     console.error(error);

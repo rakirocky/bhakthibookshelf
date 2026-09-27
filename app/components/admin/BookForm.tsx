@@ -136,17 +136,6 @@ export default function BookForm({
         </div>
 
         <div style={{ marginBottom: 20 }}>
-          <label>Author</label>
-
-          <input
-            required
-            value={form.author}
-            onChange={(e) => update("author", e.target.value)}
-            style={inputStyle}
-          />
-        </div>
-
-        <div style={{ marginBottom: 20 }}>
           <label>Description</label>
 
           <textarea

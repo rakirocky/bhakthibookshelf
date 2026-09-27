@@ -185,9 +185,13 @@ export default function DownloadsClient({
                   color: "var(--color-text-muted)",
                 }}
               >
-                {b.author}
-                {b.sizeBytes > 0 && ` · ${formatBytes(b.sizeBytes)}`}
-                {!b.available && " · no longer available for re-download"}
+                {[
+                  b.author,
+                  b.sizeBytes > 0 ? formatBytes(b.sizeBytes) : "",
+                  b.available ? "" : "no longer available for re-download",
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
               </div>
             </div>
             <Link

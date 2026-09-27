@@ -139,7 +139,6 @@ export default async function AdminDashboardPage() {
               <thead>
                 <tr>
                   <th align="left">Title</th>
-                  <th align="left">Author</th>
                   <th align="right">Price</th>
                 </tr>
               </thead>
@@ -148,7 +147,6 @@ export default async function AdminDashboardPage() {
                 {latestBooks.map((book: any) => (
                   <tr key={book.id}>
                     <td>{book.title}</td>
-                    <td>{book.author}</td>
                     <td align="right">
                       ₹{book.price}
                     </td>

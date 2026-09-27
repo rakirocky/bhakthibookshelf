@@ -9,8 +9,10 @@ import Spinner from "../ui/Spinner";
 
 export default function DeleteBookButton({
   bookId,
+  hideOnly = false,
 }: {
   bookId: number;
+  hideOnly?: boolean;
 }) {
   const router = useRouter();
   const { showToast } = useToast();
@@ -32,7 +34,13 @@ export default function DeleteBookButton({
         throw new Error("Delete failed");
       }
 
-      showToast("Book deleted successfully.");
+      const result = await response.json();
+
+      showToast(
+        result.unpublished
+          ? "Book hidden from the store (it has orders, so it was not deleted)."
+          : "Book deleted successfully."
+      );
 
       router.push("/admin/books");
 
@@ -71,7 +79,13 @@ export default function DeleteBookButton({
         }}
       >
         {loading && <Spinner />}
-        {loading ? "Deleting..." : "Yes, Delete Book"}
+        {loading
+          ? hideOnly
+            ? "Hiding..."
+            : "Deleting..."
+          : hideOnly
+            ? "Yes, Hide Book"
+            : "Yes, Delete Book"}
       </button>
 
       <button

@@ -38,10 +38,12 @@ export default async function BookInfo({
 
       <div className="book-meta">
 
-        <p>
-          <strong>{t("book.author")}</strong><br />
-          {book.author}
-        </p>
+        {book.author && (
+          <p>
+            <strong>{t("book.author")}</strong><br />
+            {book.author}
+          </p>
+        )}
 
         <p>
           <strong>{t("book.publisher")}</strong><br />

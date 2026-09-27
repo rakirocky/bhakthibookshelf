@@ -68,9 +68,11 @@ export default function BookCard({
 
         <h3>{title}</h3>
 
-        <p className="author">
-          {author}
-        </p>
+        {author && (
+          <p className="author">
+            {author}
+          </p>
+        )}
 
         <div className="price" data-web-only>
 

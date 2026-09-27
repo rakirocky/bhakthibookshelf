@@ -62,8 +62,6 @@ export default async function AdminBooksPage() {
               Title
             </th>
 
-            <th align="left">Author</th>
-
             <th align="center">Price</th>
 
             <th align="center">Featured</th>
@@ -85,8 +83,6 @@ export default async function AdminBooksPage() {
               <td style={{ padding: 14 }}>
                 {book.title}
               </td>
-
-              <td>{book.author}</td>
 
               <td align="center">
                 ₹{book.price}

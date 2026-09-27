@@ -43,7 +43,7 @@ export default function CartItem({
       <div style={{ flex: 1, minWidth: 200 }}>
         <h3>{item.title}</h3>
 
-        <p>{item.author}</p>
+        {item.author && <p>{item.author}</p>}
 
         <h2>
           ₹{item.price}
