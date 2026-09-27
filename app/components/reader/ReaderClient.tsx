@@ -14,6 +14,7 @@ import {
   toggleBookmark,
 } from "@/app/lib/offline/readingProgress";
 import { guardScreen, unguardScreen } from "@/app/lib/offline/screenGuard";
+import { useT } from "@/app/lib/i18n/I18nProvider";
 
 /**
  * Renders one decrypted book, a page at a time, onto a canvas. Nothing is
@@ -42,6 +43,7 @@ export default function ReaderClient({
   downloadId: number;
 }) {
   const router = useRouter();
+  const { t } = useT();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const docRef = useRef<PdfDoc | null>(null);
 
@@ -128,7 +130,7 @@ export default function ReaderClient({
           setBookmarks(saved.bookmarks);
           if (saved.page > 1 && saved.page <= doc.numPages) {
             setPage(saved.page);
-            setNotice(`Continuing from page ${saved.page}`);
+            setNotice(t("reader.continuing", { n: saved.page }));
           }
         }
 
@@ -136,7 +138,7 @@ export default function ReaderClient({
       } catch (err) {
         if (cancelled) return;
         setMessage(
-          err instanceof Error ? err.message : "Could not open this book."
+          err instanceof Error ? err.message : t("reader.openError")
         );
         setStatus("error");
       }
@@ -148,7 +150,8 @@ export default function ReaderClient({
       void docRef.current?.destroy();
       docRef.current = null;
     };
-  }, [downloadId]);
+    // t only changes with the interface language, never mid-read
+  }, [downloadId, t]);
 
   // Render whenever the page or zoom changes and the doc is ready.
   useEffect(() => {
@@ -200,7 +203,11 @@ export default function ReaderClient({
   async function onBookmark() {
     const marks = await toggleBookmark(downloadId, page, total);
     setBookmarks(marks);
-    setNotice(marks.includes(page) ? `Page ${page} bookmarked` : "Bookmark removed");
+    setNotice(
+      marks.includes(page)
+        ? t("reader.bookmarked", { n: page })
+        : t("reader.bookmarkRemoved")
+    );
   }
 
   // Swipe left/right to turn pages (only at normal zoom — when zoomed in,
@@ -273,7 +280,7 @@ export default function ReaderClient({
     >
       <div className="reader__bar">
         <button type="button" onClick={() => router.back()}>
-          ‹ Close
+          ‹ {t("reader.close")}
         </button>
         <span className="reader__title">{title}</span>
         {status === "ready" && (
@@ -316,15 +323,15 @@ export default function ReaderClient({
       {panel === "look" && (
         <div className="reader__panel" role="dialog" aria-label="Reading options">
           <div className="reader__panel-row">
-            {(["day", "sepia", "night"] as ReaderTheme[]).map((t) => (
+            {(["day", "sepia", "night"] as ReaderTheme[]).map((th) => (
               <button
-                key={t}
+                key={th}
                 type="button"
-                className={`reader__swatch reader__swatch--${t}${theme === t ? " is-on" : ""}`}
-                aria-pressed={theme === t}
-                onClick={() => updateLook({ theme: t })}
+                className={`reader__swatch reader__swatch--${th}${theme === th ? " is-on" : ""}`}
+                aria-pressed={theme === th}
+                onClick={() => updateLook({ theme: th })}
               >
-                {t === "day" ? "Day" : t === "sepia" ? "Sepia" : "Night"}
+                {t(`reader.${th}`)}
               </button>
             ))}
           </div>
@@ -348,7 +355,7 @@ export default function ReaderClient({
         <div className="reader__panel" role="dialog" aria-label="Bookmarks">
           {bookmarks.length === 0 ? (
             <p style={{ margin: 0, opacity: 0.8 }}>
-              No bookmarks yet — tap ☆ to mark a page.
+              {t("reader.noBookmarks")}
             </p>
           ) : (
             <div className="reader__marks">
@@ -362,7 +369,7 @@ export default function ReaderClient({
                     setPanel("none");
                   }}
                 >
-                  Page {b}
+                  {t("reader.page", { n: b })}
                 </button>
               ))}
             </div>
@@ -380,7 +387,7 @@ export default function ReaderClient({
         onClick={() => panel !== "none" && setPanel("none")}
       >
         {status === "loading" && (
-          <p className="reader__msg">Opening book…</p>
+          <p className="reader__msg">{t("reader.opening")}</p>
         )}
         {status === "error" && (
           <p className="reader__msg">{message}</p>
@@ -408,17 +415,17 @@ export default function ReaderClient({
             disabled={page <= 1}
             onClick={() => goTo(page - 1)}
           >
-            ‹ Prev
+            ‹ {t("reader.prev")}
           </button>
           <span>
-            Page {page} of {total}
+            {t("reader.pageOf", { n: page, total })}
           </span>
           <button
             type="button"
             disabled={page >= total}
             onClick={() => goTo(page + 1)}
           >
-            Next ›
+            {t("reader.next")} ›
           </button>
         </div>
       )}

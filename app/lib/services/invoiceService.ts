@@ -220,6 +220,20 @@ export function generateInvoicePdf(
         { width: 495 }
       );
 
+    // Highlighted thank-you band (client request 2026-09-27)
+    const thanksY = doc.y + 18;
+    doc
+      .roundedRect(50, thanksY, 495, 34, 6)
+      .fillAndStroke("#fff4e0", "#d97706");
+    doc
+      .font("Bold")
+      .fontSize(13)
+      .fillColor("#b45309")
+      .text(`Thank you for shopping with ${settings.store_name}!`, 50, thanksY + 9, {
+        align: "center",
+        width: 495,
+      });
+
     doc.moveDown(4);
 
     // ===== Footer =====
@@ -232,11 +246,7 @@ export function generateInvoicePdf(
         50,
         doc.page.height - 80,
         { align: "center", width: 495 }
-      )
-      .text(`Thank you for shopping with ${settings.store_name}.`, {
-        align: "center",
-        width: 495,
-      });
+      );
 
     doc.end();
   });

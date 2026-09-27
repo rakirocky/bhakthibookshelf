@@ -62,7 +62,7 @@ export default function Navbar() {
           <div>
 
             <h2>
-              Bhakthi Bookshelf
+              {t("brand.name")}
             </h2>
 
             <span>

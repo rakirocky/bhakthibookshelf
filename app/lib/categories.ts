@@ -1,7 +1,14 @@
 import type { I18nKey } from "./i18n/dictionary";
 
 /** Book categories — the Library chips, footer links and admin dropdown. */
-export const BOOK_CATEGORIES = ["scriptures", "epics", "prayers", "devotional"] as const;
+export const BOOK_CATEGORIES = [
+  "scriptures",
+  "epics",
+  "prayers",
+  "devotional",
+  "divine-stories",
+  "other",
+] as const;
 
 export type BookCategory = (typeof BOOK_CATEGORIES)[number];
 
@@ -10,6 +17,8 @@ export const CATEGORY_LABEL: Record<BookCategory, I18nKey> = {
   epics: "footer.epics",
   prayers: "footer.prayers",
   devotional: "footer.devotional",
+  "divine-stories": "footer.divineStories",
+  other: "footer.other",
 };
 
 /** Anything else (empty, unknown, tampered) becomes "no category". */

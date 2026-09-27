@@ -1,4 +1,5 @@
 import Footer from "../components/layout/Footer";
+import PrivacyKn from "./PrivacyKn";
 import { SettingsService } from "@/app/lib/services/settingsService";
 import { getT, getUiLang } from "@/app/lib/i18n/server";
 import { pageMetadata } from "@/app/lib/seo/pageMetadata";
@@ -20,11 +21,14 @@ export default async function PrivacyPolicyPage() {
   const email = settings.contact_email || "BhakthiBookshelf@gmail.com";
   const phone = settings.contact_phone || "+91 78921 19482";
   const address = settings.address;
+  // the Kannada page names the store in Kannada unless the admin has
+  // set a custom store name
+  const knStoreName = settings.store_name || t("brand.name");
   // these sections only appear once the service is switched on (env keys)
   const analyticsOn = Boolean(process.env.GA_MEASUREMENT_ID);
   const monitoringOn = Boolean(process.env.SENTRY_DSN);
 
-  const lastUpdated = new Date().toLocaleDateString("en-IN", {
+  const lastUpdated = new Date().toLocaleDateString(uiLang === "kn" ? "kn-IN" : "en-IN", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -47,6 +51,17 @@ export default async function PrivacyPolicyPage() {
           className="content-section"
           style={{ maxWidth: 780, margin: "0 auto 60px", lineHeight: 1.8 }}
         >
+          {uiLang === "kn" ? (
+            <PrivacyKn
+              storeName={knStoreName}
+              email={email}
+              phone={phone}
+              address={address}
+              analyticsOn={analyticsOn}
+              monitoringOn={monitoringOn}
+            />
+          ) : (
+          <>
           <p>
             {storeName} (&ldquo;we&rdquo;, &ldquo;us&rdquo;, &ldquo;our&rdquo;) operates this website to
             provide devotional e-books and related digital content. This
@@ -215,6 +230,8 @@ export default async function PrivacyPolicyPage() {
               </>
             )}
           </p>
+          </>
+          )}
         </section>
       </main>
       <Footer />

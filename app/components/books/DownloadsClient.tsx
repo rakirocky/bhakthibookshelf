@@ -53,14 +53,10 @@ export default function DownloadsClient({
 
       const bits: string[] = [];
       if (result.restored)
-        bits.push(
-          `restored ${result.restored} book${result.restored > 1 ? "s" : ""}`
-        );
+        bits.push(t("downloads.restored", { n: result.restored }));
       if (result.dropped)
-        bits.push(
-          `removed ${result.dropped} no longer on your account`
-        );
-      setNotice(bits.length ? `Synced — ${bits.join(", ")}.` : null);
+        bits.push(t("downloads.dropped", { n: result.dropped }));
+      setNotice(bits.length ? t("downloads.synced", { what: bits.join(", ") }) : null);
 
       await refresh();
       if (alive) setSyncing(false);
@@ -69,7 +65,7 @@ export default function DownloadsClient({
     return () => {
       alive = false;
     };
-  }, [refresh]);
+  }, [refresh, t]);
 
   // Books this account owns that aren't on this device yet — otherwise a
   // fresh buyer lands on an empty page with nothing to click.
@@ -78,7 +74,7 @@ export default function DownloadsClient({
     books === null ? [] : purchased.filter((p) => !savedIds.has(p.id));
 
   async function handleRemove(downloadId: number) {
-    if (!window.confirm("Remove this download from your device?")) return;
+    if (!window.confirm(t("downloads.confirmRemove"))) return;
     setBusy(true);
     try {
       await removeBook(downloadId);
@@ -91,10 +87,7 @@ export default function DownloadsClient({
   async function handleRemoveAll() {
     if (!books || books.length === 0) return;
     if (
-      !window.confirm(
-        `Remove all ${books.length} downloads from this device? ` +
-          "You can save them again any time."
-      )
+      !window.confirm(t("downloads.confirmRemoveAll", { n: books.length }))
     )
       return;
 

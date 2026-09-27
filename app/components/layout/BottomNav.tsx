@@ -9,6 +9,7 @@ import { useCart } from "@/app/hooks/useCart";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useT } from "@/app/lib/i18n/I18nProvider";
 import type { I18nKey } from "@/app/lib/i18n/dictionary";
+import { WEBSITE_LABEL, WEBSITE_URL } from "@/app/lib/websiteLink";
 
 /**
  * App-style bottom tab bar for small screens / the Capacitor shell.
@@ -233,6 +234,15 @@ export default function BottomNav() {
             </div>
             <div className="more-sheet__footer">
               <LanguageSwitcher />
+              <a
+                href={WEBSITE_URL}
+                target="_blank"
+                rel="noopener"
+                className="more-sheet__website"
+                data-native-only
+              >
+                🌐 {WEBSITE_LABEL}
+              </a>
             </div>
           </div>
         </div>

@@ -15,6 +15,11 @@ interface FileUploadProps {
   previewType?: "image" | "pdf" | "none";
   /** Checked in the browser before uploading; keep in step with uploadTypes.ts. */
   maxSizeMB?: number;
+  /**
+   * Runs in the browser before upload and may swap the file (e.g. a PDF
+   * cover → JPEG of its first page). The size limit applies to its result.
+   */
+  prepare?: (file: File) => Promise<File>;
   /** Extra form field sent alongside the file, e.g. { type: "sample" } */
   extraField?: {
     name: string;
@@ -30,21 +35,41 @@ export default function FileUpload({
   onUploaded,
   previewType = "none",
   maxSizeMB,
+  prepare,
   extraField,
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [uploading, setUploading] = useState(false);
+  const [preparing, setPreparing] = useState(false);
   const [error, setError] = useState("");
 
   async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
 
     if (!file) {
       return;
     }
 
     setError("");
+
+    if (prepare) {
+      setPreparing(true);
+      try {
+        file = await prepare(file);
+      } catch (err) {
+        console.error(err);
+        setError(
+          err instanceof Error ? err.message : "Could not prepare this file."
+        );
+        if (inputRef.current) {
+          inputRef.current.value = "";
+        }
+        return;
+      } finally {
+        setPreparing(false);
+      }
+    }
 
     if (maxSizeMB && file.size > maxSizeMB * 1024 * 1024) {
       setError(
@@ -164,22 +189,24 @@ export default function FileUpload({
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          disabled={uploading}
+          disabled={uploading || preparing}
           style={{
             background: "var(--color-white)",
             border: "1px solid var(--color-primary)",
             color: "var(--color-primary)",
             padding: "8px 16px",
             borderRadius: 6,
-            cursor: uploading ? "not-allowed" : "pointer",
+            cursor: uploading || preparing ? "not-allowed" : "pointer",
             fontWeight: 600,
             display: "inline-flex",
             alignItems: "center",
             gap: 8,
           }}
         >
-          {uploading && <Spinner variant="dark" />}
-          {uploading
+          {(uploading || preparing) && <Spinner variant="dark" />}
+          {preparing
+            ? "Preparing..."
+            : uploading
             ? "Uploading..."
             : value
             ? "Replace File"

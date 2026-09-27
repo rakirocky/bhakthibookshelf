@@ -1,4 +1,5 @@
 import Footer from "../components/layout/Footer";
+import TermsKn from "./TermsKn";
 import { SettingsService } from "@/app/lib/services/settingsService";
 import { getT, getUiLang } from "@/app/lib/i18n/server";
 import { pageMetadata } from "@/app/lib/seo/pageMetadata";
@@ -20,8 +21,11 @@ export default async function TermsPage() {
   const email = settings.contact_email || "BhakthiBookshelf@gmail.com";
   const phone = settings.contact_phone || "+91 78921 19482";
   const address = settings.address;
+  // the Kannada page names the store in Kannada unless the admin has
+  // set a custom store name
+  const knStoreName = settings.store_name || t("brand.name");
 
-  const lastUpdated = new Date().toLocaleDateString("en-IN", {
+  const lastUpdated = new Date().toLocaleDateString(uiLang === "kn" ? "kn-IN" : "en-IN", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -44,6 +48,15 @@ export default async function TermsPage() {
           className="content-section"
           style={{ maxWidth: 780, margin: "0 auto 60px", lineHeight: 1.8 }}
         >
+          {uiLang === "kn" ? (
+            <TermsKn
+              storeName={knStoreName}
+              email={email}
+              phone={phone}
+              address={address}
+            />
+          ) : (
+          <>
           <p>
             These terms govern your use of {storeName} and the purchase
             of digital books and subscriptions through this website. By
@@ -161,6 +174,8 @@ export default async function TermsPage() {
               </>
             )}
           </p>
+          </>
+          )}
         </section>
       </main>
       <Footer />

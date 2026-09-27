@@ -58,6 +58,7 @@ function LookInsideViewer({
   sampleUrl: string;
   onClose: () => void;
 }) {
+  const { t } = useT();
   const docRef = useRef<PdfDoc | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const leftRef = useRef<HTMLCanvasElement>(null);
@@ -181,7 +182,7 @@ function LookInsideViewer({
     <div className="look-inside" role="dialog" aria-modal="true" aria-label={`Look inside ${title}`}>
       <div className="look-inside__bar">
         <span className="look-inside__title">
-          {title} <small>· Free sample</small>
+          {title} <small>· {t("look.freeSample")}</small>
         </span>
         <button type="button" className="look-inside__close" onClick={onClose} aria-label="Close preview">
           ✕
@@ -200,9 +201,9 @@ function LookInsideViewer({
           if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
         }}
       >
-        {status === "loading" && <p className="look-inside__msg">Opening preview…</p>}
+        {status === "loading" && <p className="look-inside__msg">{t("look.opening")}</p>}
         {status === "error" && (
-          <p className="look-inside__msg">The preview couldn&apos;t be opened. Please try again later.</p>
+          <p className="look-inside__msg">{t("look.error")}</p>
         )}
         {status === "ready" && (
           <div key={`${start}-${dir}`} className={`look-inside__spread look-inside__spread--${dir}`}>
@@ -218,8 +219,10 @@ function LookInsideViewer({
             ‹
           </button>
           <span>
-            {atEnd ? "End of sample · " : ""}
-            {last > start ? `Pages ${start}–${last}` : `Page ${start}`} of {total}
+            {atEnd ? `${t("look.end")} · ` : ""}
+            {last > start
+              ? t("look.pages", { from: start, to: last, total })
+              : t("reader.pageOf", { n: start, total })}
           </span>
           <button type="button" onClick={() => go(1)} disabled={!canNext} aria-label="Next page">
             ›

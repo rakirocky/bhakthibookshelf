@@ -36,7 +36,9 @@ export async function sendPaymentConfirmationEmail(order: {
           or in the Bhakthi Bookshelf app to read them.
         </p>
         <p>If you have any questions, just reply to this email.</p>
-        <p>Thank you for shopping with ${settings.store_name}.</p>
+        <p style="margin-top: 24px; padding: 14px 18px; background: #fff4e0; border: 2px solid #d97706; border-radius: 8px; text-align: center; font-size: 17px; font-weight: bold; color: #b45309;">
+          Thank you for shopping with ${settings.store_name}!
+        </p>
       </div>
     `;
 

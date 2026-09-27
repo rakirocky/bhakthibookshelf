@@ -152,6 +152,57 @@
     box-shadow:0 10px 25px rgba(0,0,0,.25);
 }
 
+.footer-app-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+}
+
+/* iOS placeholder — looks like the Android button but clearly inactive */
+.footer-app-button--soon{
+    background:transparent;
+    border:1px solid rgba(255,255,255,.35);
+    color:#d6d6d6;
+    cursor:default;
+}
+
+.footer-app-button--soon:hover{
+    transform:none;
+    box-shadow:none;
+}
+
+.footer-app-button--soon small{
+    background:var(--color-accent-gold);
+    color:var(--color-navy);
+    font-size:11px;
+    font-weight:700;
+    padding:2px 8px;
+    border-radius:10px;
+}
+
+.footer-website{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+    padding:0 0 22px;
+    color:#d6d6d6;
+    font-size:15px;
+}
+
+.footer-website svg{
+    color:var(--color-accent-gold);
+}
+
+.footer-website a{
+    color:var(--color-white);
+    font-weight:600;
+    text-decoration:underline;
+    text-underline-offset:3px;
+}
+
 .footer-bottom{
     border-top:1px solid rgba(255,255,255,.15);
     text-align:center;

@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { Phone, Mail, Smartphone, Download } from "lucide-react";
+import { Phone, Mail, Smartphone, Download, Globe } from "lucide-react";
 
 import Container from "../ui/Container";
 import { SOCIAL_LINKS } from "./SocialLinks";
 import { getT } from "../../lib/i18n/server";
+import { WEBSITE_LABEL, WEBSITE_URL } from "../../lib/websiteLink";
 
 
 // lucide-react@1.47.0 (pinned) has no brand icons for either store —
@@ -51,7 +52,7 @@ export default async function Footer() {
         <div className="footer-top">
 
           <div className="footer-brand">
-            <h2>Bhakthi Bookshelf</h2>
+            <h2>{t("brand.name")}</h2>
 
             <p className="footer-tagline">
               {t("brand.tagline")}
@@ -123,6 +124,8 @@ export default async function Footer() {
             <Link href="/books?category=prayers">{t("footer.prayers")}</Link>
 
             <Link href="/books?category=devotional">{t("footer.devotional")}</Link>
+
+            <Link href="/books?category=divine-stories">{t("footer.divineStories")}</Link>
           </div>
 
           <div className="footer-links">
@@ -150,12 +153,34 @@ export default async function Footer() {
             </div>
           </div>
 
-          <a
-            href={APP_DOWNLOAD_URL}
-            className="footer-app-button"
-          >
-            <Download size={18} />
-            {t("footer.appButton")}
+          <div className="footer-app-buttons">
+            <a
+              href={APP_DOWNLOAD_URL}
+              className="footer-app-button"
+            >
+              <Download size={18} />
+              {t("footer.appButton")}
+            </a>
+
+            {/* no iOS build yet (needs a Mac / Xcode Cloud) — a disabled
+                placeholder until the App Store listing is live */}
+            <span
+              className="footer-app-button footer-app-button--soon"
+              aria-disabled="true"
+            >
+              <AppleIcon size={18} />
+              {t("footer.appIos")}
+              <small>{t("footer.comingSoon")}</small>
+            </span>
+          </div>
+        </div>
+
+        {/* inside the app there's no address bar — show where the website is */}
+        <div className="footer-website" data-native-only>
+          <Globe size={18} />
+          <span>{t("footer.website")}</span>
+          <a href={WEBSITE_URL} target="_blank" rel="noopener">
+            {WEBSITE_LABEL}
           </a>
         </div>
 

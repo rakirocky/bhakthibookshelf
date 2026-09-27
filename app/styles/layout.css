@@ -303,6 +303,15 @@ main {
   padding-top: 16px;
 }
 
+.more-sheet__website {
+  display: block;
+  margin-top: 14px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary-strong);
+}
+
 @keyframes more-fade {
   from { opacity: 0; }
 }
@@ -356,6 +365,11 @@ html[data-app] [data-web-only] {
 }
 
 html:not([data-app]) [data-app-only] {
+  display: none !important;
+}
+
+/* anything inside the native app, buying switched on or off */
+html:not([data-native]) [data-native-only] {
   display: none !important;
 }
 
@@ -464,74 +478,68 @@ html:not([data-app]) [data-app-only] {
 }
 
 /* ==========================================
-   ANNOUNCEMENT BAR (AnnouncementBar.tsx) — message shown 5 s, hidden 5 s
+   ANNOUNCEMENT BAR (AnnouncementBar.tsx) — continuous right-to-left ticker
 ========================================== */
 .announcement-bar {
   background: var(--color-navy);
   color: var(--color-white);
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 10px 0;
   font-size: 14px;
   font-weight: 600;
-  text-align: center;
   overflow: hidden;
+  white-space: nowrap;
+}
+
+/* padding-left: 100% (of the bar) starts the text just off the right
+   edge; translating by the track's own full width carries it off the
+   left edge, then the loop restarts from the right. */
+.announcement-bar__track {
+  display: inline-block;
+  padding-left: 100%;
+  animation: announcement-marquee var(--marquee-duration, 20s) linear infinite;
+  will-change: transform;
+}
+
+.announcement-bar:hover .announcement-bar__track,
+.announcement-bar:focus-within .announcement-bar__track {
+  animation-play-state: paused;
+}
+
+.announcement-bar__item {
+  display: inline-block;
+}
+
+.announcement-bar__sep {
+  display: inline-block;
+  margin: 0 28px;
+  color: var(--color-accent-gold);
 }
 
 .announcement-bar__link {
   color: var(--color-white);
   text-decoration: underline;
-}
-
-.announcement-bar__message {
-  display: inline-block;
-}
-
-/* an inline-block doesn't inherit the link's underline — set it here so
-   linked announcements still look clickable */
-.announcement-bar__link .announcement-bar__message {
-  text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-/* hidden phase: the text is invisible but keeps its space (no page jump) */
-.announcement-bar__message.is-hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .announcement-bar__message.is-shown {
-    animation: announcement-pop 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.3);
-  }
-
-  .announcement-bar__message.is-hidden {
-    animation: announcement-fade 0.5s ease-in;
-  }
-}
-
-@keyframes announcement-fade {
+@keyframes announcement-marquee {
   from {
-    opacity: 1;
-    transform: none;
+    transform: translateX(0);
   }
   to {
-    opacity: 0;
-    transform: translateY(30%);
+    transform: translateX(-100%);
   }
 }
 
-@keyframes announcement-pop {
-  0% {
-    opacity: 0;
-    transform: translateY(-70%) scale(0.85);
+/* reduced motion: a still, centred line instead of a moving one */
+@media (prefers-reduced-motion: reduce) {
+  .announcement-bar {
+    white-space: normal;
+    text-align: center;
+    padding: 10px 20px;
   }
-  60% {
-    opacity: 1;
-    transform: translateY(0) scale(1.06);
-  }
-  100% {
-    transform: none;
+
+  .announcement-bar__track {
+    padding-left: 0;
+    animation: none;
   }
 }

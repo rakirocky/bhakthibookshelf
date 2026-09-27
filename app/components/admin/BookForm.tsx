@@ -7,6 +7,7 @@ import { useToast } from "@/app/context/ToastContext";
 
 import FileUpload from "./FileUpload";
 import Spinner from "../ui/Spinner";
+import { COVER_ACCEPT, prepareCoverFile } from "@/app/lib/upload/coverConvert";
 
 interface BookFormValues {
   slug: string;
@@ -177,13 +178,16 @@ export default function BookForm({
             <option value="epics">Epics</option>
             <option value="prayers">Prayers</option>
             <option value="devotional">Devotional</option>
+            <option value="divine-stories">Divine Stories</option>
+            <option value="other">Other</option>
           </select>
         </div>
 
         <div style={{ marginBottom: 24 }}>
           <FileUpload
-            label="Cover Image"
-            accept="image/jpeg,image/png,image/webp"
+            label="Cover Image (image or PDF — a PDF's first page is used)"
+            accept={COVER_ACCEPT}
+            prepare={prepareCoverFile}
             uploadUrl="/api/admin/upload/image"
             value={form.cover_image}
             onUploaded={(relativePath) =>

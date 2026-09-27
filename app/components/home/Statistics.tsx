@@ -8,7 +8,7 @@ import { getSiteStats } from "../../lib/services/site-stats-service";
 import { getT } from "../../lib/i18n/server";
 
 export default async function Statistics() {
-  const { bookCount, customerCount } = await getSiteStats();
+  const { customerCount } = await getSiteStats();
   const t = await getT();
 
   return (
@@ -22,8 +22,8 @@ export default async function Statistics() {
         <div className="stats-grid">
           <StatCard
             icon={<BookOpen />}
-            number={`${bookCount}+`}
-            label={t("promise.books")}
+            number={t("promise.goal")}
+            label={t("promise.goalText")}
           />
 
           <StatCard

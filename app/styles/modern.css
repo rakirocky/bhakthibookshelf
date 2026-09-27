@@ -33,6 +33,15 @@ textarea {
   line-height: 1.15;
 }
 
+/* The logo artwork is a solid navy square; round it and ring it in gold
+   so it reads as an emblem rather than a pasted box on the white bar. */
+.brand img {
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 2px var(--color-accent-gold),
+    0 4px 14px rgba(11, 27, 59, 0.22);
+}
+
 /* The brand name reads better a touch larger in Marcellus (desktop
    only — on phones it must stay on one line next to the logo) */
 @media (min-width: 861px) {

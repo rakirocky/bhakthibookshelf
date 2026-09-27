@@ -41,7 +41,7 @@ export default function AccountHeader({
           fontSize: 18,
         }}
       >
-        Bhakthi Bookshelf
+        {t("brand.name")}
       </Link>
 
       <div
