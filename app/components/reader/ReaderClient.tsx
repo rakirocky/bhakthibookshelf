@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { LocalBook, openBook } from "@/app/lib/offline/library";
+import { openBook } from "@/app/lib/offline/library";
 import {
   ReaderTheme,
   ZOOM_STEPS,
