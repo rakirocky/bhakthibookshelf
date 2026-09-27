@@ -2,45 +2,15 @@ import Image from "next/image";
 
 import Footer from "../components/layout/Footer";
 import { getT } from "@/app/lib/i18n/server";
-import type { I18nKey } from "@/app/lib/i18n/dictionary";
 import { pageMetadata } from "@/app/lib/seo/pageMetadata";
 
 export const metadata = pageMetadata(
-  "About Us",
+  "Our Vision",
   "Bhakthi Bookshelf is a home for devotional reading — sacred scriptures and spiritual literature in English and Kannada, made easy to read anywhere.",
   "/about"
 );
 
-// The people behind Bhakthi Bookshelf (client-supplied, 2026-09-27).
-// Names stay in English script in both languages; roles are translated.
-const TEAM: { role: I18nKey; people: string[] }[] = [
-  {
-    role: "about.role.partner",
-    people: ["Siddhartha S.S", "Vishwa Bandu Priyadarshi H.M"],
-  },
-  { role: "about.role.tech", people: ["Lakshmikanth"] },
-  { role: "about.role.digital", people: ["Manjesh"] },
-  {
-    role: "about.role.content",
-    people: [
-      "Bharathi Priyadarshini H.M",
-      "Nandini Priyadarshini H.M",
-      "Indira Priyadarshini H.M",
-      "Vinutha P",
-    ],
-  },
-];
-
-function initials(name: string) {
-  return name
-    .split(/[\s.]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join("");
-}
-
-export default async function AboutPage() {
+export default async function OurVisionPage() {
   const t = await getT();
 
   return (
@@ -111,7 +81,7 @@ export default async function AboutPage() {
               position: "relative",
             }}
           >
-            {t("about.title")}
+            {t("about.vision")}
           </h1>
 
           <p
@@ -138,12 +108,7 @@ export default async function AboutPage() {
             borderRadius: 16,
           }}
         >
-          <div style={{ padding: "40px 30px 0" }}>
-            <p className="about-eyebrow">{t("about.visionEyebrow")}</p>
-            <h2 className="about-section-title">{t("about.vision")}</h2>
-          </div>
-
-          <div style={{ padding: "10px 30px 10px" }}>
+          <div style={{ padding: "40px 30px 10px" }}>
             <Image
               src="/images/about-banner-kannada-v3.svg"
               alt=""
@@ -266,34 +231,6 @@ export default async function AboutPage() {
             Thank you
           </p>
           </div>
-        </section>
-
-        {/* ===== About Us — the team ===== */}
-        <section
-          className="content-section about-sacred about-team"
-          aria-labelledby="about-team-title"
-        >
-          <p className="about-eyebrow">{t("about.teamEyebrow")}</p>
-          <h2 id="about-team-title" className="about-section-title">
-            {t("about.us")}
-          </h2>
-          <p className="about-team__intro">{t("about.teamIntro")}</p>
-
-          {TEAM.map((group) => (
-            <div key={group.role} className="about-team__group">
-              <h3>{t(group.role)}</h3>
-              <ul className="about-team__grid">
-                {group.people.map((name) => (
-                  <li key={name} className="about-team__card">
-                    <span className="about-team__avatar" aria-hidden="true">
-                      {initials(name)}
-                    </span>
-                    <strong>{name}</strong>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
         </section>
       </main>
 

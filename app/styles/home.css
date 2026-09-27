@@ -460,41 +460,49 @@
   border-top-color: rgba(217, 119, 6, 0.35) !important;
 }
 
-.about-eyebrow {
-  margin: 0 0 4px;
+/* About Us page (/about-us) */
+.about-us-hero {
+  background: linear-gradient(135deg, var(--color-navy) 0%, #142a5c 100%);
+  padding: 64px 20px 100px;
+  text-align: center;
+}
+
+.about-us-hero h1 {
+  margin: 0 0 10px;
+  color: var(--color-white);
+}
+
+.about-us-hero p {
+  max-width: 520px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.about-us-hero .about-us-hero__eyebrow {
+  margin-bottom: 8px;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #b45309 !important;
+  color: var(--color-accent-gold);
 }
 
-.about-sacred h2.about-section-title {
-  margin: 0 0 6px;
-  font-size: 30px;
-}
-
-/* About Us — team cards */
 .about-team {
+  position: relative;
   max-width: 780px;
-  margin: 0 auto 60px;
+  margin: -60px auto 60px;
   padding: 40px 30px 34px;
   border-radius: 16px;
   line-height: 1.6;
-}
-
-.about-team__intro {
-  margin: 10px 0 26px;
 }
 
 .about-team__group + .about-team__group {
   margin-top: 26px;
 }
 
-.about-team__group h3 {
-  margin: 0 0 12px;
-  font-size: 18px;
-  color: #7c2d12;
+.about-sacred .about-team__group h2 {
+  margin: 0 0 14px;
+  font-size: 20px;
 }
 
 .about-team__grid {
@@ -537,7 +545,7 @@
 
 @media (max-width: 600px) {
   .about-team {
-    margin: 0 16px 40px;
+    margin: -60px 16px 40px;
     padding: 30px 18px 26px;
   }
 

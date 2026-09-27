@@ -111,6 +111,13 @@ export default function Navbar() {
           </Link>
 
           <Link
+            href="/about-us"
+            onClick={() => setMenuOpen(false)}
+          >
+            {t("nav.aboutUs")}
+          </Link>
+
+          <Link
             href="/contact"
             onClick={() => setMenuOpen(false)}
           >

@@ -71,6 +71,7 @@ const MORE_LINKS: { href: string; label: I18nKey; webOnly?: boolean }[] = [
   { href: "/wishlist", label: "wishlist.title", webOnly: true },
   { href: "/subscribe", label: "nav.subscribe", webOnly: true },
   { href: "/about", label: "nav.about" },
+  { href: "/about-us", label: "nav.aboutUs" },
   { href: "/contact", label: "nav.contact" },
 ];
 
