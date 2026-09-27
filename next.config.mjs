@@ -32,6 +32,14 @@ const nextConfig = {
   // On-device testing loads the app from https://<lan-ip>:3010 (Capacitor
   // server.url), so dev-only HMR/_next requests come from that origin.
   // Add whatever LAN IP the dev machine currently has.
+  // proxy.ts runs on /api/admin/*, and Next buffers at most 10 MB of a
+  // proxied request body by default — full-book PDFs may be up to 100 MB
+  // (uploadTypes.ts), so allow a little over that. nginx has a matching
+  // client_max_body_size on prod.
+  experimental: {
+    proxyClientMaxBodySize: "105mb",
+  },
+
   allowedDevOrigins: ["192.168.1.150", "10.10.20.142"],
 
   // pdfkit loads its standard font metrics (.afm files) dynamically at

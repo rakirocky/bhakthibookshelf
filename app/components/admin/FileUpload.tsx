@@ -13,6 +13,8 @@ interface FileUploadProps {
   value: string;
   onUploaded: (relativePath: string) => void;
   previewType?: "image" | "pdf" | "none";
+  /** Checked in the browser before uploading; keep in step with uploadTypes.ts. */
+  maxSizeMB?: number;
   /** Extra form field sent alongside the file, e.g. { type: "sample" } */
   extraField?: {
     name: string;
@@ -27,6 +29,7 @@ export default function FileUpload({
   value,
   onUploaded,
   previewType = "none",
+  maxSizeMB,
   extraField,
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -41,8 +44,21 @@ export default function FileUpload({
       return;
     }
 
-    setUploading(true);
     setError("");
+
+    if (maxSizeMB && file.size > maxSizeMB * 1024 * 1024) {
+      setError(
+        `This file is ${(file.size / 1024 / 1024).toFixed(1)} MB — the limit is ${maxSizeMB} MB.`
+      );
+
+      if (inputRef.current) {
+        inputRef.current.value = "";
+      }
+
+      return;
+    }
+
+    setUploading(true);
 
     try {
       const formData = new FormData();
@@ -58,7 +74,17 @@ export default function FileUpload({
         body: formData,
       });
 
-      const data = await response.json();
+      // A server/proxy error (e.g. nginx 413) comes back as an HTML page,
+      // not JSON — report it plainly instead of "Unexpected token '<'".
+      const data = await response.json().catch(() => null);
+
+      if (!data) {
+        throw new Error(
+          response.status === 413
+            ? "File is too large for the server."
+            : `Upload failed (server error ${response.status}).`
+        );
+      }
 
       if (!response.ok || !data.success) {
         throw new Error(data.message ?? "Upload failed.");

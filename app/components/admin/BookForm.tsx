@@ -190,6 +190,7 @@ export default function BookForm({
               update("cover_image", relativePath)
             }
             previewType="image"
+            maxSizeMB={5}
           />
         </div>
 
@@ -199,6 +200,7 @@ export default function BookForm({
             accept="application/pdf"
             uploadUrl="/api/admin/upload/pdf"
             extraField={{ name: "type", value: "sample" }}
+            maxSizeMB={20}
             value={form.sample_pdf}
             onUploaded={(relativePath) =>
               update("sample_pdf", relativePath)
@@ -213,6 +215,7 @@ export default function BookForm({
             accept="application/pdf"
             uploadUrl="/api/admin/upload/pdf"
             extraField={{ name: "type", value: "ebook" }}
+            maxSizeMB={100}
             value={form.full_pdf}
             onUploaded={(relativePath) =>
               update("full_pdf", relativePath)
