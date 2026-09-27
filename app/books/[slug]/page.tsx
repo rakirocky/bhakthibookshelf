@@ -18,7 +18,6 @@ import { getLanguagePreference } from "@/app/lib/language";
 
 import Breadcrumb from "@/app/components/details/Breadcrumb";
 import BookInfo from "@/app/components/details/BookInfo";
-import BookDescription from "@/app/components/details/BookDescription";
 import BookActions from "@/app/components/details/BookActions";
 import RelatedBooks from "@/app/components/details/RelatedBooks";
 import RecentlyViewed from "@/app/components/details/RecentlyViewed";
@@ -182,10 +181,6 @@ export default async function BookDetailsPage({
         </div>
 
       </div>
-
-      <BookDescription
-        book={book}
-      />
 
       <RelatedBooks
         books={relatedBooks}
