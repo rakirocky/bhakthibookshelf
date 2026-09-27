@@ -16,10 +16,10 @@ import {
 import { guardScreen, unguardScreen } from "@/app/lib/offline/screenGuard";
 
 /**
- * Renders one decrypted book, a page at a time, onto a canvas. The
- * watermark is painted into the same canvas as the page — it is part of
- * the pixels, not a DOM node that can be deleted. Nothing is ever written
- * back to disk decrypted.
+ * Renders one decrypted book, a page at a time, onto a canvas. Nothing is
+ * ever written back to disk decrypted. (The per-page email/phone watermark
+ * was removed at the owner's request, 2026-09-27; the download still
+ * carries the buyer's details in meta.watermark if it is ever wanted back.)
  */
 
 // Minimal shape of what we use from pdfjs — avoids a type dep on the lib.
@@ -44,7 +44,6 @@ export default function ReaderClient({
   const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const docRef = useRef<PdfDoc | null>(null);
-  const metaRef = useRef<LocalBook | null>(null);
 
   const [status, setStatus] = useState<"loading" | "ready" | "error">(
     "loading"
@@ -88,8 +87,6 @@ export default function ReaderClient({
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     await pdfPage.render({ canvasContext: ctx, viewport }).promise;
-
-    paintWatermark(ctx, viewport.width, viewport.height, metaRef.current);
   }, []);
 
   // Load the book once.
@@ -101,7 +98,6 @@ export default function ReaderClient({
       try {
         const { bytes, meta } = await openBook(downloadId);
         if (cancelled) return;
-        metaRef.current = meta;
         setTitle(meta.title || "Reading");
 
         const pdfjs = await import("pdfjs-dist");
@@ -231,8 +227,7 @@ export default function ReaderClient({
   // Browsers have no equivalent of Android's FLAG_SECURE — none of this
   // actually blocks a screenshot (OS-level tools and a second camera both
   // bypass it entirely). It's the same "deterrent, not a block" posture
-  // already accepted for iOS: raise the friction, keep the page watermark
-  // as the real traceability measure. Long-press / right-click "save
+  // already accepted for iOS: raise the friction. Long-press / right-click "save
   // image", the print dialog, "save page as", and the devtools shortcuts
   // are the paths worth closing off.
   useEffect(() => {
@@ -429,34 +424,4 @@ export default function ReaderClient({
       )}
     </div>
   );
-}
-
-function paintWatermark(
-  ctx: CanvasRenderingContext2D,
-  width: number,
-  height: number,
-  meta: LocalBook | null
-) {
-  if (!meta) return;
-
-  const line = [meta.watermark.email, meta.watermark.phone]
-    .filter(Boolean)
-    .join("  ·  ");
-  if (!line) return;
-
-  ctx.save();
-  ctx.globalAlpha = 0.1;
-  ctx.fillStyle = "#1a1a1a";
-  ctx.font = "13px system-ui, -apple-system, sans-serif";
-  ctx.translate(width / 2, height / 2);
-  ctx.rotate((-28 * Math.PI) / 180);
-
-  const stepX = 260;
-  const stepY = 150;
-  for (let y = -height; y < height; y += stepY) {
-    for (let x = -width; x < width; x += stepX) {
-      ctx.fillText(line, x, y);
-    }
-  }
-  ctx.restore();
 }
