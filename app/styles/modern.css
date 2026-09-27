@@ -528,17 +528,38 @@ html[data-native] .temple-frame {
    still fits on one row */
 @media (min-width: 861px) and (max-width: 1400px) {
   .brand h2 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .brand img {
-    width: 50px;
-    height: 50px;
+    width: 46px;
+    height: 46px;
+  }
+
+  .brand {
+    gap: 10px;
+  }
+
+  .brand span {
+    font-size: 12.5px;
   }
 
   .nav-links {
-    gap: 11px;
-    font-size: 14.5px;
+    gap: 6px;
+    font-size: 14px;
+  }
+}
+
+/* Kannada labels are longer ("ನಮ್ಮ ದೃಷ್ಟಿಕೋನ", "ನಮ್ಮ ಬಗ್ಗೆ" …): tighter
+   still on laptop widths so the header stays on one row */
+@media (min-width: 861px) and (max-width: 1400px) {
+  html[lang="kn"] .nav-links {
+    gap: 7px;
+    font-size: 13px;
+  }
+
+  html[lang="kn"] .brand h2 {
+    font-size: 21px;
   }
 }
 
@@ -553,6 +574,21 @@ html[data-native] .temple-frame {
 /* never let the brand name and the menu touch */
 @media (min-width: 861px) {
   .navbar .container {
-    gap: 24px;
+    gap: 16px;
+  }
+}
+
+/* wide screens: the container caps at ~1250px of content, and eight menu
+   items + search + language + badges need tighter spacing than the
+   default 24px to share one row with the brand (measured 2026-09-27) */
+@media (min-width: 1401px) {
+  .navbar .container {
+    width: 96%;
+    max-width: 1400px;
+  }
+
+  .nav-links {
+    gap: 14px;
+    font-size: 15px;
   }
 }
