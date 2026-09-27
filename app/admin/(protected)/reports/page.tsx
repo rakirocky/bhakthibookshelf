@@ -95,8 +95,8 @@ export default async function AdminReportsPage() {
               </thead>
 
               <tbody>
-                {topBooks.map((book: any) => (
-                  <tr key={book.id}>
+                {topBooks.map((book: any, i: number) => (
+                  <tr key={book.id ?? `deleted-${i}`}>
                     <td>{book.title}</td>
                     <td align="right">{book.copies_sold}</td>
                     <td align="right">

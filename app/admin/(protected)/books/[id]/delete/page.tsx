@@ -27,38 +27,37 @@ export default async function DeleteBookPage({
         maxWidth: 600,
       }}
     >
-      <h1 style={{ marginBottom: 16 }}>
-        {orders > 0 ? "Hide Book" : "Delete Book"}
-      </h1>
+      <h1 style={{ marginBottom: 16 }}>Delete Book</h1>
 
-      {orders > 0 ? (
+      <p
+        style={{
+          marginBottom: 16,
+          color: "var(--color-text-strong)",
+        }}
+      >
+        Are you sure you want to delete{" "}
+        <strong>{book.title}</strong>{book.author ? ` by ${book.author}` : ""}? This
+        cannot be undone.
+      </p>
+
+      {orders > 0 && (
         <p
           style={{
             marginBottom: 24,
-            color: "var(--color-text-strong)",
+            padding: 12,
+            borderRadius: 8,
+            background: "var(--color-danger-bg, #fdecea)",
+            color: "var(--color-danger-text)",
           }}
         >
-          <strong>{book.title}</strong> appears in {orders}{" "}
-          {orders === 1 ? "order" : "orders"}, so it can&apos;t be deleted —
-          order history and invoices need it. Instead it will be hidden
-          from the store (unpublished): customers can no longer find or buy
-          it, and buyers keep the copy already on their device. You can
-          publish it again later from Edit.
-        </p>
-      ) : (
-        <p
-          style={{
-            marginBottom: 24,
-            color: "var(--color-text-strong)",
-          }}
-        >
-          Are you sure you want to delete{" "}
-          <strong>{book.title}</strong>{book.author ? ` by ${book.author}` : ""}? This
-          cannot be undone.
+          This book is in {orders} {orders === 1 ? "order" : "orders"}. Those
+          orders and invoices keep the book&apos;s title, but customers who
+          bought it will no longer be able to read or download it. To only
+          stop new sales, untick Published in Edit instead.
         </p>
       )}
 
-      <DeleteBookButton bookId={book.id} hideOnly={orders > 0} />
+      <DeleteBookButton bookId={book.id} />
     </div>
   );
 }

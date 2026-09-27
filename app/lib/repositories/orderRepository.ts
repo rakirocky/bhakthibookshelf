@@ -72,13 +72,14 @@ export class OrderRepository {
           (
               order_id,
               book_id,
+              book_title,
               quantity,
               price,
               subtotal
           )
           VALUES
           (
-              $1,$2,$3,$4,$5
+              $1,$2,(SELECT title FROM books WHERE id = $2),$3,$4,$5
           )
           `,
           [
@@ -225,12 +226,12 @@ export class OrderRepository {
       SELECT
         oi.id,
         oi.book_id,
-        b.title AS book_title,
+        COALESCE(b.title, oi.book_title, 'Deleted book') AS book_title,
         oi.quantity,
         oi.price,
         oi.subtotal
       FROM order_items oi
-      JOIN books b ON b.id = oi.book_id
+      LEFT JOIN books b ON b.id = oi.book_id
       WHERE oi.order_id = $1
       ORDER BY oi.id
       `,

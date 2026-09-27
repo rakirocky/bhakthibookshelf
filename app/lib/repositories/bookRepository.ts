@@ -274,8 +274,8 @@ export async function deleteBook(id: number) {
   );
 }
 
-// order_items.book_id has no ON DELETE, so a book that has ever been in
-// an order (paid or not) can't be deleted — order history must survive.
+// Orders that include this book — shown as a warning before deleting
+// (order_items keeps the title; buyers lose access to the book).
 export async function countOrdersForBook(id: number) {
   const { rows } = await db.query(
     `
@@ -287,17 +287,6 @@ export async function countOrdersForBook(id: number) {
   );
 
   return rows[0].count as number;
-}
-
-export async function unpublishBook(id: number) {
-  await db.query(
-    `
-    UPDATE books
-    SET published=FALSE
-    WHERE id=$1
-    `,
-    [id]
-  );
 }
 
 // The price actually charged for each published book — orders must

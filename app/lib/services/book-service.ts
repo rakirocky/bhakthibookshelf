@@ -162,20 +162,8 @@ export async function countOrdersForBook(id: number) {
   return repository.countOrdersForBook(id);
 }
 
-/**
- * Deletes a book, unless it appears in any order — then it is only
- * unpublished (hidden from the store) so order history and buyers'
- * downloaded copies stay intact.
- */
 export async function deleteBook(id: number) {
-  const orders = await repository.countOrdersForBook(id);
-
-  if (orders > 0) {
-    await repository.unpublishBook(id);
-  } else {
-    await repository.deleteBook(id);
-  }
-
+  const deleted = await repository.deleteBook(id);
   revalidateTag("books", { expire: 0 });
-  return { deleted: orders === 0, unpublished: orders > 0, orders };
+  return deleted;
 }

@@ -74,14 +74,14 @@ export class ReportsRepository {
       `
       SELECT
         b.id,
-        b.title,
+        COALESCE(b.title, oi.book_title, 'Deleted book') AS title,
         b.author,
         COALESCE(SUM(oi.quantity), 0)::int AS copies_sold,
         COALESCE(SUM(oi.subtotal), 0) AS revenue
       FROM order_items oi
       JOIN orders o ON o.id = oi.order_id AND o.payment_status = 'PAID'
-      JOIN books b ON b.id = oi.book_id
-      GROUP BY b.id, b.title, b.author
+      LEFT JOIN books b ON b.id = oi.book_id
+      GROUP BY b.id, COALESCE(b.title, oi.book_title, 'Deleted book'), b.author
       ORDER BY revenue DESC
       LIMIT $1
       `,
