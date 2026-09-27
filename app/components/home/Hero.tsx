@@ -8,7 +8,7 @@ import LanguageComingSoon from "./LanguageComingSoon";
 
 import { getAllBooks } from "../../lib/services/book-service";
 import { getLanguagePreference } from "../../lib/language";
-import { getT, getUiLang } from "../../lib/i18n/server";
+import { getT } from "../../lib/i18n/server";
 
 // How many of the newest covers feed the slider — getAllBooks() is already
 // ordered by created_at DESC, so slicing here just means the latest admin
@@ -17,7 +17,6 @@ const HERO_BOOK_LIMIT = 10;
 
 export default async function Hero() {
   const t = await getT();
-  const uiLang = await getUiLang();
   const language = await getLanguagePreference();
   const allBooks = await getAllBooks(language);
 
@@ -53,17 +52,6 @@ export default async function Hero() {
               {t("hero.title1")} <span>{t("hero.title2")}</span>
             </h1>
 
-            {/* Kannada motto under the name (client request 2026-09-27) —
-                Kannada interface only */}
-            {uiLang === "kn" && (
-              <p className="hero-motto" lang="kn">
-                <span>ಜ್ಞಾನ ಸುಧೆಯ ಭಂಡಾರ</span>
-                <span className="hero-motto__dot" aria-hidden="true">
-                  ✦
-                </span>
-                <span>ಭಕ್ತಿ ಭಾವ ಸೂಸುವ ಮಂದಿರ</span>
-              </p>
-            )}
 
             <p className="hero-description">
               {t("hero.description")}

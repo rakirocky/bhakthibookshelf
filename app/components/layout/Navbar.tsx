@@ -13,7 +13,7 @@ import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { t } = useT();
+  const { t, lang } = useT();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -65,9 +65,21 @@ export default function Navbar() {
               {t("brand.name")}
             </h2>
 
-            <span>
-              {t("brand.tagline")}
-            </span>
+            {/* Kannada motto (client request 2026-09-27) on two short
+                lines so the brand stays narrow enough for a one-row header */}
+            {lang === "kn" ? (
+              <span className="brand-motto" lang="kn">
+                <span>
+                  ಜ್ಞಾನ ಸುಧೆಯ ಭಂಡಾರ{" "}
+                  <span className="brand-motto__dot" aria-hidden="true">✦</span>
+                </span>
+                <span>ಭಕ್ತಿ ಭಾವ ಸೂಸುವ ಮಂದಿರ</span>
+              </span>
+            ) : (
+              <span>
+                {t("brand.tagline")}
+              </span>
+            )}
 
           </div>
 

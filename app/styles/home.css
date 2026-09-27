@@ -31,38 +31,6 @@
     color:var(--color-primary);
 }
 
-/* Kannada motto under the hero name */
-.hero-motto{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    align-items:center;
-    gap:6px 18px;
-    margin:-6px auto 18px;
-    font-family:var(--font-heading-kn), var(--font-heading), Georgia, serif;
-    font-size:24px;
-    font-weight:600;
-    color:#7c2d12;
-}
-
-.hero-motto__dot{
-    color:var(--color-accent-gold);
-    font-size:16px;
-}
-
-/* phones: one phrase per line, no dangling separator */
-@media(max-width:560px){
-.hero-motto{
-    flex-direction:column;
-    gap:2px;
-    font-size:19px;
-    margin:-4px auto 14px;
-}
-
-.hero-motto__dot{
-    display:none;
-}
-}
 
 .hero-tag{
     display:inline-block;

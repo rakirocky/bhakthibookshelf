@@ -419,7 +419,7 @@ const kn: Record<I18nKey, string> = {
   "nav.cart": "ಕಾರ್ಟ್",
   "nav.more": "ಇನ್ನಷ್ಟು",
   "brand.name": "ಭಕ್ತಿ ಬುಕ್‌ಶೆಲ್ಫ್",
-  "brand.tagline": "ಭಕ್ತಿ ಸಾಹಿತ್ಯದ ಮನೆ",
+  "brand.tagline": "ಜ್ಞಾನ ಸುಧೆಯ ಭಂಡಾರ ✦ ಭಕ್ತಿ ಭಾವ ಸೂಸುವ ಮಂದಿರ",
   "about.vision": "ನಮ್ಮ ದೃಷ್ಟಿಕೋನ",
   "about.us": "ನಮ್ಮ ಬಗ್ಗೆ",
   "about.teamEyebrow": "ಭಕ್ತಿ ಬುಕ್‌ಶೆಲ್ಫ್ ಹಿಂದಿನ ತಂಡ",
