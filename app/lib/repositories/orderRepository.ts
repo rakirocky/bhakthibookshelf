@@ -79,7 +79,7 @@ export class OrderRepository {
           )
           VALUES
           (
-              $1,$2,(SELECT title FROM books WHERE id = $2),$3,$4,$5
+              $1,$2::integer,(SELECT title FROM books WHERE id = $2::integer),$3,$4,$5
           )
           `,
           [
