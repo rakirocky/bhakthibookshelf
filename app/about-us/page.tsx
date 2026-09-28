@@ -10,37 +10,35 @@ export const metadata = pageMetadata(
 );
 
 // The people behind Bhakthi Bookshelf (client-supplied, 2026-09-27;
-// Kannada spellings + "initials first, no dots" 2026-09-28).
+// Kannada spellings, no dots, initials after the name — 2026-09-28).
 type Person = { en: string; kn: string };
 const TEAM: { role: I18nKey; people: Person[] }[] = [
   {
     role: "about.role.partner",
     people: [
-      { en: "S S Siddhartha", kn: "ಎಸ್ ಎಸ್ ಸಿದ್ಧಾರ್ಥ" },
-      { en: "H M Vishwa Bandhu Priyadarshi", kn: "ಹೆಚ್ ಎಂ ವಿಶ್ವ ಬಂಧು ಪ್ರಿಯದರ್ಶಿ" },
+      { en: "Siddhartha S S", kn: "ಸಿದ್ಧಾರ್ಥ ಎಸ್ ಎಸ್" },
+      { en: "Vishwa Bandhu Priyadarshi H M", kn: "ವಿಶ್ವ ಬಂಧು ಪ್ರಿಯದರ್ಶಿ ಹೆಚ್ ಎಂ" },
     ],
   },
   { role: "about.role.tech", people: [{ en: "Lakshmikanth", kn: "ಲಕ್ಷ್ಮೀಕಾಂತ್" }] },
-  { role: "about.role.digital", people: [{ en: "U Manjesh", kn: "ಯು ಮಂಜೇಶ್" }] },
+  { role: "about.role.digital", people: [{ en: "Manjesh U", kn: "ಮಂಜೇಶ್ ಯು" }] },
   {
     role: "about.role.content",
     people: [
-      { en: "H M Bharathi Priyadarshini", kn: "ಹೆಚ್ ಎಂ ಭಾರತಿ ಪ್ರಿಯದರ್ಶಿನಿ" },
-      { en: "H M Nandini Priyadarshini", kn: "ಹೆಚ್ ಎಂ ನಂದಿನಿ ಪ್ರಿಯದರ್ಶಿನಿ" },
-      { en: "H M Indira Priyadarshini", kn: "ಹೆಚ್ ಎಂ ಇಂದಿರಾ ಪ್ರಿಯದರ್ಶಿನಿ" },
-      { en: "P Vinutha", kn: "ಪಿ ವಿನುತ" },
+      { en: "Bharathi Priyadarshini H M", kn: "ಭಾರತಿ ಪ್ರಿಯದರ್ಶಿನಿ ಹೆಚ್ ಎಂ" },
+      { en: "Nandini Priyadarshini H M", kn: "ನಂದಿನಿ ಪ್ರಿಯದರ್ಶಿನಿ ಹೆಚ್ ಎಂ" },
+      { en: "Indira Priyadarshini H M", kn: "ಇಂದಿರಾ ಪ್ರಿಯದರ್ಶಿನಿ ಹೆಚ್ ಎಂ" },
+      { en: "Vinutha P", kn: "ವಿನುತ ಪಿ" },
     ],
   },
 ];
 
 const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
 
-/** Avatar letter: first character of the given name (English initials
- *  come first, so skip them). Grapheme-aware so a Kannada ವಿ stays whole. */
-function avatarLetter(en: string, display: string) {
-  const skip = en.split(" ").filter((w) => w.length === 1).length;
-  const given = display.split(" ")[skip] ?? display;
-  return segmenter.segment(given)[Symbol.iterator]().next().value?.segment.toUpperCase() ?? "";
+/** Avatar letter: first character of the name. Grapheme-aware so a
+ *  Kannada ವಿ stays whole. */
+function avatarLetter(name: string) {
+  return segmenter.segment(name)[Symbol.iterator]().next().value?.segment.toUpperCase() ?? "";
 }
 
 export default async function AboutUsPage() {
@@ -71,7 +69,7 @@ export default async function AboutUsPage() {
                   return (
                   <li key={person.en} className="about-team__card">
                     <span className="about-team__avatar" aria-hidden="true">
-                      {avatarLetter(person.en, name)}
+                      {avatarLetter(name)}
                     </span>
                     <strong>{name}</strong>
                   </li>
