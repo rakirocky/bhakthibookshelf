@@ -125,8 +125,6 @@ export default async function Footer() {
 
             <Link href="/books?category=prayers">{t("footer.prayers")}</Link>
 
-            <Link href="/books?category=devotional">{t("footer.devotional")}</Link>
-
             <Link href="/books?category=divine-stories">{t("footer.divineStories")}</Link>
           </div>
 
