@@ -5,6 +5,7 @@ import Container from "../components/ui/Container";
 import CartItem from "../components/cart/CartItem";
 import CartSummary from "../components/cart/CartSummary";
 import EmptyCart from "../components/cart/EmptyCart";
+import CartUnavailableNotice from "../components/cart/CartUnavailableNotice";
 
 import { useCart } from "../hooks/useCart";
 import { useT } from "@/app/lib/i18n/I18nProvider";
@@ -17,6 +18,7 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <Container>
+        <CartUnavailableNotice />
         <EmptyCart />
       </Container>
     );
@@ -34,6 +36,8 @@ export default function CartPage() {
         >
           {t("cart.title")}
         </h1>
+
+        <CartUnavailableNotice />
 
         <div
           style={{

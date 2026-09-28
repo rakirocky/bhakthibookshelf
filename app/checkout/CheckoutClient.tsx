@@ -9,6 +9,7 @@ import CheckoutSummary from "../components/checkout/CheckoutSummary";
 
 import { useCart } from "../hooks/useCart";
 import EmptyCart from "../components/cart/EmptyCart";
+import CartUnavailableNotice from "../components/cart/CartUnavailableNotice";
 import { useIsReadOnlyApp, isReadOnlyApp } from "../lib/offline/appMode";
 import { useT } from "@/app/lib/i18n/I18nProvider";
 
@@ -43,6 +44,7 @@ export default function CheckoutClient({
   if (items.length === 0) {
     return (
       <Container>
+        <CartUnavailableNotice />
         <EmptyCart />
       </Container>
     );
@@ -57,6 +59,8 @@ export default function CheckoutClient({
       >
         {t("checkout.title")}
       </h1>
+
+      <CartUnavailableNotice />
 
       <div
         style={{
