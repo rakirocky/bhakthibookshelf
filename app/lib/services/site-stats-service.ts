@@ -1,11 +1,12 @@
 import "server-only";
 
-import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
 import { getPublicBookCount } from "../repositories/bookRepository";
 import { CustomerRepository } from "../repositories/customerRepository";
 
-export const getSiteStats = unstable_cache(
+// Per-request only — see the note in book-service.ts (2-process cluster).
+export const getSiteStats = cache(
   async () => {
     const [bookCount, customerCount] = await Promise.all([
       getPublicBookCount(),
@@ -13,7 +14,5 @@ export const getSiteStats = unstable_cache(
     ]);
 
     return { bookCount, customerCount };
-  },
-  ["site-stats"],
-  { tags: ["books", "customers"], revalidate: 300 }
+  }
 );

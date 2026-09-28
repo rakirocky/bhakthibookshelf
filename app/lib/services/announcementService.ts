@@ -1,16 +1,12 @@
-import { revalidateTag, unstable_cache } from "next/cache";
+import { cache } from "react";
+import { revalidateTag } from "next/cache";
 
 import { AnnouncementRepository } from "../repositories/announcementRepository";
 
-// Read on every page (root layout) but written only from /admin/announcements
-// — cache the DB read (data cache, not route/page caching) so a hot path hit
-// by every visitor doesn't do a Postgres round-trip each time. Invalidated
-// instantly on any admin write via revalidateTag below, 60s ceiling otherwise.
-const getActiveCached = unstable_cache(
-  async () => AnnouncementRepository.getActive(),
-  ["announcements", "active"],
-  { tags: ["announcements"], revalidate: 60 }
-);
+// Read on every page (root layout) and by /api/announcements. Per-request
+// only — see the note in book-service.ts (2-process cluster): an admin
+// switching an announcement on/off must show on both processes at once.
+const getActiveCached = cache(async () => AnnouncementRepository.getActive());
 
 export class AnnouncementService {
   static async getActive() {

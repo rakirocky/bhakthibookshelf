@@ -1,26 +1,23 @@
 import "server-only";
 
-import { revalidateTag, unstable_cache } from "next/cache";
+import { cache } from "react";
+import { revalidateTag } from "next/cache";
 
 import * as repository from "../repositories/bookRepository";
 import { normalizeCategory } from "../categories";
 
-// The catalogue is read far more often than it's written, so these wrap
-// the DB reads in Next's data cache — still re-validated instantly on
-// any admin write via revalidateTag("books") below, and on a 5-minute
-// ceiling otherwise. This does NOT change page-level rendering (pages
-// keep whatever `dynamic`/cookie-driven behavior they already have) —
-// it only removes the Postgres round-trip from the hot path.
-export const getAllBooks = unstable_cache(
-  async (language?: string) => repository.findAllBooks(language),
-  ["books", "all"],
-  { tags: ["books"], revalidate: 300 }
+// Per-request dedupe only (React cache), NOT Next's cross-request data
+// cache: the site runs as a 2-process pm2 cluster, and revalidateTag()
+// only clears the cache in the process that handled the admin's write —
+// the other process would keep serving a deleted/edited book for up to
+// the TTL. These queries take a few ms on the local Postgres, so reading
+// fresh on every request is the simple, correct choice.
+export const getAllBooks = cache(
+  async (language?: string) => repository.findAllBooks(language)
 );
 
-export const getFeaturedBooks = unstable_cache(
-  async (language?: string) => repository.findFeaturedBooks(language),
-  ["books", "featured"],
-  { tags: ["books"], revalidate: 300 }
+export const getFeaturedBooks = cache(
+  async (language?: string) => repository.findFeaturedBooks(language)
 );
 
 // The homepage's "Featured Books" section otherwise renders an empty grid
@@ -38,10 +35,8 @@ export async function getFeaturedBooksOrLatest(language?: string) {
   return latest.slice(0, FEATURED_FALLBACK_LIMIT);
 }
 
-export const getBookBySlug = unstable_cache(
-  async (slug: string) => repository.findBookBySlug(slug),
-  ["books", "by-slug"],
-  { tags: ["books"], revalidate: 300 }
+export const getBookBySlug = cache(
+  async (slug: string) => repository.findBookBySlug(slug)
 );
 
 /**

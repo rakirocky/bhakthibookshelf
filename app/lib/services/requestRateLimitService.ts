@@ -4,9 +4,10 @@ import "server-only";
 // (order creation, subscribe) — separate from LoginRateLimitService,
 // which tracks failed-credential attempts in the DB. This tracks raw
 // request volume regardless of success/failure, and doesn't need to
-// survive a restart, so an in-memory Map is enough: the app runs as a
-// single pm2 fork-mode process (see [[prod-server]] memory), not a
-// cluster, so there's only ever one process's worth of state to track.
+// survive a restart, so an in-memory Map is enough. The app runs as a
+// 2-process pm2 cluster (ecosystem.config.cjs), so each process counts
+// separately — worst case an abuser gets 2× the limit, acceptable for a
+// spam throttle (login lockouts are DB-backed and unaffected).
 const requestLog = new Map<string, number[]>();
 
 export type RateLimitResult =

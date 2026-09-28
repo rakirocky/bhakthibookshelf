@@ -1,6 +1,8 @@
 import "server-only";
 
-import { revalidateTag, unstable_cache } from "next/cache";
+import { cache } from "react";
+
+import { revalidateTag } from "next/cache";
 
 import {
   FESTIVAL_KINDS,
@@ -21,13 +23,8 @@ function toFestival(row: FestivalDateRow): Festival | null {
   };
 }
 
-// Read by the home page on every request; written only from
-// Admin → Festivals, which revalidates the tag.
-const getAllCached = unstable_cache(
-  async () => FestivalRepository.getAll(),
-  ["festivals", "all"],
-  { tags: ["festivals"], revalidate: 3600 }
-);
+// Per-request only — see the note in book-service.ts (2-process cluster).
+const getAllCached = cache(async () => FestivalRepository.getAll());
 
 function validDate(value: unknown): value is string {
   return typeof value === "string" && YMD.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
