@@ -53,7 +53,7 @@ export default function LanguageSwitcher() {
     >
       {[
         { value: "all", label: "All" },
-        { value: "English", label: "EN" },
+        { value: "English", label: "English" },
         { value: "Kannada", label: "ಕನ್ನಡ" },
       ].map((option) => (
         <button

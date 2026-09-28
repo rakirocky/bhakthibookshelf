@@ -2,7 +2,7 @@
  * Every customer-facing interface string, English and Kannada, in one
  * place so the Kannada can be reviewed/edited by the client in one file.
  * The UI is Kannada when the navbar language is ಕನ್ನಡ ("site_language"
- * cookie = Kannada); "All" and "EN" keep English.
+ * cookie = Kannada); "All" and "English" keep English.
  *
  * Placeholders like {n} are filled by t(key, { n: … }).
  * Kannada drafted 2026-09-25 — PENDING CLIENT REVIEW.
