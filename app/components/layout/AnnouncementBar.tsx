@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 
 interface Announcement {
   id: number;
@@ -17,17 +17,57 @@ interface Announcement {
  * Several active announcements scroll one after another in the same
  * line. Pauses while hovered or focused so a link can be read and
  * clicked.
+ *
+ * The root layout supplies the list once per full page load, and client
+ * navigations never re-render it — so the bar also re-reads
+ * /api/announcements on every page change, when the tab/app comes back
+ * to the foreground, and once a minute while visible. A newly activated
+ * (or deactivated) announcement then shows without a reload.
  */
 export default function AnnouncementBar({
-  announcements,
+  announcements: initial,
 }: {
   announcements: Announcement[];
 }) {
   const pathname = usePathname();
+  const [announcements, setAnnouncements] = useState(initial);
+  const isAdmin = pathname?.startsWith("/admin") ?? false;
+
+  useEffect(() => {
+    if (isAdmin) return;
+    let cancelled = false;
+
+    const refresh = async () => {
+      if (document.visibilityState !== "visible") return;
+      try {
+        const res = await fetch("/api/announcements", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = (await res.json()) as { announcements: Announcement[] | null };
+        if (!cancelled && data.announcements) {
+          setAnnouncements((prev) =>
+            JSON.stringify(prev) === JSON.stringify(data.announcements)
+              ? prev
+              : data.announcements!
+          );
+        }
+      } catch {
+        // offline / transient — keep what we have
+      }
+    };
+
+    refresh();
+    const timer = window.setInterval(refresh, 60_000);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", refresh);
+    };
+  }, [pathname, isAdmin]);
 
   // Admin has its own header — no flash bar there, same reasoning as
   // hiding the storefront Navbar on /admin.
-  if (pathname?.startsWith("/admin") || announcements.length === 0) {
+  if (isAdmin || announcements.length === 0) {
     return null;
   }
 
