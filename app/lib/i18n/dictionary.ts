@@ -426,7 +426,7 @@ export type I18nKey = keyof typeof en;
 const kn: Record<I18nKey, string> = {
   "nav.home": "ಮುಖಪುಟ",
   "nav.library": "ಗ್ರಂಥಾಲಯ",
-  "nav.about": "ನಮ್ಮ ದೃಷ್ಟಿಕೋನ",
+  "nav.about": "ನಮ್ಮ ದೂರದೃಷ್ಟಿ",
   "nav.aboutUs": "ನಮ್ಮ ಬಗ್ಗೆ",
   "nav.contact": "ಸಂಪರ್ಕಿಸಿ",
   "nav.subscribe": "ಚಂದಾದಾರರಾಗಿ",
@@ -437,7 +437,7 @@ const kn: Record<I18nKey, string> = {
   "nav.more": "ಇನ್ನಷ್ಟು",
   "brand.name": "ಭಕ್ತಿ ಬುಕ್‌ಶೆಲ್ಫ್",
   "brand.tagline": "ಜ್ಞಾನ ಸುಧೆಯ ಭಂಡಾರ ✦ ಭಕ್ತಿ ಭಾವ ಸೂಸುವ ಮಂದಿರ",
-  "about.vision": "ನಮ್ಮ ದೃಷ್ಟಿಕೋನ",
+  "about.vision": "ನಮ್ಮ ದೂರದೃಷ್ಟಿ",
   "about.us": "ನಮ್ಮ ಬಗ್ಗೆ",
   "about.teamEyebrow": "ಭಕ್ತಿ ಬುಕ್‌ಶೆಲ್ಫ್ ಹಿಂದಿನ ತಂಡ",
   "about.teamIntro": "ನಮ್ಮ ಪವಿತ್ರ ಪರಂಪರೆಯನ್ನು ಪ್ರತಿಯೊಬ್ಬ ಓದುಗರಿಗೂ ತಲುಪಿಸಲು ಸಮರ್ಪಿತವಾದ ಪುಟ್ಟ ತಂಡ.",
