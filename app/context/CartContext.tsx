@@ -83,7 +83,7 @@ export function CartProvider({
   const checkOnPage = pathname === "/cart" || pathname === "/checkout";
   useEffect(() => {
     if (!hydrated) return;
-    const ids = items.map((x) => x.id);
+    const ids = items.map((x) => Number(x.id));
     if (ids.length === 0) return;
 
     let cancelled = false;
@@ -98,7 +98,9 @@ export function CartProvider({
         if (cancelled || !data?.books) return;
         // ids can arrive as strings (Postgres bigint) — compare as numbers
         const live = new Map(data.books.map((b) => [Number(b.id), Number(b.price)]));
-        const gone = itemsRef.current.filter((x) => !live.has(x.id));
+        // Cart ids can be strings too (book objects from the server carry
+        // Postgres bigint ids as text) — always compare as numbers.
+        const gone = itemsRef.current.filter((x) => !live.has(Number(x.id)));
         if (gone.length > 0) {
           setRemovedTitles((t) => [
             ...new Set([...t, ...gone.map((x) => x.title)]),
@@ -106,8 +108,8 @@ export function CartProvider({
         }
         setItems((prev) => {
           const next = prev
-            .filter((x) => live.has(x.id))
-            .map((x) => ({ ...x, price: live.get(x.id)! }));
+            .filter((x) => live.has(Number(x.id)))
+            .map((x) => ({ ...x, price: live.get(Number(x.id))! }));
           const changed =
             next.length !== prev.length ||
             next.some((x, i) => x.price !== prev[i].price);
