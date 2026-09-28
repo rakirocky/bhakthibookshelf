@@ -97,6 +97,17 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  // Guests: keep the list in sync across tabs, so a save in one tab isn't
+  // undone by another tab's older copy (logged-in lists live on the account).
+  useEffect(() => {
+    if (loggedIn) return;
+    function onStorage(e: StorageEvent) {
+      if (e.key === STORAGE_KEY || e.key === null) setSlugs(readLocal());
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, [loggedIn]);
+
   const sync = useCallback(
     async (method: "POST" | "DELETE", slug: string) => {
       if (!loggedIn) return;

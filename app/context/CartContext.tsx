@@ -128,12 +128,33 @@ export function CartProvider({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hydrated, checkOnPage]);
 
+  // Save only after the saved cart has been read back: saving on the very
+  // first render would briefly overwrite storage with an empty cart.
   useEffect(() => {
+    if (!hydrated) return;
     localStorage.setItem(
       "cart",
       JSON.stringify(items)
     );
-  }, [items]);
+  }, [items, hydrated]);
+
+  // Keep carts in sync across tabs: another tab adding or removing a book
+  // updates this tab too, so this tab's older copy can't overwrite it.
+  useEffect(() => {
+    function onStorage(e: StorageEvent) {
+      if (e.key !== "cart") return;
+      try {
+        const next: CartItem[] = e.newValue ? JSON.parse(e.newValue) : [];
+        setItems((prev) =>
+          JSON.stringify(prev) === JSON.stringify(next) ? prev : next
+        );
+      } catch {
+        /* ignore malformed value */
+      }
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
 
   function addItem(item: Omit<CartItem, "quantity">) {
     if (!items.some((x) => x.id === item.id)) {
