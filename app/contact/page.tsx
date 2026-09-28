@@ -54,8 +54,10 @@ export default async function ContactPage() {
             style={{
               position: "relative",
               display: "inline-flex",
-              padding: 8,
-              borderRadius: "50%",
+              padding: 6,
+              // rounded square, same as Our Vision — a circle clips the
+              // logo's tagline corners ("A … Reading")
+              borderRadius: 24,
               background:
                 "linear-gradient(135deg, var(--color-primary), var(--color-accent-gold))",
               marginBottom: 26,
@@ -65,19 +67,16 @@ export default async function ContactPage() {
             <div
               style={{
                 background: "var(--color-white)",
-                borderRadius: "50%",
-                padding: 10,
+                borderRadius: 19,
+                padding: 4,
               }}
             >
               <Image
                 src="/images/logo.png"
                 alt="Bhakthi Bookshelf"
-                width={130}
-                height={130}
-                style={{
-                  borderRadius: "50%",
-                  display: "block",
-                }}
+                width={164}
+                height={164}
+                style={{ borderRadius: 15, display: "block" }}
                 priority
               />
             </div>
