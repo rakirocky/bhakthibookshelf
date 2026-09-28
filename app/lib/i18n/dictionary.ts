@@ -30,8 +30,8 @@ const en = {
   "about.teamEyebrow": "The people behind Bhakthi Bookshelf",
   "about.teamIntro": "A small team devoted to bringing our sacred heritage to every reader.",
   "about.role.partner": "Managing Partners",
-  "about.role.tech": "Technology Head",
-  "about.role.digital": "Digital Head",
+  "about.role.tech": "Technical Head",
+  "about.role.digital": "Digital Marketing Head",
   "about.role.content": "Content Creators",
 
   // home — hero
@@ -442,8 +442,8 @@ const kn: Record<I18nKey, string> = {
   "about.teamEyebrow": "ಭಕ್ತಿ ಬುಕ್‌ಶೆಲ್ಫ್ ಹಿಂದಿನ ತಂಡ",
   "about.teamIntro": "ನಮ್ಮ ಪವಿತ್ರ ಪರಂಪರೆಯನ್ನು ಪ್ರತಿಯೊಬ್ಬ ಓದುಗರಿಗೂ ತಲುಪಿಸಲು ಸಮರ್ಪಿತವಾದ ಪುಟ್ಟ ತಂಡ.",
   "about.role.partner": "ವ್ಯವಸ್ಥಾಪಕ ಪಾಲುದಾರರು",
-  "about.role.tech": "ತಂತ್ರಜ್ಞಾನ ಮುಖ್ಯಸ್ಥರು",
-  "about.role.digital": "ಡಿಜಿಟಲ್ ಮುಖ್ಯಸ್ಥರು",
+  "about.role.tech": "ತಾಂತ್ರಿಕ ಮುಖ್ಯಸ್ಥರು",
+  "about.role.digital": "ಡಿಜಿಟಲ್ ಮಾರ್ಕೆಟಿಂಗ್ ಮುಖ್ಯಸ್ಥರು",
   "about.role.content": "ವಿಷಯ ರಚನೆಕಾರರು",
 
   "hero.tag": "ವಿಶ್ವಾಸಾರ್ಹ ಡಿಜಿಟಲ್ ಆಧ್ಯಾತ್ಮಿಕ ಗ್ರಂಥಾಲಯ",
