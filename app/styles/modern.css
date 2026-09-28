@@ -33,7 +33,7 @@ textarea {
   line-height: 1.15;
 }
 
-/* The logo artwork is a solid navy square; round it and ring it in gold
+/* The logo artwork is a solid black square; round it and ring it in gold
    so it reads as an emblem rather than a pasted box on the white bar. */
 .brand img {
   border-radius: 14px;

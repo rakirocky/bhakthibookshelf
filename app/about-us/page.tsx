@@ -1,5 +1,5 @@
 import Footer from "../components/layout/Footer";
-import { getT } from "@/app/lib/i18n/server";
+import { getT, getUiLang } from "@/app/lib/i18n/server";
 import type { I18nKey } from "@/app/lib/i18n/dictionary";
 import { pageMetadata } from "@/app/lib/seo/pageMetadata";
 
@@ -9,37 +9,43 @@ export const metadata = pageMetadata(
   "/about-us"
 );
 
-// The people behind Bhakthi Bookshelf (client-supplied, 2026-09-27).
-// Names stay in English script in both languages; roles are translated.
-const TEAM: { role: I18nKey; people: string[] }[] = [
+// The people behind Bhakthi Bookshelf (client-supplied, 2026-09-27;
+// Kannada spellings + "initials first, no dots" 2026-09-28).
+type Person = { en: string; kn: string };
+const TEAM: { role: I18nKey; people: Person[] }[] = [
   {
     role: "about.role.partner",
-    people: ["Siddhartha S.S", "Vishwa Bandu Priyadarshi H.M"],
+    people: [
+      { en: "S S Siddhartha", kn: "ಎಸ್ ಎಸ್ ಸಿದ್ಧಾರ್ಥ" },
+      { en: "H M Vishwa Bandhu Priyadarshi", kn: "ಹೆಚ್ ಎಂ ವಿಶ್ವ ಬಂಧು ಪ್ರಿಯದರ್ಶಿ" },
+    ],
   },
-  { role: "about.role.tech", people: ["Lakshmikanth"] },
-  { role: "about.role.digital", people: ["Manjesh"] },
+  { role: "about.role.tech", people: [{ en: "Lakshmikanth", kn: "ಲಕ್ಷ್ಮೀಕಾಂತ್" }] },
+  { role: "about.role.digital", people: [{ en: "U Manjesh", kn: "ಯು ಮಂಜೇಶ್" }] },
   {
     role: "about.role.content",
     people: [
-      "Bharathi Priyadarshini H.M",
-      "Nandini Priyadarshini H.M",
-      "Indira Priyadarshini H.M",
-      "Vinutha P",
+      { en: "H M Bharathi Priyadarshini", kn: "ಹೆಚ್ ಎಂ ಭಾರತಿ ಪ್ರಿಯದರ್ಶಿನಿ" },
+      { en: "H M Nandini Priyadarshini", kn: "ಹೆಚ್ ಎಂ ನಂದಿನಿ ಪ್ರಿಯದರ್ಶಿನಿ" },
+      { en: "H M Indira Priyadarshini", kn: "ಹೆಚ್ ಎಂ ಇಂದಿರಾ ಪ್ರಿಯದರ್ಶಿನಿ" },
+      { en: "P Vinutha", kn: "ಪಿ ವಿನುತ" },
     ],
   },
 ];
 
-function initials(name: string) {
-  return name
-    .split(/[\s.]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join("");
+const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+
+/** Avatar letter: first character of the given name (English initials
+ *  come first, so skip them). Grapheme-aware so a Kannada ವಿ stays whole. */
+function avatarLetter(en: string, display: string) {
+  const skip = en.split(" ").filter((w) => w.length === 1).length;
+  const given = display.split(" ")[skip] ?? display;
+  return segmenter.segment(given)[Symbol.iterator]().next().value?.segment.toUpperCase() ?? "";
 }
 
 export default async function AboutUsPage() {
   const t = await getT();
+  const lang = await getUiLang();
 
   return (
     <>
@@ -60,14 +66,17 @@ export default async function AboutUsPage() {
             <div key={group.role} className="about-team__group">
               <h2>{t(group.role)}</h2>
               <ul className="about-team__grid">
-                {group.people.map((name) => (
-                  <li key={name} className="about-team__card">
+                {group.people.map((person) => {
+                  const name = lang === "kn" ? person.kn : person.en;
+                  return (
+                  <li key={person.en} className="about-team__card">
                     <span className="about-team__avatar" aria-hidden="true">
-                      {initials(name)}
+                      {avatarLetter(person.en, name)}
                     </span>
                     <strong>{name}</strong>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             </div>
           ))}

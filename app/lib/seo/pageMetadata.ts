@@ -19,7 +19,7 @@ export function pageMetadata(
       description,
       url: path,
       siteName: SITE_NAME,
-      images: [{ url: "/images/logo.png", width: 818, height: 796, alt: SITE_NAME }],
+      images: [{ url: "/images/logo.png", width: 900, height: 900, alt: SITE_NAME }],
       locale: "en_IN",
       type: "website",
     },

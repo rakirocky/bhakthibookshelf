@@ -8,7 +8,7 @@
  * are left to fail normally offline.
  */
 
-const VERSION = "bbs-offline-v2";
+const VERSION = "bbs-offline-v3";
 const PRECACHE = `${VERSION}-precache`;
 const RUNTIME = `${VERSION}-runtime`;
 

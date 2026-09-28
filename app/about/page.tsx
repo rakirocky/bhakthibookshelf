@@ -83,17 +83,6 @@ export default async function OurVisionPage() {
           >
             {t("about.vision")}
           </h1>
-
-          <p
-            style={{
-              color: "rgba(255,255,255,0.75)",
-              maxWidth: 480,
-              margin: "0 auto",
-              position: "relative",
-            }}
-          >
-            {t("brand.tagline")}
-          </p>
         </section>
 
         {/* ===== Content — card pulled up over the hero for depth ===== */}

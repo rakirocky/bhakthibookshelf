@@ -47,8 +47,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/images/logo.png",
-        width: 818,
-        height: 796,
+        width: 900,
+        height: 900,
         alt: "Bhakthi Bookshelf",
       },
     ],

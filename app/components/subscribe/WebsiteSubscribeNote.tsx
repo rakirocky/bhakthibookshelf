@@ -1,9 +1,11 @@
 import { WEBSITE_LABEL, WEBSITE_URL } from "@/app/lib/websiteLink";
 
-/** Tagline under the subscribe action — points app users to the website. */
+/** Tagline under the subscribe action — points app users to the website.
+ *  data-native-only: hidden on the website itself (client 2026-09-28). */
 export default function WebsiteSubscribeNote({ text }: { text: string }) {
   return (
     <p
+      data-native-only
       style={{
         marginTop: 14,
         marginBottom: 0,
