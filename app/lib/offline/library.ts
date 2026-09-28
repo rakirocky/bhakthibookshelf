@@ -341,6 +341,20 @@ export async function removeBook(downloadId: number): Promise<void> {
   );
 }
 
+/**
+ * Delete every downloaded book (file, key, reading progress) from this
+ * device without touching the server — used when the account is being
+ * deleted, where the server removes all licences itself.
+ */
+export async function wipeLocalLibrary(): Promise<void> {
+  const { forgetProgress } = await import("./readingProgress");
+  for (const book of await readIndex()) {
+    await removeBookLocal(book.downloadId).catch(() => undefined);
+    await forgetProgress(book.downloadId).catch(() => undefined);
+  }
+  await writeIndex([]);
+}
+
 /** On-disk size of one downloaded book's encrypted file, in bytes. */
 export async function bookFileSize(downloadId: number): Promise<number> {
   try {

@@ -253,6 +253,18 @@ export default async function AccountPage() {
         >
           {t("account.ordersSoon")}
         </p>
+
+        <Link
+          href="/account/delete-account"
+          style={{
+            display: "inline-block",
+            marginTop: 16,
+            fontSize: 14,
+            color: "#b42318",
+          }}
+        >
+          {t("del.link")}
+        </Link>
       </div>
     </div>
   );

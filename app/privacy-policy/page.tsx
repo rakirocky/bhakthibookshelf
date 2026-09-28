@@ -190,12 +190,15 @@ export default async function PrivacyPolicyPage() {
           <h2 id="your-rights">7. Your Rights</h2>
           <p>
             You can view and update your account details, and change
-            your password, at any time from your account page. To
-            request a copy of your data, or to request that we delete
-            your account — including any device records and download
-            licences tied to the mobile app — contact us using the
-            details below. We&rsquo;ll confirm the deletion by email once
-            it&rsquo;s done.
+            your password, at any time from your account page. You can
+            also delete your account yourself, on the website or in the
+            app: My Account &rarr; &ldquo;Delete my account&rdquo;. This
+            permanently removes your name, email, phone number and
+            password, your device records and download licences, and
+            your wishlist. Invoices for past payments are kept only as
+            required by Indian tax (GST) law. To request a copy of your
+            data, or if you can&rsquo;t sign in to delete your account,
+            contact us using the details below.
           </p>
 
           <h2>8. Children&rsquo;s Privacy</h2>

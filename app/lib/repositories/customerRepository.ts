@@ -101,11 +101,11 @@ export class CustomerRepository {
     Omit<CustomerRow, "password_hash">[]
   > {
     const params: string[] = [];
-    let whereClause = "";
+    let whereClause = "WHERE c.deleted_at IS NULL";
 
     if (promoterCode) {
       params.push(promoterCode);
-      whereClause = `WHERE p.code = $${params.length}`;
+      whereClause += ` AND p.code = $${params.length}`;
     }
 
     const { rows } = await db.query(
@@ -273,5 +273,65 @@ export class CustomerRepository {
       `,
       [id]
     );
+  }
+
+  // Self-service account deletion (migration 032). One transaction:
+  // personal data goes, the login slot is freed, and every device /
+  // download licence / wishlist / reset code is removed. The row itself
+  // stays — anonymised — because orders and subscriptions (GST records)
+  // reference it. Order rows keep the billing name/email/address printed
+  // on their invoices; that is the legally required tax record.
+  static async deleteAccount(id: number): Promise<void> {
+    const client = await db.connect();
+
+    try {
+      await client.query("BEGIN");
+
+      const { rows } = await client.query(
+        `SELECT email FROM customers WHERE id = $1 AND deleted_at IS NULL FOR UPDATE`,
+        [id]
+      );
+
+      if (rows.length === 0) {
+        await client.query("ROLLBACK");
+        return;
+      }
+
+      if (rows[0].email) {
+        await client.query(
+          `DELETE FROM newsletter_subscribers WHERE LOWER(email) = LOWER($1)`,
+          [rows[0].email]
+        );
+      }
+
+      await client.query(`DELETE FROM book_downloads WHERE customer_id = $1`, [id]);
+      await client.query(`DELETE FROM customer_devices WHERE customer_id = $1`, [id]);
+      await client.query(`DELETE FROM wishlist_items WHERE customer_id = $1`, [id]);
+      await client.query(`DELETE FROM password_reset_otps WHERE customer_id = $1`, [id]);
+
+      await client.query(
+        `
+        UPDATE customers
+        SET phone = 'del-' || id,
+            name = NULL,
+            email = NULL,
+            password_hash = '!deleted',
+            is_active = FALSE,
+            active_session_id = NULL,
+            active_session_expires_at = NULL,
+            deleted_at = CURRENT_TIMESTAMP,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = $1
+        `,
+        [id]
+      );
+
+      await client.query("COMMIT");
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 }
