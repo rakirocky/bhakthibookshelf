@@ -54,7 +54,7 @@ const en = {
   "promise.subtitle":
     "Every book we publish is chosen with devotion, authenticity and the desire to share timeless spiritual wisdom.",
   "promise.goal": "1 Lakh+",
-  "promise.goalText": "Our mission: a library of one lakh+ (1,00,000+) devotional books for every seeker.",
+  "promise.goalText": "Our mission: a library of one lakh plus devotional books for every seeker.",
   "promise.readers": "Readers who've joined Bhakthi Bookshelf.",
   "promise.instant": "Instant",
   "promise.instantText": "Download your books immediately after purchase.",
@@ -447,7 +447,7 @@ const kn: Record<I18nKey, string> = {
   "promise.subtitle":
     "ನಾವು ಪ್ರಕಟಿಸುವ ಪ್ರತಿಯೊಂದು ಪುಸ್ತಕವನ್ನೂ ಭಕ್ತಿ, ಪ್ರಾಮಾಣಿಕತೆ ಹಾಗೂ ಕಾಲಾತೀತ ಆಧ್ಯಾತ್ಮಿಕ ಜ್ಞಾನವನ್ನು ಹಂಚುವ ಆಶಯದಿಂದ ಆಯ್ಕೆ ಮಾಡುತ್ತೇವೆ.",
   "promise.goal": "1 ಲಕ್ಷ+",
-  "promise.goalText": "ನಮ್ಮ ಗುರಿ: ಪ್ರತಿಯೊಬ್ಬ ಭಕ್ತನಿಗಾಗಿ ಒಂದು ಲಕ್ಷಕ್ಕೂ ಹೆಚ್ಚು (1,00,000+) ಭಕ್ತಿ ಪುಸ್ತಕಗಳ ಗ್ರಂಥಾಲಯ.",
+  "promise.goalText": "ನಮ್ಮ ಗುರಿ: ಪ್ರತಿಯೊಬ್ಬ ಭಕ್ತನಿಗಾಗಿ ಒಂದು ಲಕ್ಷಕ್ಕೂ ಹೆಚ್ಚು ಭಕ್ತಿ ಪುಸ್ತಕಗಳ ಗ್ರಂಥಾಲಯ.",
   "promise.readers": "ಭಕ್ತಿ ಬುಕ್‌ಶೆಲ್ಫ್‌ಗೆ ಸೇರಿರುವ ಓದುಗರು.",
   "promise.instant": "ತಕ್ಷಣ",
   "promise.instantText": "ಖರೀದಿಸಿದ ತಕ್ಷಣವೇ ನಿಮ್ಮ ಪುಸ್ತಕಗಳನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ.",
