@@ -178,7 +178,7 @@ export default async function Footer() {
         </div>
 
         {/* inside the app there's no address bar — show where the website is */}
-        <div className="footer-website" data-native-only>
+        <div className="footer-website" data-native-only data-not-ios>
           <Globe size={18} />
           <span>{t("footer.website")}</span>
           <a href={WEBSITE_URL} target="_blank" rel="noopener">

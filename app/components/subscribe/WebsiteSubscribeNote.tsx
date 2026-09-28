@@ -6,6 +6,7 @@ export default function WebsiteSubscribeNote({ text }: { text: string }) {
   return (
     <p
       data-native-only
+      data-not-ios
       style={{
         marginTop: 14,
         marginBottom: 0,

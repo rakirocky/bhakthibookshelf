@@ -16,6 +16,14 @@ export function isNativeApp(): boolean {
   return Boolean(cap?.isNativePlatform?.());
 }
 
+/** True inside the iOS app (sync — reads the Capacitor bridge global). */
+export function isIOSApp(): boolean {
+  if (!isNativeApp()) return false;
+  const cap = (window as unknown as { Capacitor?: { getPlatform?: () => string } })
+    .Capacitor;
+  return cap?.getPlatform?.() === "ios";
+}
+
 export async function nativePlatform(): Promise<"android" | "ios" | "web"> {
   if (!isNativeApp()) return "web";
   const { Capacitor } = await import("@capacitor/core");

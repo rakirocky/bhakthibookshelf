@@ -241,6 +241,7 @@ export default function BottomNav() {
                 rel="noopener"
                 className="more-sheet__website"
                 data-native-only
+                data-not-ios
               >
                 🌐 {WEBSITE_LABEL}
               </a>

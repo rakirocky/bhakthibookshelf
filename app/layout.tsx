@@ -91,7 +91,11 @@ export const dynamic = "force-dynamic";
 // and client code (isReadOnlyApp) behaves like the website.
 // Also always marks <html data-native> inside the app (buying on or off),
 // e.g. for the lighter temple frame on small app screens.
-const APP_MODE_SCRIPT = `try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform()){var d=document.documentElement;d.setAttribute("data-native","");if(!d.hasAttribute("data-app-commerce"))d.setAttribute("data-app","")}}catch(e){}`;
+// iOS: marks <html data-ios> and is ALWAYS read-only — the admin's
+// "allow buying" switch is Android-only; Apple requires In-App Purchase
+// for digital books, and links out to the website ([data-not-ios]) count
+// as steering (App Store guideline 3.1.1 / 3.1.3).
+const APP_MODE_SCRIPT = `try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform()){var d=document.documentElement;d.setAttribute("data-native","");var ios=c.getPlatform&&c.getPlatform()==="ios";if(ios)d.setAttribute("data-ios","");if(ios||!d.hasAttribute("data-app-commerce"))d.setAttribute("data-app","")}}catch(e){}`;
 
 // Site typography (self-hosted by next/font): Marcellus headings, Noto
 // Sans body; the Kannada Noto faces are listed after them in each stack
