@@ -4,7 +4,7 @@ import Footer from "../components/layout/Footer";
 import ContactForm from "../components/contact/ContactForm";
 import { SOCIAL_LINKS } from "../components/layout/SocialLinks";
 import { PhoneIcon, MailIcon, ClockIcon, PinIcon } from "../components/ui/Icons";
-import { SettingsService } from "@/app/lib/services/settingsService";
+import { SettingsService, CONTACT_EMAIL_FALLBACK } from "@/app/lib/services/settingsService";
 import { getT } from "@/app/lib/i18n/server";
 import { pageMetadata } from "@/app/lib/seo/pageMetadata";
 
@@ -133,14 +133,8 @@ export default async function ContactPage() {
             <ContactInfoRow
               icon={<MailIcon color="var(--color-primary)" />}
               label={t("signup.email")}
-              value={
-                settings.contact_email ||
-                "BhakthiBookshelf@gmail.com"
-              }
-              href={`mailto:${
-                settings.contact_email ||
-                "BhakthiBookshelf@gmail.com"
-              }`}
+              value={settings.contact_email || CONTACT_EMAIL_FALLBACK}
+              href={`mailto:${settings.contact_email || CONTACT_EMAIL_FALLBACK}`}
             />
 
             <ContactInfoRow

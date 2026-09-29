@@ -6,6 +6,7 @@ import { SOCIAL_LINKS } from "./SocialLinks";
 import { getT } from "../../lib/i18n/server";
 import { WEBSITE_LABEL, WEBSITE_URL } from "../../lib/websiteLink";
 import { BOOK_CATEGORIES, CATEGORY_LABEL } from "../../lib/categories";
+import { SettingsService, CONTACT_EMAIL_FALLBACK } from "../../lib/services/settingsService";
 
 
 // lucide-react@1.47.0 (pinned) has no brand icons for either store —
@@ -45,6 +46,8 @@ const APP_STORE_URL: string | null = null;
 
 export default async function Footer() {
   const t = await getT();
+  const settings = await SettingsService.getSettings();
+  const email = settings.contact_email || CONTACT_EMAIL_FALLBACK;
 
   return (
     <footer className="footer">
@@ -130,7 +133,7 @@ export default async function Footer() {
 
             <p><Phone size={16} /> +91 78921 19482</p>
 
-            <p><Mail size={16} /> bhakthibookshelf@gmail.com</p>
+            <p><Mail size={16} /> <a href={`mailto:${email}`}>{email}</a></p>
 
             <Link href="/contact">{t("footer.contactUs")}</Link>
 

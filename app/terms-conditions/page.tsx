@@ -1,6 +1,6 @@
 import Footer from "../components/layout/Footer";
 import TermsKn from "./TermsKn";
-import { SettingsService } from "@/app/lib/services/settingsService";
+import { SettingsService, CONTACT_EMAIL_FALLBACK } from "@/app/lib/services/settingsService";
 import { getT, getUiLang } from "@/app/lib/i18n/server";
 import { pageMetadata } from "@/app/lib/seo/pageMetadata";
 
@@ -18,7 +18,7 @@ export default async function TermsPage() {
   const settings = await SettingsService.getSettings();
 
   const storeName = settings.store_name || "Bhakthi Bookshelf";
-  const email = settings.contact_email || "BhakthiBookshelf@gmail.com";
+  const email = settings.contact_email || CONTACT_EMAIL_FALLBACK;
   const phone = settings.contact_phone || "+91 78921 19482";
   const address = settings.address;
   // the Kannada page names the store in Kannada unless the admin has

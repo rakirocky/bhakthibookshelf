@@ -227,6 +227,25 @@ const isSignIn = (u) => u.startsWith("/account/login") || u.startsWith("/account
   await t.close();
 }
 
+// 2e3. Contact email: footer and Contact page agree (Play cross-checks it with the listing)
+{
+  const t = await openTab();
+  const mail = `[...document.querySelectorAll('a[href^="mailto:"]')].map(a => a.getAttribute('href').slice(7).toLowerCase())`;
+  await t.go("/");
+  const footerMail = await t.ev(`document.querySelector('footer a[href^="mailto:"]')?.getAttribute('href').slice(7).toLowerCase() ?? null`);
+  await t.go("/contact");
+  const contact = await t.ev(mail);
+  check("footer email matches the Contact page", !!footerMail && contact.includes(footerMail), `footer=${footerMail} contact=[${contact}]`);
+  await t.close();
+}
+
+// 2e4. Delete-account URL (given to Play) sends a logged-out visitor to sign in, then back
+{
+  const r = await fetch(`${BASE}/account/delete-account`, { redirect: "manual" });
+  const to = new URL(r.headers.get("location") ?? "/", BASE);
+  check("delete-account URL → sign in, then back to it", r.status >= 300 && r.status < 400 && isSignIn(to.pathname) && to.searchParams.get("from") === "/account/delete-account", `${r.status} ${to.pathname}${to.search}`);
+}
+
 // 2f. Kannada interface (only if the admin has it switched on)
 {
   const t = await openTab({ cookies: [{ name: "site_language", value: "kannada" }] });

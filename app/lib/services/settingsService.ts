@@ -13,6 +13,9 @@ const DEFAULT_SETTINGS: StoreSettings = {
   updated_at: new Date().toISOString(),
 };
 
+/** Shown wherever the admin hasn't set Settings → Contact email. */
+export const CONTACT_EMAIL_FALLBACK = "support@bhakthibookshelf.in";
+
 export class SettingsService {
   static async getSettings(): Promise<StoreSettings> {
     const settings = await SettingsRepository.getSettings();

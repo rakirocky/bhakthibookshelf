@@ -1,10 +1,14 @@
 # Play Console — Store Listing
 
 Content to paste into Play Console → **Grow → Store presence → Main store listing**.
-Contact details below use the fallback values in `app/privacy-policy/page.tsx` /
-`SettingsService` (`BhakthiBookshelf@gmail.com`, `+91 78921 19482`) — **confirm these
-match whatever's actually saved in `/admin/settings` on prod** before you submit; Play
+Contact details below match Admin → Settings on prod (`support@bhakthibookshelf.in` —
+migration 034 switched it from the old Gmail address on 2026-09-29 — and
+`+91 78921 19482`). **Confirm them in `/admin/settings`** before you submit; Play
 cross-checks the listing against the app's own privacy policy page.
+
+Last reviewed **2026-09-29**: buying is ON in the Android app (client's decision), the
+subscription is a one-time lifetime plan, the reader no longer watermarks pages, and
+customers can delete their own account.
 
 ---
 
@@ -17,10 +21,11 @@ cross-checks the listing against the app's own privacy policy page.
 | Default language | English (India) — add Kannada (kn-IN) as an additional listing language once you have Kannada copy; the app itself already serves Kannada content via `LanguageSwitcher`. |
 | Category | **Books & Reference** |
 | Tags (pick up to 5 in Console) | Religion & Spirituality, Reading, Ebooks |
-| Contact email | `BhakthiBookshelf@gmail.com` *(confirm live value)* |
-| Contact phone | `+91 78921 19482` *(confirm live value)* |
+| Contact email | `support@bhakthibookshelf.in` |
+| Contact phone | `+91 78921 19482` |
 | Website | `https://bhakthibookshelf.in` |
 | Privacy policy URL | `https://bhakthibookshelf.in/privacy-policy` |
+| Delete account URL (Data safety) | `https://bhakthibookshelf.in/account/delete-account` |
 
 ## Short description (80 characters max)
 
@@ -29,35 +34,43 @@ Pick one (both fit):
 > Devotional e-books & sacred texts. Read online or download for offline.
 *(74 chars)*
 
-> Bhagavad Gita, Ramayana & more devotional reads — buy, subscribe, download.
-*(78 chars)*
+> Devotional books in English & Kannada — buy once, read online or offline.
+*(74 chars)*
+
+Don't name specific titles (Bhagavad Gita, Ramayana…) until they're actually in the
+catalogue — Play treats listing content the app doesn't have as misleading.
 
 ## Full description (4000 characters max)
 
 ```
 Bhakthi Bookshelf is a home for devotional reading — sacred texts, scriptures,
-and spiritual books you can buy individually or unlock with a subscription.
+and spiritual books you can buy individually or unlock all at once with a
+one-time lifetime subscription.
 
 WHAT YOU CAN DO
 • Browse a growing library of devotional and religious e-books in English and
   Kannada
-• Buy a single book, or subscribe for access to the full library
+• Buy a single book, or get the lifetime subscription for the full library,
+  including books added later
 • Read anywhere in the in-app reader
 • Save books for offline reading — once downloaded, they stay readable even
   without an internet connection
 • Track your orders and manage your subscription from your account
 
 BUILT FOR DEVOTED READERS
-Every book download is protected: encrypted on your device, watermarked with
-your account details, and tied to that device, so your purchase stays yours.
+Every book download is protected: encrypted on your device and tied to your
+account and that device, so your purchase stays yours.
 You can register up to 3 devices and manage them at any time from
 Account → Manage Devices.
 
-Whether you're starting your day with the Bhagavad Gita, revisiting the
-Ramayana, or exploring something new, Bhakthi Bookshelf keeps your library
-with you — online or off.
+Whether you're starting your day with a prayer, preparing for a festival, or
+exploring something new, Bhakthi Bookshelf keeps your library with you —
+online or off.
 
-Questions or support: BhakthiBookshelf@gmail.com
+Your account, your choice: you can delete your account at any time from
+My Account.
+
+Questions or support: support@bhakthibookshelf.in
 ```
 
 *(~950 characters — well under the 4000 limit; expand with real catalogue highlights
@@ -66,10 +79,11 @@ once you decide what to feature.)*
 ## What's new (release notes, this release)
 
 ```
-• New: Manage your devices from Account → Manage Devices, and free up a slot
-  any time.
-• Downloads now restore automatically if you reinstall the app.
-• Downloads screen shows how much space each book uses on your device.
+• New app icon.
+• Buy books and the lifetime subscription right in the app.
+• Delete your account any time from My Account.
+• Manage your devices from Account → Manage Devices; downloads restore
+  automatically if you reinstall the app.
 ```
 
 ---
@@ -83,7 +97,7 @@ different look.
 | --- | --- | --- | --- |
 | App icon | 512×512 PNG | `app-icon-512.png` | Reused as-is from `public/icons/icon-512.png` — the same icon already shipping in the installed app, so the Play listing matches what's on-device. No alpha channel, which Play accepts fine in practice. |
 | Feature graphic | 1024×500 PNG (no alpha) | `feature-graphic.png` | Custom-built HTML mockup rendered to exact size: navy/gold brand gradient, the real logo in a medallion, "Bhakthi Bookshelf" wordmark + tagline. Matches the same hero style used on the site's Contact/About pages. |
-| Phone screenshots | 4 images, ≤2:1 elongation, min 320px/max 3840px per side | `screenshot-1-home.png` (home/hero), `screenshot-2-book-detail.png` (Bhagavad Gita detail page), `screenshot-3-subscribe.png` (lifetime plan), `screenshot-4-library.png` (catalogue) | Real screenshots of the actual live site rendered at phone width (not mockups) — this server-mode Capacitor app loads this exact UI, so these are accurate. Play requires elongation ≤2:1 (not the older 16:9–9:16 language), confirmed all 4 fit that. Reader/Downloads/Manage-Devices screens need a real logged-in session to screenshot meaningfully — not captured (would need a seeded test account logged in through a real browser, not just curl). |
+| Phone screenshots | ⚠ **Retake before submitting** — these show the old logo and a Bhagavad Gita page (that demo book has since been deleted). 4 images, ≤2:1 elongation, min 320px/max 3840px per side | `screenshot-1-home.png` (home/hero), `screenshot-2-book-detail.png` (Bhagavad Gita detail page), `screenshot-3-subscribe.png` (lifetime plan), `screenshot-4-library.png` (catalogue) | Real screenshots of the actual live site rendered at phone width (not mockups) — this server-mode Capacitor app loads this exact UI, so these are accurate. Play requires elongation ≤2:1 (not the older 16:9–9:16 language), confirmed all 4 fit that. Reader/Downloads/Manage-Devices screens need a real logged-in session to screenshot meaningfully — not captured (would need a seeded test account logged in through a real browser, not just curl). |
 | 7" / 10" tablet screenshots | Same rules, optional | — | Not drafted; recommend only if you expect tablet installs. |
 | Promo video | Optional, YouTube URL | — | Skip for v1. |
 
@@ -103,7 +117,8 @@ Answering as a straightforward devotional reading + e-commerce app:
 - User-generated content / social features: **None** (no comments, chat, or public
   profiles — the contact form only reaches you, not other users).
 - Shares user location: **No**.
-- Digital purchases: **Yes** — books and subscriptions (see the Play Billing note below).
+- Digital purchases: **Yes** — books and the lifetime subscription, sold in the app
+  (see the Play Billing note below).
 - Gambling / simulated gambling: **No**.
 
 This should land the app at the lowest rating tier in every region (e.g. **PEGI 3 /
@@ -130,13 +145,18 @@ so Play's reviewers can sign in:
 
 ## Before you can actually submit
 
-1. **Play Billing decision** (flagged separately) — Razorpay checkout currently runs
-   inside the Android WebView for digital book/subscription purchases, which Play's
-   payments policy generally requires to go through Google Play Billing instead. Resolve
-   this before submitting; a listing built around this catalogue won't matter if the
-   binary gets rejected on the payments policy.
+1. **Play Billing** — **Decision 2026-09-29: the client keeps buying ON in the app**
+   (Admin → Settings → "Android app: allow buying"), so Razorpay checkout runs inside the
+   Android app for books and the subscription. Play's payments policy generally requires
+   Google Play Billing (or enrolment in user choice billing, which still means adding
+   Play Billing alongside Razorpay) for digital goods sold in-app, so **review may reject
+   the app** — if it does, Path A below is the fix. Never switch buying OFF just for
+   review and back ON afterwards; Google treats that as evasion and can ban the
+   developer account. The read-only mode (Path B, below) was built on 2026-09-24 and is
+   still one switch away if the client changes their mind.
 
-   Two paths, with effort estimates (2026-09-16):
+   The paths as costed on 2026-09-16 (the ₹999 plan is now one-time/lifetime, so under
+   Path A it's a one-time managed product, not a subscription SKU):
 
    **Path A — Migrate to Google Play Billing.** ~2–4 weeks dev + ongoing catalog
    maintenance.
@@ -187,6 +207,7 @@ so Play's reviewers can sign in:
    cut. This is a business call for the owner.
 2. **Data Safety form** — see `docs/play-store-data-safety.md`, drafted from what the
    code actually collects and sends.
-3. **Data deletion URL** — Play Console → App content → Data safety → "Data deletion"
-   now has a stable target: `https://bhakthibookshelf.in/privacy-policy#your-rights`.
+3. **Data deletion URL** — Play Console → App content → Data safety → "Delete account
+   URL": `https://bhakthibookshelf.in/account/delete-account` (sign in → delete form).
+   The in-app route is My Account → Delete my account.
 4. A **Play Console developer account** (one-time $25 fee) if you don't already have one.
