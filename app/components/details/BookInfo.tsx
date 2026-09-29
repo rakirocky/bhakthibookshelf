@@ -45,20 +45,26 @@ export default async function BookInfo({
           </p>
         )}
 
-        <p>
-          <strong>{t("book.publisher")}</strong><br />
-          {book.publisher || "-"}
-        </p>
+        {book.publisher && (
+          <p>
+            <strong>{t("book.publisher")}</strong><br />
+            {book.publisher}
+          </p>
+        )}
 
-        <p>
-          <strong>{t("book.language")}</strong><br />
-          {languageLabel}
-        </p>
+        {languageLabel && (
+          <p>
+            <strong>{t("book.language")}</strong><br />
+            {languageLabel}
+          </p>
+        )}
 
-        <p>
-          <strong>{t("book.pages")}</strong><br />
-          {book.pages || "-"}
-        </p>
+        {Number(book.pages) > 0 && (
+          <p>
+            <strong>{t("book.pages")}</strong><br />
+            {book.pages}
+          </p>
+        )}
 
       </div>
 

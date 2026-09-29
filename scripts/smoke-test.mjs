@@ -126,6 +126,15 @@ for (const [label, width] of [["desktop", 1280], ["phone", 400]]) {
 
 const isSignIn = (u) => u.startsWith("/account/login") || u.startsWith("/account/required");
 
+// 2a2. Book page shows no empty details ("Publisher -")
+{
+  const t = await openTab();
+  await t.go(`/books/${book.slug}`);
+  const empty = await t.ev(`[...document.querySelectorAll('.book-meta p')].filter(p => /^-?$/.test(p.innerText.split('\\n').slice(1).join('').trim())).map(p => p.querySelector('strong')?.innerText)`);
+  check("book page hides empty details", Array.isArray(empty) && empty.length === 0, `empty: ${empty}`);
+  await t.close();
+}
+
 // 2b. Add to Cart → cart → checkout, with the real buttons
 {
   const t = await openTab();
@@ -273,6 +282,9 @@ for (const platform of ["android", "ios"]) {
   const where = await t.ev("location.pathname");
   if (buyingOn) {
     check("android app: buying allowed (admin switch ON) — cart opens", where === "/cart", where);
+    await t.go("/subscribe", 4000);
+    const note = await t.ev(`[...document.querySelectorAll('a[target=_blank][href*="/subscribe"]')].some(a => a.offsetParent !== null)`);
+    check("android app, buying ON: no 'visit our website' on Subscribe", note === false, `visible=${note}`);
     warn("Android 'allow buying' is ON", "client's choice (2026-09-29) — Play Store review may reject Razorpay for e-books unless Play Billing / user choice billing is set up");
   } else {
     check(`${platform} app is read-only (/cart → /downloads)`, where === "/downloads", where);
