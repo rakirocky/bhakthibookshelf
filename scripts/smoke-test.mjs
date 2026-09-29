@@ -208,6 +208,25 @@ const isSignIn = (u) => u.startsWith("/account/login") || u.startsWith("/account
   await t.close();
 }
 
+// 2e2. Footer categories = the Library's category chips, and each link opens its chip
+{
+  const t = await openTab();
+  await t.go("/books");
+  const chips = await t.ev(`[...document.querySelectorAll('.category-chips .category-chip')].slice(1).map(b => b.innerText.trim())`);
+  await t.go("/"); // the footer is on the home page, not the Library
+  const links = await t.ev(`[...document.querySelectorAll('footer a[href^="/books?category="]')].map(a => ({ text: a.innerText.trim(), href: a.getAttribute('href') }))`);
+  check("footer lists every Library category", chips?.length > 0 && JSON.stringify(chips) === JSON.stringify(links.map((l) => l.text)),
+    `library=[${chips}] footer=[${links.map((l) => l.text)}]`);
+  const wrong = [];
+  for (const l of links) {
+    await t.go(l.href, 2500);
+    const on = await t.ev(`document.querySelector('.category-chip.is-on')?.innerText.trim()`);
+    if (on !== l.text) wrong.push(`${l.text}→${on}`);
+  }
+  check("each footer category link opens that category", wrong.length === 0, wrong.join("; "));
+  await t.close();
+}
+
 // 2f. Kannada interface (only if the admin has it switched on)
 {
   const t = await openTab({ cookies: [{ name: "site_language", value: "kannada" }] });

@@ -5,6 +5,7 @@ import Container from "../ui/Container";
 import { SOCIAL_LINKS } from "./SocialLinks";
 import { getT } from "../../lib/i18n/server";
 import { WEBSITE_LABEL, WEBSITE_URL } from "../../lib/websiteLink";
+import { BOOK_CATEGORIES, CATEGORY_LABEL } from "../../lib/categories";
 
 
 // lucide-react@1.47.0 (pinned) has no brand icons for either store —
@@ -119,13 +120,9 @@ export default async function Footer() {
           <div className="footer-links">
             <h3>{t("footer.categories")}</h3>
 
-            <Link href="/books?category=scriptures">{t("footer.scriptures")}</Link>
-
-            <Link href="/books?category=epics">{t("footer.epics")}</Link>
-
-            <Link href="/books?category=prayers">{t("footer.prayers")}</Link>
-
-            <Link href="/books?category=divine-stories">{t("footer.divineStories")}</Link>
+            {BOOK_CATEGORIES.map((c) => (
+              <Link key={c} href={`/books?category=${c}`}>{t(CATEGORY_LABEL[c])}</Link>
+            ))}
           </div>
 
           <div className="footer-links">
