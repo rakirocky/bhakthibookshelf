@@ -88,17 +88,16 @@ once you decide what to feature.)*
 
 ---
 
-## Graphic assets — drafted, in `docs/play-store-assets/`
+## Graphic assets — in `docs/play-store-assets/`
 
-Drafted 2026-09-22. Ready to upload as-is; swap any of them later if you want a
-different look.
+Remade **2026-09-29** with the new logo, from the live site in Android-app mode.
 
 | Asset | Spec | File | Notes |
 | --- | --- | --- | --- |
-| App icon | 512×512 PNG | `app-icon-512.png` | Reused as-is from `public/icons/icon-512.png` — the same icon already shipping in the installed app, so the Play listing matches what's on-device. No alpha channel, which Play accepts fine in practice. |
-| Feature graphic | 1024×500 PNG (no alpha) | `feature-graphic.png` | Custom-built HTML mockup rendered to exact size: navy/gold brand gradient, the real logo in a medallion, "Bhakthi Bookshelf" wordmark + tagline. Matches the same hero style used on the site's Contact/About pages. |
-| Phone screenshots | ⚠ **Retake before submitting** — these show the old logo and a Bhagavad Gita page (that demo book has since been deleted). 4 images, ≤2:1 elongation, min 320px/max 3840px per side | `screenshot-1-home.png` (home/hero), `screenshot-2-book-detail.png` (Bhagavad Gita detail page), `screenshot-3-subscribe.png` (lifetime plan), `screenshot-4-library.png` (catalogue) | Real screenshots of the actual live site rendered at phone width (not mockups) — this server-mode Capacitor app loads this exact UI, so these are accurate. Play requires elongation ≤2:1 (not the older 16:9–9:16 language), confirmed all 4 fit that. Reader/Downloads/Manage-Devices screens need a real logged-in session to screenshot meaningfully — not captured (would need a seeded test account logged in through a real browser, not just curl). |
-| 7" / 10" tablet screenshots | Same rules, optional | — | Not drafted; recommend only if you expect tablet installs. |
+| App icon | 512×512 PNG | `app-icon-512.png` | Copy of `public/icons/icon-512.png` — the icon in APK 1.2, so the listing matches the installed app. |
+| Feature graphic | 1024×500 PNG (no alpha) | `feature-graphic.png` | Navy/gold, the new logo in a rounded-square gold frame (a circle crops "A Home for Devotional Reading"), wordmark + tagline. HTML source was a one-off; rebuild the same way if the logo changes. |
+| Phone screenshots | 1000×1950 PNG (≤2:1) | `screenshot-1-home.png`, `screenshot-2-book-detail.png` (Lord Ganesha), `screenshot-3-subscribe.png` (₹999 lifetime), `screenshot-4-library.png` (category chips incl. Other) | Live site at 500 CSS px ×2 with `window.Capacitor` faked as Android, so they show the app's bottom tab bar. The announcement bar was hidden for the capture (announcements change). Retake when the catalogue grows so the Library shows more than one book. |
+| 7" / 10" tablet screenshots | Same rules, optional | — | Not made; only if you expect tablet installs. |
 | Promo video | Optional, YouTube URL | — | Skip for v1. |
 
 **Note on the screenshot method**: headless Chrome's `--window-size` below ~500px
