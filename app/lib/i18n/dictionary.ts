@@ -98,7 +98,6 @@ const en = {
   "footer.appButton": "Download for Android",
   "footer.appIos": "iPhone (iOS)",
   "footer.comingSoon": "Coming soon",
-  "footer.website": "Visit our website:",
   "footer.rights": "© 2026 Bhakthi Bookshelf. All Rights Reserved.",
 
   // library
@@ -371,7 +370,6 @@ const en = {
   "sub.anyDevice": "Read on any device",
   "sub.noRenewal": "No renewal, ever — read on any device",
   "sub.signIn": "Sign In to Subscribe",
-  "sub.visitWebsite": "Visit our website to subscribe and enjoy this lifetime access offer:",
   "sub.pending": "Payment pending — we’ll activate your subscription once it’s confirmed.",
   "sub.verifyFailed": "Payment verification failed.",
   "sub.activated": "Subscription activated — welcome aboard!",
@@ -509,7 +507,6 @@ const kn: Record<I18nKey, string> = {
   "footer.appButton": "Android ಗಾಗಿ ಡೌನ್‌ಲೋಡ್",
   "footer.appIos": "iPhone (iOS)",
   "footer.comingSoon": "ಶೀಘ್ರದಲ್ಲೇ",
-  "footer.website": "ನಮ್ಮ ವೆಬ್‌ಸೈಟ್‌ಗೆ ಭೇಟಿ ನೀಡಿ:",
   "footer.rights": "© 2026 ಭಕ್ತಿ ಬುಕ್‌ಶೆಲ್ಫ್. ಎಲ್ಲ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.",
 
   "library.title": "ನಮ್ಮ ಗ್ರಂಥಾಲಯ",
@@ -779,7 +776,6 @@ const kn: Record<I18nKey, string> = {
   "sub.anyDevice": "ಯಾವುದೇ ಸಾಧನದಲ್ಲಿ ಓದಿ",
   "sub.noRenewal": "ನವೀಕರಣದ ಅಗತ್ಯವೇ ಇಲ್ಲ — ಯಾವುದೇ ಸಾಧನದಲ್ಲಿ ಓದಿ",
   "sub.signIn": "ಚಂದಾದಾರರಾಗಲು ಲಾಗಿನ್ ಆಗಿ",
-  "sub.visitWebsite": "ಚಂದಾದಾರರಾಗಲು ಮತ್ತು ಈ ಜೀವಮಾನದ ಪ್ರವೇಶದ ಕೊಡುಗೆಯನ್ನು ಪಡೆಯಲು ನಮ್ಮ ವೆಬ್‌ಸೈಟ್‌ಗೆ ಭೇಟಿ ನೀಡಿ:",
   "sub.pending": "ಪಾವತಿ ಬಾಕಿ ಇದೆ — ದೃಢೀಕರಣವಾದ ತಕ್ಷಣ ನಿಮ್ಮ ಚಂದಾದಾರಿಕೆಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸುತ್ತೇವೆ.",
   "sub.verifyFailed": "ಪಾವತಿ ದೃಢೀಕರಣ ವಿಫಲವಾಯಿತು.",
   "sub.activated": "ಚಂದಾದಾರಿಕೆ ಸಕ್ರಿಯವಾಗಿದೆ — ಸ್ವಾಗತ!",

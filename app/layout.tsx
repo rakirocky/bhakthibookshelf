@@ -93,8 +93,9 @@ export const dynamic = "force-dynamic";
 // e.g. for the lighter temple frame on small app screens.
 // iOS: marks <html data-ios> and is ALWAYS read-only — the admin's
 // "allow buying" switch is Android-only; Apple requires In-App Purchase
-// for digital books, and links out to the website ([data-not-ios]) count
-// as steering (App Store guideline 3.1.1 / 3.1.3).
+// for digital books. Neither app links out to the website: Apple (3.1.1 /
+// 3.1.3) and Google Play (Payments policy) both count that as steering
+// buyers past their in-app billing.
 const APP_MODE_SCRIPT = `try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform()){var d=document.documentElement;d.setAttribute("data-native","");var ios=c.getPlatform&&c.getPlatform()==="ios";if(ios)d.setAttribute("data-ios","");if(ios||!d.hasAttribute("data-app-commerce"))d.setAttribute("data-app","")}}catch(e){}`;
 
 // Site typography (self-hosted by next/font): Marcellus headings, Noto

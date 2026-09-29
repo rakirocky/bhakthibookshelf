@@ -332,15 +332,6 @@ main {
   padding-top: 16px;
 }
 
-.more-sheet__website {
-  display: block;
-  margin-top: 14px;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-primary-strong);
-}
-
 @keyframes more-fade {
   from { opacity: 0; }
 }
@@ -399,13 +390,6 @@ html:not([data-app]) [data-app-only] {
 
 /* anything inside the native app, buying switched on or off */
 html:not([data-native]) [data-native-only] {
-  display: none !important;
-}
-
-/* iOS app: no links out to the website (App Store 3.1.1 / 3.1.3 — the
-   site sells books, so a link to it counts as steering past In-App
-   Purchase). <html data-ios> is set by APP_MODE_SCRIPT in layout.tsx. */
-html[data-ios] [data-not-ios] {
   display: none !important;
 }
 

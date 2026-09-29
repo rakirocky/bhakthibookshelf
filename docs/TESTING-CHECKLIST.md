@@ -19,8 +19,8 @@ SMOKE_BASE=https://bhakthibookshelf.in ADMIN_PHONE=… ADMIN_PASSWORD=… npm ru
 - a deleted book in a cart is removed with a notice; available books stay
 - two tabs stay in sync (cart)
 - wishlist heart, Kannada interface
-- Android app mode (website link shown; read-only unless "Android app: allow buying" is on) and iOS app mode
-  (website link hidden, always read-only)
+- Android app mode (no website link; read-only unless "Android app: allow buying" is on) and iOS app mode
+  (no website link, always read-only)
 - every admin portal page opens (read-only; needs `ADMIN_PHONE` / `ADMIN_PASSWORD`)
 - APIs: health, announcements, book availability, delete-account refuses without login
 

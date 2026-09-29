@@ -267,15 +267,21 @@ const isSignIn = (u) => u.startsWith("/account/login") || u.startsWith("/account
   await t.close();
 }
 
-// 2g. App modes: Android shows the website link and is read-only; iOS hides the link
+// 2g. App modes: neither app links out to the website (Play + App Store
+// anti-steering); Android read-only unless the admin switch is on, iOS always.
+const WEBSITE_LINKS = `[...document.querySelectorAll('a[href]')].filter(a => { try { const u = new URL(a.href);
+  return u.host !== location.host && /bhakthibookshelf\\.in$/.test(u.host) && a.getClientRects().length > 0; } catch { return false } }).map(a => a.href)`;
 for (const platform of ["android", "ios"]) {
   const t = await openTab({ platform, width: 520 });
   await t.go("/");
+  // open the bottom-nav More sheet too — it used to carry a website link
+  await t.ev(`document.querySelector('button.bottom-nav__item[aria-haspopup]')?.click()`);
+  await new Promise((r) => setTimeout(r, 500));
   const s = await t.ev(`({ native: document.documentElement.hasAttribute('data-native'),
     ios: document.documentElement.hasAttribute('data-ios'),
-    link: (()=>{const e=document.querySelector('.footer-website');return !!e && getComputedStyle(e).display!=='none'})() })`);
-  const okLink = platform === "android" ? s.link : !s.link;
-  check(`${platform} app: native mode + website link ${platform === "android" ? "shown" : "hidden"}`, s.native && okLink && (platform !== "ios" || s.ios), JSON.stringify(s));
+    moreOpen: !!document.querySelector('.more-sheet__footer'),
+    links: ${WEBSITE_LINKS} })`);
+  check(`${platform} app: native mode, no link out to the website`, s.native && s.moreOpen && s.links.length === 0 && (platform !== "ios" || s.ios), JSON.stringify(s));
   // Android follows Admin → Settings → "Android app: allow buying"; iOS is always read-only.
   const buyingOn = platform === "android" && (await t.ev("document.documentElement.hasAttribute('data-app-commerce')"));
   await t.go("/cart", 4500);

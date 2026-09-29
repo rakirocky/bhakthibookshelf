@@ -3,7 +3,6 @@ import Link from "next/link";
 import { getCustomerSession } from "@/app/lib/auth/getCustomerSession";
 import { SubscriptionService } from "@/app/lib/services/subscriptionService";
 import SubscribeButton from "@/app/components/subscribe/SubscribeButton";
-import WebsiteSubscribeNote from "@/app/components/subscribe/WebsiteSubscribeNote";
 import { getT } from "@/app/lib/i18n/server";
 import { pageMetadata } from "@/app/lib/seo/pageMetadata";
 
@@ -113,12 +112,6 @@ export default async function SubscribePage() {
               >
                 {t("sub.signIn")}
               </Link>
-            )}
-
-            {(!session ||
-              status?.status === "NONE" ||
-              status?.status === "EXPIRED") && (
-              <WebsiteSubscribeNote text={t("sub.visitWebsite")} />
             )}
 
             {session && status?.status === "ACTIVE" && (

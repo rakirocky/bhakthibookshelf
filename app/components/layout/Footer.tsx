@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { Phone, Mail, Smartphone, Download, Globe } from "lucide-react";
+import { Phone, Mail, Smartphone, Download } from "lucide-react";
 
 import Container from "../ui/Container";
 import { SOCIAL_LINKS } from "./SocialLinks";
 import { getT } from "../../lib/i18n/server";
-import { WEBSITE_LABEL, WEBSITE_URL } from "../../lib/websiteLink";
 import { BOOK_CATEGORIES, CATEGORY_LABEL } from "../../lib/categories";
 import { SettingsService, CONTACT_EMAIL_FALLBACK } from "../../lib/services/settingsService";
 
@@ -173,15 +172,6 @@ export default async function Footer() {
               <small>{t("footer.comingSoon")}</small>
             </span>
           </div>
-        </div>
-
-        {/* inside the app there's no address bar — show where the website is */}
-        <div className="footer-website" data-native-only data-not-ios>
-          <Globe size={18} />
-          <span>{t("footer.website")}</span>
-          <a href={WEBSITE_URL} target="_blank" rel="noopener">
-            {WEBSITE_LABEL}
-          </a>
         </div>
 
         <div className="footer-bottom">

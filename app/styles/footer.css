@@ -181,28 +181,6 @@
     border-radius:10px;
 }
 
-.footer-website{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:8px;
-    padding:0 0 22px;
-    color:#d6d6d6;
-    font-size:15px;
-}
-
-.footer-website svg{
-    color:var(--color-accent-gold);
-}
-
-.footer-website a{
-    color:var(--color-white);
-    font-weight:600;
-    text-decoration:underline;
-    text-underline-offset:3px;
-}
-
 .footer-bottom{
     border-top:1px solid rgba(255,255,255,.15);
     text-align:center;
