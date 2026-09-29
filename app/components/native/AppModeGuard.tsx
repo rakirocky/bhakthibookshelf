@@ -15,6 +15,32 @@ export default function AppModeGuard() {
   const pathname = usePathname();
   const router = useRouter();
 
+  // Android hardware/gesture Back: go back a page, or close the app on the
+  // first page. Needs the @capacitor/app plugin, which only APK 1.3+ has —
+  // older installs keep their old behaviour (Back closes the app).
+  useEffect(() => {
+    if (!isNativeApp()) return;
+    let cancelled = false;
+    let remove: (() => void) | undefined;
+
+    (async () => {
+      const { Capacitor } = await import("@capacitor/core");
+      if (!Capacitor.isPluginAvailable("App")) return;
+      const { App } = await import("@capacitor/app");
+      const handle = await App.addListener("backButton", ({ canGoBack }) => {
+        if (canGoBack) window.history.back();
+        else App.exitApp();
+      });
+      if (cancelled) handle.remove();
+      else remove = () => handle.remove();
+    })().catch(() => {});
+
+    return () => {
+      cancelled = true;
+      remove?.();
+    };
+  }, []);
+
   useEffect(() => {
     // Fallbacks in case the inline script ran before the bridge existed.
     if (isNativeApp()) {
