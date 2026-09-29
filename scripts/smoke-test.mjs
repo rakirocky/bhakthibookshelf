@@ -92,7 +92,13 @@ async function openTab({ platform, width = 1280, height = 900, cookies = [] } = 
   for (const c of cookies) await send("Network.setCookie", { ...c, url: BASE });
   if (platform) await send("Page.addScriptToEvaluateOnNewDocument", { source: `window.Capacitor={isNativePlatform:()=>true,getPlatform:()=>"${platform}"};` });
   const ev = async (expr) => (await send("Runtime.evaluate", { expression: expr, returnByValue: true, awaitPromise: true })).result?.value;
-  const go = async (path, wait = 3500) => { errors.length = 0; await send("Page.navigate", { url: BASE + path }); await sleep(wait); };
+  // Fixed wait for client code to settle, then keep waiting (up to 15 s) until
+  // the new document has fully loaded — on a slow network 3.5 s wasn't always
+  // enough and checks ran against a half-loaded page ("no header" flakes).
+  const go = async (path, wait = 3500) => {
+    errors.length = 0; await send("Page.navigate", { url: BASE + path }); await sleep(wait);
+    for (let i = 0; i < 30 && (await ev("document.readyState")) !== "complete"; i++) await sleep(500);
+  };
   const click = (re) => ev(`(()=>{const b=[...document.querySelectorAll('button,a')].find(b=>${re}.test(b.textContent.trim())&&b.offsetParent!==null);if(!b)return null;b.click();return b.textContent.trim()})()`);
   // Close the tab itself, not just the socket: tabs left open share the
   // site's localStorage and would interfere with the next check.

@@ -9,8 +9,12 @@ actually does (not a guess) — `app/lib/repositories/customerRepository.ts`,
 `app/api/client-errors/route.ts`. Re-check this if the data model changes before you
 submit — Play can suspend an app for a form that doesn't match reality.
 
-Last reviewed **2026-09-29**: buying is ON in the Android app (client's decision), and
-customers can delete their own account.
+Last reviewed **2026-09-29 (late)**: **the Android app is read-only** (option A — buying
+OFF, no checkout, no link to the website), and customers can delete their own account.
+The app itself never takes a payment, so address/GST/payment details are never entered
+in the app; they're still listed below because the same account's purchases (made on the
+website) show in the app's order history — conservative, and Play accepts over-declaring
+far more readily than under-declaring.
 
 > **The app loads the live website**, so a change on the server (for example adding the
 > GA4 or Sentry keys) changes what the app collects **without a new APK**. Update this
@@ -42,10 +46,10 @@ customers can delete their own account.
 | Personal info | Name | Yes | No | Account management, App functionality (orders/invoices) | Required to sign up |
 | Personal info | Email address | Yes | No¹ | Account management (password reset), App functionality (invoices), Developer communications (newsletter, only if the user subscribes) | Required to sign up |
 | Personal info | Phone number | Yes | No | Account management (the login identifier) | Required to sign up |
-| Personal info | Address | Yes | No | App functionality (invoicing — `orders.address/city/pincode`) | Required to check out |
+| Personal info | Address | Yes (entered at website checkout, not in the app) | No | App functionality (invoicing — `orders.address/city/pincode`) | Optional (only for buyers) |
 | Personal info | Other info (GST number) | Yes, if the buyer gives one | No | App functionality (invoicing) | Optional |
-| Financial info | Purchase history | Yes | No | App functionality (order/subscription history, access to bought books) | Required (part of buying) |
-| Financial info | Payment info (card / UPI / bank) | **No — never reaches our server** | **Yes — Razorpay** | App functionality (payment processing) | Required to pay |
+| Financial info | Purchase history | Yes | No | App functionality (order/subscription history, access to owned books) | Optional (only for buyers) |
+| Financial info | Payment info (card / UPI / bank) | **No** — the app has no checkout; on the website it goes straight to Razorpay, never our server | No (from the app) | — | — |
 | App activity | Other actions (wishlist) | Yes, when signed in | No | App functionality | Optional |
 | Device or other IDs | Device ID | Yes, app only | No | App functionality (device-bound offline downloads, `customer_devices`) | Only if the user downloads a book |
 | App activity | Search history, installed apps, other user-generated content | **No** | — | — | — |
@@ -68,8 +72,10 @@ purpose "App functionality" and name the provider.
 - **Razorpay** — card/UPI/bank details go straight from the Razorpay checkout
   (`checkout.razorpay.com/v1/checkout.js`) to Razorpay, with the order amount and
   reference; our server only sees Razorpay's payment/order/signature IDs
-  (`app/lib/razorpayClient.ts`, `app/api/orders/verify-payment`). With buying ON this
-  happens inside the Android app too. Declare it as the "Payment info" share.
+  (`app/lib/razorpayClient.ts`, `app/api/orders/verify-payment`). This happens **only on
+  the website** — the read-only app never opens Razorpay, so there's no "Payment info"
+  share to declare. If Android buying is ever switched ON, add it back (Payment info:
+  shared with Razorpay, App functionality) **before** switching.
 - **SMTP provider** — receives what's in outgoing emails. See footnote ¹.
 - **No ad networks.** Analytics and crash reporting are built in but switched off — next
   section.
