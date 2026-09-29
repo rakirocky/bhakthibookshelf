@@ -393,6 +393,12 @@ html:not([data-native]) [data-native-only] {
   display: none !important;
 }
 
+/* website only — hidden in both apps whatever the buying switch says
+   (share buttons send a website link: Play/Apple anti-steering) */
+html[data-native] [data-no-native] {
+  display: none !important;
+}
+
 /* ---------------------------------------------------------------
    Temple frame (TempleFrame.tsx). Piece sizes are the source pixels
    of /images/frame/*.webp; --tf-s scales the whole frame.

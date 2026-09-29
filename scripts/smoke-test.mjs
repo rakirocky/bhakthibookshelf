@@ -273,6 +273,17 @@ const isSignIn = (u) => u.startsWith("/account/login") || u.startsWith("/account
   await t.close();
 }
 
+// 2f2. Share buttons stay on the website (hidden only inside the apps)
+{
+  const t = await openTab({ width: 1280 });
+  await t.go("/");
+  const shloka = await t.ev(`!!document.querySelector('.daily-shloka__share')?.getClientRects().length`);
+  await t.go(`/books/${book.slug}`);
+  const share = await t.ev(`!!document.querySelector('.share-book')?.getClientRects().length`);
+  check("website: WhatsApp/Copy-link share buttons visible", shloka && share, `shloka=${shloka} book=${share}`);
+  await t.close();
+}
+
 // 2g. App modes: neither app links out to the website (Play + App Store
 // anti-steering); Android read-only unless the admin switch is on, iOS always.
 const WEBSITE_LINKS = `[...document.querySelectorAll('a[href]')].filter(a => { try { const u = new URL(a.href);
@@ -288,6 +299,11 @@ for (const platform of ["android", "ios"]) {
     moreOpen: !!document.querySelector('.more-sheet__footer'),
     links: ${WEBSITE_LINKS} })`);
   check(`${platform} app: native mode, no link out to the website`, s.native && s.moreOpen && s.links.length === 0 && (platform !== "ios" || s.ios), JSON.stringify(s));
+  // share buttons put a website link in the message — website only
+  const shloka = await t.ev(`!!document.querySelector('.daily-shloka__share')?.getClientRects().length`);
+  await t.go(`/books/${book.slug}`);
+  const share = await t.ev(`!!document.querySelector('.share-book')?.getClientRects().length`);
+  check(`${platform} app: no WhatsApp/Copy-link share buttons`, !shloka && !share, `shloka=${shloka} book=${share}`);
   // Android follows Admin → Settings → "Android app: allow buying"; iOS is always read-only.
   const buyingOn = platform === "android" && (await t.ev("document.documentElement.hasAttribute('data-app-commerce')"));
   await t.go("/cart", 4500);

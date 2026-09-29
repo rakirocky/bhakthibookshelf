@@ -5,8 +5,8 @@ import { useT } from "@/app/lib/i18n/I18nProvider";
 import { track } from "@/app/lib/analytics/track";
 
 // WhatsApp is how most of our readers share; the link unfurls into the
-// book's preview card (./opengraph-image.tsx). No price in the message
-// text, so it's also fine inside the read-only app.
+// book's preview card (./opengraph-image.tsx). Website only: the message
+// carries a link to the site, so it's hidden in the apps (data-no-native).
 export default function ShareBook({
   title,
   slug,
@@ -41,7 +41,7 @@ export default function ShareBook({
   }
 
   return (
-    <div className="share-book">
+    <div className="share-book" data-no-native>
       <span className="share-book__label">{t("book.share")}</span>
 
       <button
