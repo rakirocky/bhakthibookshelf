@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { Book } from "@/app/lib/types/book";
@@ -15,11 +16,13 @@ import { useT } from "@/app/lib/i18n/I18nProvider";
 type Props = {
   book: Book;
   hasAccess: boolean;
+  signedIn: boolean;
 };
 
 export default function BookActions({
   book,
   hasAccess,
+  signedIn,
 }: Props) {
   const router = useRouter();
   const { addItem } = useCart();
@@ -54,6 +57,20 @@ export default function BookActions({
     >
       {hasAccess ? (
         <OfflineSaveButton bookId={book.id} />
+      ) : readOnlyApp && !signedIn ? (
+        // Signed out (e.g. the one-device rule ended this session): the
+        // book may well be owned, so ask for a sign-in, not "not owned".
+        <>
+          <p style={{ margin: 0, color: "var(--color-text-secondary)" }}>
+            {t("book.signInToRead")}
+          </p>
+          <Link
+            href={`/account/login?from=${encodeURIComponent(`/books/${book.slug}`)}`}
+            className="btn btn-primary"
+          >
+            {t("auth.signIn")}
+          </Link>
+        </>
       ) : readOnlyApp ? (
         // Read-only app: no buy button, price or "buy on the web" pointer
         // (Play anti-steering policy) — just state it isn't owned.

@@ -172,6 +172,7 @@ export default async function BookDetailsPage({
           <BookActions
             book={book}
             hasAccess={hasAccess}
+            signedIn={Boolean(session)}
           />
 
           {!hasAccess && <WishlistButton slug={book.slug} variant="full" />}
