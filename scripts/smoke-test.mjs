@@ -254,7 +254,7 @@ for (const platform of ["android", "ios"]) {
   const where = await t.ev("location.pathname");
   if (buyingOn) {
     check("android app: buying allowed (admin switch ON) — cart opens", where === "/cart", where);
-    warn("Android 'allow buying' is ON", "must be switched OFF in Admin → Settings before the Play Store submission (Play Billing policy)");
+    warn("Android 'allow buying' is ON", "client's choice (2026-09-29) — Play Store review may reject Razorpay for e-books unless Play Billing / user choice billing is set up");
   } else {
     check(`${platform} app is read-only (/cart → /downloads)`, where === "/downloads", where);
   }
