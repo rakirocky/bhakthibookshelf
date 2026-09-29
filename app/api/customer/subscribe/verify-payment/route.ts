@@ -66,6 +66,26 @@ export async function POST(request: Request) {
       );
     }
 
+    // The payment must be for THIS subscription's Razorpay order —
+    // otherwise a ₹20 book payment could be replayed to activate a plan.
+    if (
+      !subscription.razorpay_order_id ||
+      subscription.razorpay_order_id !== razorpay_order_id
+    ) {
+      console.error(
+        `[subscription-payment-verify] RAZORPAY ORDER MISMATCH — subscription ${subscription.id} expects ${subscription.razorpay_order_id}, got ${razorpay_order_id} (payment ${razorpay_payment_id}). Not activated.`
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Payment verification failed. If money was deducted, contact support.",
+        },
+        { status: 400 }
+      );
+    }
+
     const isValid = RazorpayService.verifyPaymentSignature({
       razorpayOrderId: razorpay_order_id,
       razorpayPaymentId: razorpay_payment_id,

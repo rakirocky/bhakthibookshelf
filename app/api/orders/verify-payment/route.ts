@@ -65,6 +65,27 @@ export async function POST(request: Request) {
       );
     }
 
+    // The payment must be for THIS order's Razorpay order. A valid
+    // signature only proves Razorpay issued it — without this, a payment
+    // for a cheap order could be replayed to mark an expensive one paid.
+    if (
+      !order.razorpay_order_id ||
+      order.razorpay_order_id !== razorpay_order_id
+    ) {
+      console.error(
+        `[payment-verify] RAZORPAY ORDER MISMATCH — order ${order.id} expects ${order.razorpay_order_id}, got ${razorpay_order_id} (payment ${razorpay_payment_id}). Order was NOT marked paid.`
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Payment verification failed. If money was deducted, contact support with your order number.",
+        },
+        { status: 400 }
+      );
+    }
+
     // The actual security check. Everything above this point is just
     // routing and ownership — this line is what actually decides
     // whether real money is considered received. Never skip it, never
