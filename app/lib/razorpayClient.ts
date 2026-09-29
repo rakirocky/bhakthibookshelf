@@ -24,6 +24,32 @@ function loadRazorpayScript(): Promise<void> {
   return scriptLoadPromise;
 }
 
+// On a phone a QR code can't be scanned from the same screen, so put the
+// UPI apps first: tapping PhonePe / Google Pay / Paytm opens that app
+// (UPI intent) to approve the payment. Other methods stay listed below.
+const UPI_APPS_FIRST = {
+  display: {
+    blocks: {
+      upiApps: {
+        name: "Pay using UPI apps",
+        instruments: [
+          {
+            method: "upi",
+            flows: ["intent"],
+            apps: ["phonepe", "google_pay", "paytm"],
+          },
+        ],
+      },
+    },
+    sequence: ["block.upiApps"],
+    preferences: { show_default_blocks: true },
+  },
+};
+
+function isPhone(): boolean {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
 export interface RazorpayPaymentResult {
   razorpay_payment_id: string;
   razorpay_order_id: string;
@@ -65,6 +91,7 @@ export function openRazorpayCheckout(options: {
         theme: {
           color: "#d97706",
         },
+        ...(isPhone() ? { config: UPI_APPS_FIRST } : {}),
         handler: function (response: RazorpayPaymentResult) {
           resolve(response);
         },
