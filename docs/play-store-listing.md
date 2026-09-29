@@ -16,6 +16,32 @@ delete their own account.
 
 ---
 
+## What to upload (first release)
+
+| Item | Value |
+| --- | --- |
+| File | `android/app/build/outputs/bundle/release/app-release.aab` (rebuild with the recipe in memory/`android-capacitor-build-env` if missing) |
+| Version | **1.5**, versionCode **7** — target SDK **36** (Android 16; Play has required it for new apps since 2026-08-31), min SDK 24 |
+| Upload key | `~/keystores/bhakthibookshelf-release.jks`, alias `bhakthibookshelf`, cert SHA-256 `25:FE:74:34:84:D2:C4:40:CB:BC:9B:CC:AF:C1:60:5F:AC:AC:32:EC:08:6B:2B:B6:D6:0E:A6:DC:0A:60:0A:28` |
+| Verified | Owner's vivo I2304 (Android 16): read-only mode, Back button, download + reader, screenshots blocked **only** in the reader |
+
+**Play App Signing (asked on the first upload):** choose *"Use a different key → Export and
+upload a key from Java keystore"* and upload **our** key as the app signing key. Then phones
+that installed the APK from `bhakthibookshelf.in/downloads/` can update from Play without
+uninstalling. With a Google-generated key those installs must be uninstalled first (their
+downloads re-download after sign-in). Play gives a `pepk.jar` + encryption key on that
+screen — the export is done on this laptop, where the keystore lives.
+
+**Organisation account prerequisites:** D-U-N-S number whose legal name and address match
+what's entered in Play Console exactly; organisation phone + email; website
+`https://bhakthibookshelf.in`; $25 fee. The same D-U-N-S number is needed for the Apple
+Developer Program (Organisation), so request it once for both.
+
+**Reviewer account (App content → App access):** a customer account that already owns a
+book (buy Lord Ganesha once on the website with it), phone + password in the form.
+
+---
+
 ## App details
 
 | Field | Value |
@@ -78,13 +104,13 @@ Questions or support: support@bhakthibookshelf.in
 *(~900 characters — well under the 4000 limit; expand with real catalogue highlights
 once you decide what to feature.)*
 
-## What's new (release notes, this release)
+## What's new (release notes, first release 1.5)
 
 ```
-• New app icon.
-• Delete your account any time from My Account.
-• Manage your devices from Account → Manage Devices; downloads restore
-  automatically if you reinstall the app.
+• Read your Bhakthi Bookshelf books in English and Kannada.
+• Save books for offline reading — readable without internet.
+• Festival Calendar with a shloka for each festival.
+• Manage your devices and delete your account any time from My Account.
 ```
 
 ---
@@ -96,7 +122,7 @@ Remade **2026-09-29** with the new logo, from the live site in Android-app mode
 
 | Asset | Spec | File | Notes |
 | --- | --- | --- | --- |
-| App icon | 512×512 PNG | `app-icon-512.png` | Copy of `public/icons/icon-512.png` — the icon in APK 1.2, so the listing matches the installed app. |
+| App icon | 512×512 PNG | `app-icon-512.png` | Copy of `public/icons/icon-512.png` — the icon in the app (unchanged since APK 1.2), so the listing matches the installed app. |
 | Feature graphic | 1024×500 PNG (no alpha) | `feature-graphic.png` | Navy/gold, the new logo in a rounded-square gold frame (a circle crops "A Home for Devotional Reading"), wordmark + tagline. HTML source was a one-off; rebuild the same way if the logo changes. |
 | Phone screenshots | 1000×1950 PNG (≤2:1) | `screenshot-1-home.png`, `screenshot-2-book-detail.png` (Lord Ganesha), `screenshot-3-festivals.png` (Festival Calendar), `screenshot-4-library.png` (category chips incl. Other) | Retaken **2026-09-29 (late)** in read-only mode (buying OFF): Downloads tab instead of Cart, no prices or buy buttons — the old Subscribe shot was dropped because the app no longer has that page. Live site at 500 CSS px ×2 with `window.Capacitor` faked as Android, so they show the app's bottom tab bar. The announcement bar was hidden for the capture (announcements change). Retake when the catalogue grows so the Library shows more than one book. |
 | 7" / 10" tablet screenshots | Same rules, optional | — | Not made; only if you expect tablet installs. |
