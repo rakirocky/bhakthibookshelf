@@ -20,11 +20,7 @@ type Props = {
   initialQuery?: string;
 };
 
-type SortOption =
-  | "featured"
-  | "title"
-  | "price-low"
-  | "price-high";
+type SortOption = "featured" | "title";
 
 export default function BooksClient({
   books,
@@ -56,22 +52,6 @@ export default function BooksClient({
       case "title":
         result.sort((a, b) =>
           a.title.localeCompare(b.title)
-        );
-        break;
-
-      case "price-low":
-        result.sort(
-          (a, b) =>
-            Number(a.discount_price ?? a.price) -
-            Number(b.discount_price ?? b.price)
-        );
-        break;
-
-      case "price-high":
-        result.sort(
-          (a, b) =>
-            Number(b.discount_price ?? b.price) -
-            Number(a.discount_price ?? a.price)
         );
         break;
 
@@ -130,14 +110,6 @@ export default function BooksClient({
 
                 <option value="title">
                   {t("library.sortTitle")}
-                </option>
-
-                <option value="price-low" data-web-only>
-                  {t("library.sortPriceLow")}
-                </option>
-
-                <option value="price-high" data-web-only>
-                  {t("library.sortPriceHigh")}
                 </option>
               </select>
             </div>
