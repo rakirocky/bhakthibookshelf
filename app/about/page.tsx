@@ -99,7 +99,7 @@ export default async function OurVisionPage() {
         >
           <div style={{ padding: "40px 30px 10px" }}>
             <Image
-              src="/images/about-banner-kannada-v3.svg"
+              src="/images/about-banner-kannada-v4.svg"
               alt=""
               width={1200}
               height={568}
@@ -133,7 +133,7 @@ export default async function OurVisionPage() {
           <p lang="kn">
             ನಮ್ಮ ಹಿಂದೂ ಧರ್ಮದ ಇತಿಹಾಸ, ಸಂಸ್ಕೃತಿ, ಅದರ ಹಿರಿಮೆ, ಪರಂಪರೆ ಹಾಗೂ
             ನಮ್ಮ ದೇಶದ ವಿವಿಧ ಸ್ಥಳಗಳ ಮಹಿಮೆ, ದೇವಾಲಯಗಳ ಪರಿಚಯ ಮತ್ತು
-            ವಿಶೇಷತೆ, ಸಕರಾತ್ಮಕತೆ ಬಿತ್ತುವ, ಮನಶಾಂತಿ ಮತ್ತು ಮುದ
+            ವಿಶೇಷತೆ, ಸಕರಾತ್ಮಕತೆ ಬಿತ್ತುವ, ಮನಸ್ಸಿಗೆ ಶಾಂತಿ ಮತ್ತು ಮುದ
             ನೀಡುವಂತಹ ಶ್ಲೋಕಗಳು, ದೇವರ ನಾಮಗಳು ಹಾಗೂ ಹಬ್ಬಗಳ ಆಚರಣೆ, ಮಹತ್ವ
             ಮತ್ತು ಅದರ ವೈಶಿಷ್ಟ್ಯತೆ ಇತ್ಯಾದಿಗಳ ಕುರಿತು ಮಾಹಿತಿಗಳನ್ನು
             ಒದಗಿಸುವ ಸೇವೆಯೇ &ldquo;BHAKTHI BOOKSHELF&rdquo; E-BOOK.
