@@ -25,6 +25,10 @@ const menu = [
     href: "/admin/customers",
   },
   {
+    title: "Contacts",
+    href: "/admin/contacts",
+  },
+  {
     title: "Password Resets",
     href: "/admin/password-resets",
   },

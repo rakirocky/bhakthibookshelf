@@ -105,6 +105,19 @@
   text-decoration:underline;
 }
 
+.btn-link-text{
+  background:none;
+  border:none;
+  color:var(--color-primary);
+  font-weight:600;
+  cursor:pointer;
+  padding:6px 10px;
+}
+
+.btn-link-text:hover{
+  text-decoration:underline;
+}
+
 .btn-block{
   width:100%;
 }
