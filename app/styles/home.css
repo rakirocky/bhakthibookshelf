@@ -671,12 +671,12 @@
 }
 
 /* Why choose us: faint temple pattern, cards with a gold top edge.
-   `space` fits only whole mandalas across the width and spreads them
+   `space` fits only whole mandalas across the width and height and spreads them
    evenly — with plain `repeat` the last column was cut at the right edge
    and the left looked empty. */
 .home-sacred .why-choose {
   background:
-    url("/images/temple-pattern-tight.svg") space repeat,
+    url("/images/temple-pattern-tight.svg") space,
     linear-gradient(180deg, #fffaf0 0%, #fdf2dc 100%);
 }
 
