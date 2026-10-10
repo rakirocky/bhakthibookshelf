@@ -123,8 +123,11 @@ export async function getAdminBooks() {
   const { rows } = await db.query(`
       SELECT
         id,
+        slug,
         title,
         author,
+        language,
+        category,
         price,
         featured,
         published,

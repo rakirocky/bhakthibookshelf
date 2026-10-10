@@ -47,10 +47,23 @@ export default function AdminHeader({
           alignItems: "center",
         }}
       >
-        <input
-          placeholder="Search..."
-          className="admin-header-search"
-        />
+        {/* Searches books — the list filters live on Admin → Books. */}
+        <form
+          role="search"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const q = new FormData(e.currentTarget).get("q")?.toString().trim() ?? "";
+            router.push(q ? `/admin/books?q=${encodeURIComponent(q)}` : "/admin/books");
+          }}
+        >
+          <input
+            name="q"
+            type="search"
+            placeholder="Search books..."
+            aria-label="Search books"
+            className="admin-header-search"
+          />
+        </form>
 
         <span
           style={{
