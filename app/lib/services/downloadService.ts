@@ -7,11 +7,18 @@ import {
 } from "../repositories/downloadRepository";
 import {
   readStorageFile,
+  resolveStorageFilePath,
   StorageFileError,
 } from "../upload/readStorageFile";
 import { AccessService } from "./accessService";
 import { getBookById } from "./book-service";
-import { encryptBook, EncryptedBook } from "./bookCrypto";
+import {
+  encryptBook,
+  encryptBookFileStream,
+  EncryptedBook,
+  StreamedEncryptedBook,
+  withEncryptionSlot,
+} from "./bookCrypto";
 
 /**
  * Max devices that can hold downloads for one account. Removing a device
@@ -46,7 +53,7 @@ export interface DownloadPayload {
     slug: string;
     author: string;
   };
-  encrypted: EncryptedBook;
+  encrypted: EncryptedBook | StreamedEncryptedBook;
   watermark: {
     email: string | null;
     phone: string;
@@ -173,8 +180,7 @@ export class DownloadService {
       throw new DownloadError("Book file not available.", 404);
     }
 
-    const plaintext = await readBookFile(book.full_pdf);
-    const encrypted = encryptBook(plaintext);
+    const encrypted = await encryptForDownload(book.full_pdf);
 
     const record = await DownloadRepository.recordDownload({
       customerId: input.customerId,
@@ -344,8 +350,7 @@ export class DownloadService {
       );
     }
 
-    const plaintext = await readBookFile(book.full_pdf);
-    const encrypted = encryptBook(plaintext);
+    const encrypted = await encryptForDownload(book.full_pdf);
 
     await DownloadRepository.touchDevice(device.id);
 
@@ -383,6 +388,39 @@ function publicDevice(
     revoked: Boolean(d.revoked_at),
     bookCount: d.book_count ?? 0,
   };
+}
+
+/**
+ * Books stored on this server are streamed (constant memory per download);
+ * a book stored as an absolute URL falls back to buffering, a few at a time.
+ */
+async function encryptForDownload(
+  fullPdf: string
+): Promise<EncryptedBook | StreamedEncryptedBook> {
+  let filePath: string | null;
+  try {
+    filePath = resolveStorageFilePath(fullPdf);
+  } catch (error) {
+    if (error instanceof StorageFileError) {
+      throw new DownloadError("Book file could not be read.", error.status);
+    }
+    throw error;
+  }
+
+  if (filePath === null) {
+    return withEncryptionSlot(async () =>
+      encryptBook(await readBookFile(fullPdf))
+    );
+  }
+
+  try {
+    return await encryptBookFileStream(filePath);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException)?.code === "ENOENT") {
+      throw new DownloadError("Book file not found on server.", 404);
+    }
+    throw new DownloadError("Book file could not be read.", 500);
+  }
 }
 
 /**

@@ -27,15 +27,13 @@ export class StorageFileError extends Error {
   }
 }
 
-export async function readStorageFile(stored: string): Promise<Buffer> {
+/**
+ * Absolute path of a locally stored asset, or null for an absolute URL.
+ * Throws StorageFileError for anything that could escape its root.
+ */
+export function resolveStorageFilePath(stored: string): string | null {
   if (stored.startsWith("http://") || stored.startsWith("https://")) {
-    const res = await fetch(stored);
-
-    if (!res.ok) {
-      throw new StorageFileError("File could not be read.", 502);
-    }
-
-    return Buffer.from(await res.arrayBuffer());
+    return null;
   }
 
   // Reject anything that could climb out of the intended root.
@@ -53,6 +51,22 @@ export async function readStorageFile(stored: string): Promise<Buffer> {
 
   if (!filePath.startsWith(root + path.sep)) {
     throw new StorageFileError("Invalid file path.", 400);
+  }
+
+  return filePath;
+}
+
+export async function readStorageFile(stored: string): Promise<Buffer> {
+  const filePath = resolveStorageFilePath(stored);
+
+  if (filePath === null) {
+    const res = await fetch(stored);
+
+    if (!res.ok) {
+      throw new StorageFileError("File could not be read.", 502);
+    }
+
+    return Buffer.from(await res.arrayBuffer());
   }
 
   try {

@@ -33,7 +33,15 @@ export function encryptedDownloadResponse(
     "X-Watermark-Phone": encodeURIComponent(payload.watermark.phone),
   });
 
-  return new NextResponse(new Uint8Array(encrypted.ciphertext), {
+  if ("stream" in encrypted) {
+    headers.set("Content-Length", String(encrypted.size));
+    return new NextResponse(encrypted.stream, { status: 200, headers });
+  }
+
+  // A Buffer is already a Uint8Array — passing it directly avoids copying
+  // the whole (up to ~100 MB) book again.
+  headers.set("Content-Length", String(encrypted.ciphertext.length));
+  return new NextResponse(encrypted.ciphertext as Uint8Array<ArrayBuffer>, {
     status: 200,
     headers,
   });
