@@ -42,6 +42,8 @@ function SignupForm() {
   const [referralCode, setReferralCode] = useState(
     () => readReferralCookie() ?? ""
   );
+  // Unticked by default — marketing consent has to be an active choice.
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -67,6 +69,7 @@ function SignupForm() {
             email,
             password,
             referralCode: referralCode.trim() || undefined,
+            marketingOptIn,
           }),
         }
       );
@@ -215,6 +218,18 @@ function SignupForm() {
             </p>
           </div>
 
+          <label style={checkboxLabelStyle}>
+            <input
+              type="checkbox"
+              checked={marketingOptIn}
+              onChange={(e) =>
+                setMarketingOptIn(e.target.checked)
+              }
+              style={{ marginTop: 3, flexShrink: 0 }}
+            />
+            <span>{t("consent.signup")}</span>
+          </label>
+
           {error && (
             <p style={errorStyle}>{error}</p>
           )}
@@ -315,6 +330,17 @@ const hintStyle = {
   fontSize: 12,
   color: "var(--color-text-muted)",
   marginTop: 6,
+} as const;
+
+const checkboxLabelStyle = {
+  display: "flex",
+  gap: 10,
+  alignItems: "flex-start",
+  marginBottom: 24,
+  fontSize: 13,
+  lineHeight: 1.5,
+  color: "var(--color-text-secondary)",
+  cursor: "pointer",
 } as const;
 
 const errorStyle = {

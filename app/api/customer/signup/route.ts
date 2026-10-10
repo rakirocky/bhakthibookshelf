@@ -16,7 +16,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
   try {
-    const { phone, password, name, email, referralCode } =
+    const { phone, password, name, email, referralCode, marketingOptIn } =
       await request.json();
 
     const cleanPhone = String(phone ?? "").trim();
@@ -84,6 +84,7 @@ export async function POST(request: Request) {
       name: name || null,
       email: cleanEmail,
       passwordHash,
+      marketingOptIn: marketingOptIn === true,
     });
 
     console.log(
