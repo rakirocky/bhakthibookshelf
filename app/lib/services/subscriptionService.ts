@@ -1,10 +1,17 @@
 import { SubscriptionRepository } from "../repositories/subscriptionRepository";
+import { RazorpayService } from "./razorpayService";
 
 export class SubscriptionService {
   static async getActivePlans() {
     return SubscriptionRepository.getActivePlans();
   }
 
+  /**
+   * Starts (or resumes) a subscription purchase. An unpaid subscription
+   * from an earlier attempt is reused — every click used to insert a new
+   * PENDING row — and `reused` tells the caller it may already have a
+   * Razorpay order to pay against.
+   */
   static async purchase(
     customerId: number,
     planId: number,
@@ -18,25 +25,36 @@ export class SubscriptionService {
       throw new Error("This plan is not available.");
     }
 
-    const existing =
-      await SubscriptionRepository.getActiveForCustomer(
-        customerId
-      );
+    // Settles a pending payment that actually went through first, so a
+    // customer who already paid isn't asked to pay again.
+    const status = await this.getStatusForCustomer(customerId);
 
-    if (existing) {
+    if (status.status === "ACTIVE") {
       throw new Error(
-        `You already have an active subscription until ${new Date(
-          existing.ends_at
-        ).toLocaleDateString("en-IN")}.`
+        status.subscription.ends_at
+          ? `You already have an active subscription until ${new Date(
+              status.subscription.ends_at
+            ).toLocaleDateString("en-IN")}.`
+          : "You already have lifetime access."
       );
     }
 
-    return SubscriptionRepository.create({
+    if (
+      status.status === "PENDING" &&
+      Number(status.subscription.plan_id) === Number(planId) &&
+      Number(status.subscription.amount) === Number(plan.price)
+    ) {
+      return { ...status.subscription, reused: true as const };
+    }
+
+    const created = await SubscriptionRepository.create({
       customerId,
       planId,
       amount: plan.price,
       promoterId,
     });
+
+    return { ...created, reused: false as const };
   }
 
   static async getStatusForCustomer(customerId: number) {
@@ -59,6 +77,12 @@ export class SubscriptionService {
     }
 
     if (latest.payment_status === "PENDING") {
+      const settled = await this.reconcileWithRazorpay(latest);
+
+      if (settled) {
+        return { status: "ACTIVE" as const, subscription: settled };
+      }
+
       return {
         status: "PENDING" as const,
         subscription: latest,
@@ -69,6 +93,45 @@ export class SubscriptionService {
       status: "EXPIRED" as const,
       subscription: latest,
     };
+  }
+
+  /**
+   * If Razorpay says this pending subscription's order was paid, mark it
+   * PAID (same path as verify-payment / webhook) and return the active
+   * row. Any Razorpay error leaves it pending — the next page view will
+   * check again.
+   */
+  private static async reconcileWithRazorpay(subscription: {
+    id: number;
+    customer_id: number;
+    razorpay_order_id?: string | null;
+  }) {
+    const orderId = subscription.razorpay_order_id;
+    if (!orderId) return null;
+
+    try {
+      const paymentId = await RazorpayService.getCapturedPaymentId(orderId);
+      if (!paymentId) return null;
+
+      await SubscriptionRepository.markPaid(subscription.id, {
+        paymentId,
+        paymentMethod: "razorpay",
+      });
+
+      console.log(
+        `[subscription-reconcile] subscription ${subscription.id} marked PAID — Razorpay reports order ${orderId} paid (payment ${paymentId}); the verify call and webhook had not arrived`
+      );
+
+      return SubscriptionRepository.getActiveForCustomer(
+        subscription.customer_id
+      );
+    } catch (error) {
+      console.error(
+        `[subscription-reconcile] could not check Razorpay order ${orderId}:`,
+        error instanceof Error ? error.message : error
+      );
+      return null;
+    }
   }
 
   static async getAllForAdmin(promoterCode?: string) {

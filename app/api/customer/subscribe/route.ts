@@ -69,7 +69,7 @@ export async function POST(request: Request) {
     );
 
     console.log(
-      `[subscription-create] customer ${session.phone} subscribed to plan ${planId}` +
+      `[subscription-create] customer ${session.phone} ${subscription.reused ? `resumed unpaid subscription ${subscription.id}` : `subscribed to plan ${planId}`}` +
         (promoterId
           ? ` — attributed to promoter id ${promoterId}`
           : " — no promoter attribution")
@@ -78,38 +78,53 @@ export async function POST(request: Request) {
     let razorpayOrder: { id: string; amount: number; currency: string } | null =
       null;
 
-    try {
-      razorpayOrder = await RazorpayService.createOrder({
-        amountInRupees: subscription.amount,
-        receipt: `sub-${subscription.id}`,
-        notes: {
-          subscription_id: String(subscription.id),
-          customer_phone: session.phone,
-        },
-      });
+    // Resuming: pay against the Razorpay order already on this
+    // subscription (same amount — purchase() only reuses on a price match).
+    const existingOrderId =
+      subscription.reused && "razorpay_order_id" in subscription
+        ? (subscription.razorpay_order_id as string | null)
+        : null;
 
-      await SubscriptionService.setRazorpayOrderId(
-        subscription.id,
-        razorpayOrder.id
-      );
+    if (existingOrderId) {
+      razorpayOrder = {
+        id: existingOrderId,
+        amount: Math.round(Number(subscription.amount) * 100),
+        currency: "INR",
+      };
+    } else {
+      try {
+        razorpayOrder = await RazorpayService.createOrder({
+          amountInRupees: Number(subscription.amount),
+          receipt: `sub-${subscription.id}`,
+          notes: {
+            subscription_id: String(subscription.id),
+            customer_phone: session.phone,
+          },
+        });
 
-      console.log(
-        `[subscription-create] Razorpay order ${razorpayOrder.id} created for subscription ${subscription.id}`
-      );
-    } catch (razorpayError) {
-      const notConfigured =
-        razorpayError instanceof Error &&
-        razorpayError.message.includes(
-          "Razorpay is not configured"
+        await SubscriptionService.setRazorpayOrderId(
+          subscription.id,
+          razorpayOrder.id
         );
 
-      if (!notConfigured) {
-        throw razorpayError;
-      }
+        console.log(
+          `[subscription-create] Razorpay order ${razorpayOrder.id} created for subscription ${subscription.id}`
+        );
+      } catch (razorpayError) {
+        const notConfigured =
+          razorpayError instanceof Error &&
+          razorpayError.message.includes(
+            "Razorpay is not configured"
+          );
 
-      console.log(
-        `[subscription-create] Razorpay not configured yet — subscription ${subscription.id} created as PENDING, same as before this integration existed.`
-      );
+        if (!notConfigured) {
+          throw razorpayError;
+        }
+
+        console.log(
+          `[subscription-create] Razorpay not configured yet — subscription ${subscription.id} created as PENDING, same as before this integration existed.`
+        );
+      }
     }
 
     return NextResponse.json({

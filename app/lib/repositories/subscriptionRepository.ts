@@ -95,6 +95,7 @@ export class SubscriptionRepository {
       SELECT
         s.id, s.customer_id, s.plan_id, s.amount,
         s.payment_status, s.starts_at, s.ends_at, s.created_at,
+        s.razorpay_order_id,
         p.name AS plan_name
       FROM subscriptions s
       JOIN subscription_plans p ON p.id = s.plan_id

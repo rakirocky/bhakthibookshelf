@@ -66,6 +66,30 @@ export class RazorpayService {
   }
 
   /**
+   * Asks Razorpay directly whether an order has been paid — the safety
+   * net for when both the browser's verify call and the webhook were
+   * missed (closed tab, network drop, app killed mid-payment). Returns
+   * the captured payment's id, or null if the order isn't paid.
+   */
+  static async getCapturedPaymentId(
+    razorpayOrderId: string
+  ): Promise<string | null> {
+    const client = getClient();
+    const order = await client.orders.fetch(razorpayOrderId);
+
+    if (order.status !== "paid") {
+      return null;
+    }
+
+    const payments = await client.orders.fetchPayments(razorpayOrderId);
+    const captured = (payments.items ?? []).find(
+      (p: { status?: string }) => p.status === "captured"
+    );
+
+    return captured?.id ?? null;
+  }
+
+  /**
    * Verifies that a payment callback genuinely came from Razorpay and
    * wasn't fabricated by a malicious client. This is the single most
    * important function in the whole payment feature — an order must

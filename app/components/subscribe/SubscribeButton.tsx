@@ -11,8 +11,11 @@ import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function SubscribeButton({
   planId,
+  resume = false,
 }: {
   planId: number;
+  /** An earlier attempt is unpaid — same flow, "Complete Payment" label. */
+  resume?: boolean;
 }) {
   const router = useRouter();
   const { showToast } = useToast();
@@ -200,7 +203,11 @@ export default function SubscribeButton({
       className="btn btn-primary btn-block"
     >
       {loading && <Spinner />}
-      {loading ? t("sub.submitting") : t("sub.now")}
+      {loading
+        ? t("sub.submitting")
+        : resume
+          ? t("sub.completePayment")
+          : t("sub.now")}
     </button>
   );
 }

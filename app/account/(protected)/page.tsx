@@ -84,9 +84,19 @@ export default async function AccountPage() {
         )}
 
         {status?.status === "PENDING" && (
-          <p style={{ margin: 0, color: "var(--color-warning-text)" }}>
-            {t("account.pending")}
-          </p>
+          <>
+            <p style={{ margin: "0 0 16px", color: "var(--color-warning-text)" }}>
+              {t("account.unpaid")}
+            </p>
+            <Link
+              href="/subscribe"
+              data-web-only
+              className="btn btn-primary"
+              style={{ textDecoration: "none" }}
+            >
+              {t("sub.completePayment")}
+            </Link>
+          </>
         )}
 
         {(status?.status === "NONE" ||

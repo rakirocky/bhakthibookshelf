@@ -122,10 +122,18 @@ export default async function SubscribePage() {
               </div>
             )}
 
+            {/* An unpaid attempt — say so plainly and let them pay. (The
+                status check has already asked Razorpay, so a payment that
+                did go through shows as ACTIVE, never here.) */}
             {session && status?.status === "PENDING" && (
-              <div style={statusBoxStyle("var(--color-warning-bg)", "var(--color-warning-text)")}>
-                {t("sub.pending")}
-              </div>
+              <>
+                <div style={statusBoxStyle("var(--color-warning-bg)", "var(--color-warning-text)")}>
+                  {t("sub.unpaid")}
+                </div>
+                <div style={{ marginTop: 14 }}>
+                  <SubscribeButton planId={plan.id} resume />
+                </div>
+              </>
             )}
 
             {session &&
