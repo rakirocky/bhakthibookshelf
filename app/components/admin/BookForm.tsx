@@ -178,6 +178,7 @@ export default function BookForm({
             <option value="epics">Epics</option>
             <option value="prayers">Prayers &amp; Festivals</option>
             <option value="divine-stories">Divine Stories</option>
+            <option value="glory-of-places">Glory of Places</option>
             <option value="other">Other</option>
           </select>
         </div>

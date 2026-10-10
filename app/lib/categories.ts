@@ -6,6 +6,7 @@ export const BOOK_CATEGORIES = [
   "epics",
   "prayers",
   "divine-stories",
+  "glory-of-places",
   "other",
 ] as const;
 
@@ -16,6 +17,7 @@ export const CATEGORY_LABEL: Record<BookCategory, I18nKey> = {
   epics: "footer.epics",
   prayers: "footer.prayers",
   "divine-stories": "footer.divineStories",
+  "glory-of-places": "footer.gloryOfPlaces",
   other: "footer.other",
 };
 
