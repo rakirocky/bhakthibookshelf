@@ -640,11 +640,14 @@
   background: url("/images/lotus-divider.svg") center / contain no-repeat;
 }
 
-/* Featured Books: parchment band, mandalas peeking in from the corners */
+/* Featured Books: parchment band, a whole mandala in the top-left and
+   bottom-right corners (owner 2026-10-11: they used to sit half outside
+   and the temple pillars cut them in half). Size shrinks on narrow
+   screens so they stay whole on phones too. */
 .home-sacred .featured-books {
   background:
-    var(--mandala-bg) -180px -120px / 520px no-repeat,
-    var(--mandala-bg) calc(100% + 180px) calc(100% + 120px) / 520px no-repeat,
+    var(--mandala-bg) left 28px top 28px / min(460px, 40vw) no-repeat,
+    var(--mandala-bg) right 28px bottom 28px / min(460px, 40vw) no-repeat,
     linear-gradient(180deg, #fdf0d5 0%, #fffaf0 100%);
 }
 
