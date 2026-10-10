@@ -1,3 +1,5 @@
+import { isIOSApp, isNativeApp } from "./offline/native";
+
 // Loads Razorpay's checkout script once, reuses it on subsequent calls
 // rather than injecting a duplicate <script> tag every time someone
 // checks out.
@@ -65,6 +67,11 @@ export function openRazorpayCheckout(options: {
         theme: {
           color: "#d97706",
         },
+        // Inside the Android app checkout runs in a WebView, where Razorpay
+        // can't see installed UPI apps and only offers QR / UPI ID. This
+        // makes it list PhonePe / GPay / Paytm; tapping one loads a upi://
+        // link, which Capacitor hands to Android to open the app.
+        ...(isNativeApp() && !isIOSApp() ? { webview_intent: true } : {}),
         handler: function (response: RazorpayPaymentResult) {
           resolve(response);
         },

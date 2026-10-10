@@ -143,7 +143,9 @@ export default async function Footer() {
 
         </div>
 
-        <div className="footer-app" data-web-only>
+        {/* Hidden in both apps even when Android buying is on — no "get the
+            app" inside the app, and no link out to the website. */}
+        <div className="footer-app" data-no-native>
           <div className="footer-app-text">
             <Smartphone />
             <div>
