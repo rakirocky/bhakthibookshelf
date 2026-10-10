@@ -38,7 +38,7 @@ const siteJsonLd = {
       "@id": `${SITE_URL}/#organization`,
       name: "Bhakthi Bookshelf",
       url: `${SITE_URL}/`,
-      logo: absoluteUrl("/images/logo.png"),
+      logo: absoluteUrl("/images/logo-v2.png"),
     },
   ],
 };

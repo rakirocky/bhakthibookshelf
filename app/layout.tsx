@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     siteName: "Bhakthi Bookshelf",
     images: [
       {
-        url: "/images/logo.png",
+        url: "/images/logo-v2.png",
         width: 900,
         height: 900,
         alt: "Bhakthi Bookshelf",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     title: "Bhakthi Bookshelf | A Home for Devotional Reading",
     description:
       "Discover timeless wisdom through sacred scriptures, devotional books and spiritual literature.",
-    images: ["/images/logo.png"],
+    images: ["/images/logo-v2.png"],
   },
 };
 

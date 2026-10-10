@@ -72,7 +72,7 @@ export default async function ContactPage() {
               }}
             >
               <Image
-                src="/images/logo.png"
+                src="/images/logo-v2.png"
                 alt="Bhakthi Bookshelf"
                 width={164}
                 height={164}
