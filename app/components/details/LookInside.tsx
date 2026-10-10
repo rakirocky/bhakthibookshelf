@@ -3,19 +3,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useT } from "@/app/lib/i18n/I18nProvider";
+import {
+  PdfPageLike,
+  RenderSuperseded,
+  renderPdfPage,
+} from "@/app/lib/pdf/renderPdfPage";
 
 // Minimal shape of what we use from pdfjs (same as ReaderClient).
 interface PdfDoc {
   numPages: number;
-  getPage(n: number): Promise<PdfPage>;
+  getPage(n: number): Promise<PdfPageLike>;
   destroy(): Promise<void>;
-}
-interface PdfPage {
-  getViewport(opts: { scale: number }): { width: number; height: number };
-  render(opts: {
-    canvasContext: CanvasRenderingContext2D;
-    viewport: { width: number; height: number };
-  }): { promise: Promise<void> };
 }
 
 /**
@@ -116,11 +114,21 @@ function LookInsideViewer({
   // switching layouts (phone ↔ wide) never lands mid-spread.
   const start = spread && page % 2 === 0 ? page - 1 : page;
 
+  const slots = useRef(
+    new WeakMap<HTMLCanvasElement, { task?: { cancel(): void } | null; seq?: number }>()
+  );
+
   const renderInto = useCallback(
     async (canvas: HTMLCanvasElement | null, num: number, maxW: number, maxH: number) => {
       const doc = docRef.current;
       if (!doc || !canvas) return;
       if (num < 1 || num > doc.numPages) {
+        // Supersede any render still running for this canvas.
+        const stale = slots.current.get(canvas);
+        if (stale) {
+          stale.seq = (stale.seq ?? 0) + 1;
+          stale.task?.cancel();
+        }
         canvas.width = 0;
         canvas.style.width = "0px";
         return;
@@ -128,16 +136,14 @@ function LookInsideViewer({
       const p = await doc.getPage(num);
       const base = p.getViewport({ scale: 1 });
       const scale = Math.min(maxW / base.width, maxH / base.height);
-      const vp = p.getViewport({ scale });
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = vp.width * dpr;
-      canvas.height = vp.height * dpr;
-      canvas.style.width = `${vp.width}px`;
-      canvas.style.height = `${vp.height}px`;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      await p.render({ canvasContext: ctx, viewport: vp }).promise;
+      // One render slot per canvas (left/right page of a spread).
+      const slot = slots.current.get(canvas) ?? {};
+      slots.current.set(canvas, slot);
+      try {
+        await renderPdfPage(p, canvas, scale, slot);
+      } catch (err) {
+        if (!(err instanceof RenderSuperseded)) throw err;
+      }
     },
     []
   );

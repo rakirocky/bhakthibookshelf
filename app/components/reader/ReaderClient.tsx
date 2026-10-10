@@ -15,6 +15,11 @@ import {
 } from "@/app/lib/offline/readingProgress";
 import { guardScreen, unguardScreen } from "@/app/lib/offline/screenGuard";
 import { useT } from "@/app/lib/i18n/I18nProvider";
+import {
+  PdfPageLike,
+  RenderSuperseded,
+  renderPdfPage,
+} from "@/app/lib/pdf/renderPdfPage";
 
 /**
  * Renders one decrypted book, a page at a time, onto a canvas. Nothing is
@@ -26,15 +31,8 @@ import { useT } from "@/app/lib/i18n/I18nProvider";
 // Minimal shape of what we use from pdfjs — avoids a type dep on the lib.
 interface PdfDoc {
   numPages: number;
-  getPage(n: number): Promise<PdfPage>;
+  getPage(n: number): Promise<PdfPageLike>;
   destroy(): Promise<void>;
-}
-interface PdfPage {
-  getViewport(opts: { scale: number }): { width: number; height: number };
-  render(opts: {
-    canvasContext: CanvasRenderingContext2D;
-    viewport: { width: number; height: number };
-  }): { promise: Promise<void> };
 }
 
 export default function ReaderClient({
@@ -64,31 +62,56 @@ export default function ReaderClient({
   const [notice, setNotice] = useState("");
   const touchStart = useRef<{ x: number; y: number } | null>(null);
 
-  const renderPage = useCallback(async (num: number, zoomLevel: number) => {
-    const doc = docRef.current;
-    const canvas = canvasRef.current;
-    if (!doc || !canvas) return;
+  // Pinch-zoom factor (1 = not pinched). The page is re-drawn at that
+  // resolution once the pinch settles, so zooming in stays sharp.
+  const [pinch, setPinch] = useState(1);
+  const renderSlot = useRef<{ task?: { cancel(): void } | null; seq?: number }>({});
 
-    const pdfPage = await doc.getPage(num);
-    const stageWidth = Math.min(
-      canvas.parentElement?.clientWidth ?? 900,
-      1100
-    );
-    const base = pdfPage.getViewport({ scale: 1 });
-    const scale = ((stageWidth - 28) / base.width) * zoomLevel;
-    const viewport = pdfPage.getViewport({ scale: Math.max(scale, 0.2) });
+  const renderPage = useCallback(
+    async (num: number, zoomLevel: number, pinchScale: number) => {
+      const doc = docRef.current;
+      const canvas = canvasRef.current;
+      if (!doc || !canvas) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+      const pdfPage = await doc.getPage(num);
+      const stageWidth = Math.min(
+        canvas.parentElement?.clientWidth ?? 900,
+        1100
+      );
+      const base = pdfPage.getViewport({ scale: 1 });
+      const scale = ((stageWidth - 28) / base.width) * zoomLevel;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = viewport.width * dpr;
-    canvas.height = viewport.height * dpr;
-    canvas.style.width = `${viewport.width}px`;
-    canvas.style.height = `${viewport.height}px`;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      try {
+        await renderPdfPage(
+          pdfPage,
+          canvas,
+          Math.max(scale, 0.2),
+          renderSlot.current,
+          pinchScale
+        );
+      } catch (err) {
+        if (!(err instanceof RenderSuperseded)) throw err;
+      }
+    },
+    []
+  );
 
-    await pdfPage.render({ canvasContext: ctx, viewport }).promise;
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const onResize = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        // Round so tiny scroll-induced changes don't re-render.
+        setPinch(Math.max(1, Math.round(vv.scale * 4) / 4));
+      }, 250);
+    };
+    vv.addEventListener("resize", onResize);
+    return () => {
+      clearTimeout(timer);
+      vv.removeEventListener("resize", onResize);
+    };
   }, []);
 
   // Load the book once.
@@ -153,11 +176,11 @@ export default function ReaderClient({
     // t only changes with the interface language, never mid-read
   }, [downloadId, t]);
 
-  // Render whenever the page or zoom changes and the doc is ready.
+  // Render whenever the page, zoom or pinch changes and the doc is ready.
   useEffect(() => {
     if (status !== "ready") return;
-    void renderPage(page, zoom);
-  }, [status, page, zoom, renderPage]);
+    void renderPage(page, zoom, pinch);
+  }, [status, page, zoom, pinch, renderPage]);
 
   // Remember the page for "Continue reading".
   useEffect(() => {
