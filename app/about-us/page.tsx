@@ -1,4 +1,5 @@
 import Footer from "../components/layout/Footer";
+import HeroLogo from "../components/ui/HeroLogo";
 import { getT, getUiLang } from "@/app/lib/i18n/server";
 import type { I18nKey } from "@/app/lib/i18n/dictionary";
 import { pageMetadata } from "@/app/lib/seo/pageMetadata";
@@ -56,6 +57,7 @@ export default async function AboutUsPage() {
       <main>
         {/* ===== Hero — same navy band as Our Vision / Contact ===== */}
         <section className="about-us-hero">
+          <HeroLogo glow />
           <p className="about-us-hero__eyebrow">{t("about.teamEyebrow")}</p>
           <h1 style={{ color: "var(--color-white)" }}>{t("about.us")}</h1>
           <p>{t("about.teamIntro")}</p>
