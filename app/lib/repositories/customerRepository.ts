@@ -42,14 +42,11 @@ export class CustomerRepository {
     name?: string | null;
     email?: string | null;
     passwordHash: string;
-    // Ticked the WhatsApp/SMS box at signup. Unticked stays NULL
-    // ("unknown"), not an opt-out — see MarketingContactRepository.
-    marketingOptIn?: boolean;
   }): Promise<CustomerRow> {
     const { rows } = await db.query(
       `
-      INSERT INTO customers (phone, name, email, password_hash, marketing_opt_in, marketing_opt_in_at)
-      VALUES ($1, $2, $3, $4, CASE WHEN $5::boolean THEN TRUE END, CASE WHEN $5::boolean THEN CURRENT_TIMESTAMP END)
+      INSERT INTO customers (phone, name, email, password_hash)
+      VALUES ($1, $2, $3, $4)
       RETURNING id, phone, name, email, password_hash, is_active
       `,
       [
@@ -57,7 +54,6 @@ export class CustomerRepository {
         data.name ?? null,
         data.email ?? null,
         data.passwordHash,
-        data.marketingOptIn === true,
       ]
     );
 
@@ -197,17 +193,6 @@ export class CustomerRepository {
       `,
       [id, email]
     );
-  }
-
-  static async getMarketingOptIn(
-    id: number
-  ): Promise<boolean | null> {
-    const { rows } = await db.query(
-      `SELECT marketing_opt_in FROM customers WHERE id = $1`,
-      [id]
-    );
-
-    return rows[0]?.marketing_opt_in ?? null;
   }
 
   // --- Single-active-session login (see migration 024) ---

@@ -7,7 +7,6 @@ import { OrderService } from "@/app/lib/services/orderService";
 import { CustomerRepository } from "@/app/lib/repositories/customerRepository";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import EmailSettingsCard from "@/app/components/account/EmailSettingsCard";
-import MarketingConsentCard from "@/app/components/account/MarketingConsentCard";
 import { getT } from "@/app/lib/i18n/server";
 
 export default async function AccountPage() {
@@ -22,10 +21,6 @@ export default async function AccountPage() {
     ? await SubscriptionService.getStatusForCustomer(
         session.customerId
       )
-    : null;
-
-  const marketingOptIn = session
-    ? await CustomerRepository.getMarketingOptIn(session.customerId)
     : null;
 
   const purchasedBooks = session
@@ -56,11 +51,6 @@ export default async function AccountPage() {
 
       <EmailSettingsCard
         currentEmail={customer?.email ?? null}
-      />
-
-      <MarketingConsentCard
-        phone={customer?.phone ?? session?.phone ?? ""}
-        optedIn={marketingOptIn === true}
       />
 
       <div
