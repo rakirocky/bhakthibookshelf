@@ -95,6 +95,34 @@ export default function BottomNav() {
   const { t } = useT();
   const { cartCount } = useCart();
   const [moreOpen, setMoreOpen] = useState(false);
+  const [typing, setTyping] = useState(false);
+
+  // Hide the bar while a text field has focus. On phones the keyboard
+  // pushes this fixed bar up over the form (checkout: it covered City /
+  // State), so it gets out of the way until the keyboard closes.
+  useEffect(() => {
+    const isTextField = (el: Element | null) =>
+      el instanceof HTMLTextAreaElement ||
+      el instanceof HTMLSelectElement ||
+      (el instanceof HTMLInputElement &&
+        !["checkbox", "radio", "button", "submit", "reset", "range", "file", "color"].includes(el.type)) ||
+      (el instanceof HTMLElement && el.isContentEditable);
+
+    const onFocusIn = (e: FocusEvent) => {
+      if (isTextField(e.target as Element)) setTyping(true);
+    };
+    // Checked after focus settles, so moving City → State doesn't flash it.
+    const onFocusOut = () => {
+      setTimeout(() => setTyping(isTextField(document.activeElement)), 0);
+    };
+
+    document.addEventListener("focusin", onFocusIn);
+    document.addEventListener("focusout", onFocusOut);
+    return () => {
+      document.removeEventListener("focusin", onFocusIn);
+      document.removeEventListener("focusout", onFocusOut);
+    };
+  }, []);
 
   // Lock body scroll while the sheet is open.
   useEffect(() => {
@@ -124,7 +152,11 @@ export default function BottomNav() {
     <>
       <div className="bottom-nav-spacer" aria-hidden="true" />
 
-      <nav className="bottom-nav" aria-label="Primary">
+      <nav
+        className="bottom-nav"
+        aria-label="Primary"
+        data-typing={typing ? "" : undefined}
+      >
         {TABS.map((tab) => (
           <Link
             key={tab.href}
