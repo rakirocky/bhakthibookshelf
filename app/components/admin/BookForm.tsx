@@ -8,6 +8,7 @@ import { useToast } from "@/app/context/ToastContext";
 import FileUpload from "./FileUpload";
 import Spinner from "../ui/Spinner";
 import { COVER_ACCEPT, prepareCoverFile } from "@/app/lib/upload/coverConvert";
+import { lowResolutionWarning } from "@/app/lib/upload/pdfResolution";
 
 interface BookFormValues {
   slug: string;
@@ -203,6 +204,7 @@ export default function BookForm({
             label="Sample PDF"
             accept="application/pdf"
             uploadUrl="/api/admin/upload/pdf"
+            check={lowResolutionWarning}
             extraField={{ name: "type", value: "sample" }}
             maxSizeMB={20}
             value={form.sample_pdf}
@@ -218,6 +220,7 @@ export default function BookForm({
             label="Full Book PDF"
             accept="application/pdf"
             uploadUrl="/api/admin/upload/pdf"
+            check={lowResolutionWarning}
             extraField={{ name: "type", value: "ebook" }}
             maxSizeMB={100}
             value={form.full_pdf}

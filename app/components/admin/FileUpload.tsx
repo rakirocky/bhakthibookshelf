@@ -20,6 +20,11 @@ interface FileUploadProps {
    * cover → JPEG of its first page). The size limit applies to its result.
    */
   prepare?: (file: File) => Promise<File>;
+  /**
+   * Runs in the browser alongside the upload; a returned message is shown
+   * as a warning (e.g. a low-resolution book PDF). Never blocks the upload.
+   */
+  check?: (file: File) => Promise<string | null>;
   /** Extra form field sent alongside the file, e.g. { type: "sample" } */
   extraField?: {
     name: string;
@@ -36,13 +41,18 @@ export default function FileUpload({
   previewType = "none",
   maxSizeMB,
   prepare,
+  check,
   extraField,
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  // Only the latest pick's check may set the warning.
+  const checkSeq = useRef(0);
 
   const [uploading, setUploading] = useState(false);
   const [preparing, setPreparing] = useState(false);
   const [error, setError] = useState("");
+  const [warning, setWarning] = useState("");
+  const [checking, setChecking] = useState(false);
 
   async function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     let file = e.target.files?.[0];
@@ -81,6 +91,21 @@ export default function FileUpload({
       }
 
       return;
+    }
+
+    if (check) {
+      const seq = ++checkSeq.current;
+      const picked = file;
+      setWarning("");
+      setChecking(true);
+      check(picked)
+        .then((message) => {
+          if (seq === checkSeq.current) setWarning(message ?? "");
+        })
+        .catch((err) => console.error("file check failed", err))
+        .finally(() => {
+          if (seq === checkSeq.current) setChecking(false);
+        });
     }
 
     setUploading(true);
@@ -232,6 +257,36 @@ export default function FileUpload({
         onChange={handleFileChange}
         style={{ display: "none" }}
       />
+
+      {checking && (
+        <p
+          style={{
+            fontSize: 13,
+            marginTop: 6,
+            color: "var(--color-text-muted)",
+          }}
+        >
+          Checking page quality…
+        </p>
+      )}
+
+      {warning && (
+        <p
+          role="alert"
+          style={{
+            background: "var(--color-warning-bg)",
+            color: "var(--color-warning-text)",
+            fontSize: 13,
+            lineHeight: 1.5,
+            marginTop: 8,
+            marginBottom: 0,
+            padding: "10px 12px",
+            borderRadius: 8,
+          }}
+        >
+          ⚠️ {warning}
+        </p>
+      )}
 
       {error && (
         <p
