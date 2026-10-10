@@ -40,6 +40,13 @@ const nextConfig = {
     proxyClientMaxBodySize: "105mb",
   },
 
+  // Book covers are served at quality 90 (COVER_QUALITY) — they are what
+  // customers look at most, so sharpness beats a few KB. 75 stays the
+  // default for decorative images. Next 16 requires this allowlist.
+  images: {
+    qualities: [75, 90],
+  },
+
   allowedDevOrigins: ["192.168.1.150", "10.10.20.142"],
 
   // pdfkit loads its standard font metrics (.afm files) dynamically at

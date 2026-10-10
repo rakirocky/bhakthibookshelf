@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { fileUrl } from "@/app/lib/upload/fileUrl";
+import { COVER_QUALITY } from "@/app/lib/upload/coverQuality";
 
 export type HeroBook = {
   id: number;
@@ -70,6 +71,7 @@ export default function HeroBookshelf({ books }: Props) {
                 fill
                 sizes="220px"
                 style={{ objectFit: "cover" }}
+                quality={COVER_QUALITY}
               />
             </button>
           )}
@@ -90,6 +92,7 @@ export default function HeroBookshelf({ books }: Props) {
                 sizes="(max-width: 480px) 220px, (max-width: 560px) 200px, (max-width: 900px) 260px, 300px"
                 style={{ objectFit: "cover" }}
                 priority
+                quality={COVER_QUALITY}
               />
             </Link>
           </div>
@@ -108,6 +111,7 @@ export default function HeroBookshelf({ books }: Props) {
                 fill
                 sizes="220px"
                 style={{ objectFit: "cover" }}
+                quality={COVER_QUALITY}
               />
             </button>
           )}

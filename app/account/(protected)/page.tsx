@@ -8,6 +8,7 @@ import { CustomerRepository } from "@/app/lib/repositories/customerRepository";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import EmailSettingsCard from "@/app/components/account/EmailSettingsCard";
 import { getT } from "@/app/lib/i18n/server";
+import { COVER_QUALITY } from "@/app/lib/upload/coverQuality";
 
 export default async function AccountPage() {
   const session = await getCustomerSession();
@@ -183,6 +184,7 @@ export default async function AccountPage() {
                     height: "auto",
                     borderRadius: 8,
                   }}
+                  quality={COVER_QUALITY}
                 />
 
                 <p

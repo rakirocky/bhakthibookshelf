@@ -6,6 +6,7 @@ import { CartItem as Item } from "@/app/context/CartContext";
 import { useCart } from "@/app/hooks/useCart";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import { useT } from "@/app/lib/i18n/I18nProvider";
+import { COVER_QUALITY } from "@/app/lib/upload/coverQuality";
 
 type Props = {
   item: Item;
@@ -38,6 +39,7 @@ export default function CartItem({
         alt={item.title}
         width={120}
         height={170}
+        quality={COVER_QUALITY}
       />
 
       <div style={{ flex: 1, minWidth: 200 }}>

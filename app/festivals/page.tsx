@@ -11,6 +11,7 @@ import { getLanguagePreference } from "../lib/language";
 import { fileUrl } from "../lib/upload/fileUrl";
 import { getT } from "../lib/i18n/server";
 import { pageMetadata } from "../lib/seo/pageMetadata";
+import { COVER_QUALITY } from "@/app/lib/upload/coverQuality";
 
 export const metadata = pageMetadata(
   "Hindu Festival Calendar 2026–27",
@@ -137,6 +138,7 @@ export default async function FestivalsPage() {
                                       alt=""
                                       width={28}
                                       height={40}
+                                      quality={COVER_QUALITY}
                                     />
                                     {b.title}
                                   </Link>

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import { useT } from "@/app/lib/i18n/I18nProvider";
 import WishlistButton from "../wishlist/WishlistButton";
+import { COVER_QUALITY } from "@/app/lib/upload/coverQuality";
 
 const NEW_BADGE_WINDOW_DAYS = 14;
 
@@ -58,6 +59,8 @@ export default function BookCard({
             width={300}
             height={450}
             priority={false}
+            quality={COVER_QUALITY}
+            sizes="(max-width: 480px) 260px, 250px"
           />
 
         </div>

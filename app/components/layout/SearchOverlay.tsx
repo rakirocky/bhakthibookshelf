@@ -9,6 +9,7 @@ import { createPortal } from "react-dom";
 import { useT } from "@/app/lib/i18n/I18nProvider";
 import { matchesQuery, searchScore } from "@/app/lib/bookSearch";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
+import { COVER_QUALITY } from "@/app/lib/upload/coverQuality";
 
 interface IndexBook {
   slug: string;
@@ -118,6 +119,7 @@ export default function SearchOverlay({ onClose }: { onClose: () => void }) {
                     alt=""
                     width={44}
                     height={64}
+                    quality={COVER_QUALITY}
                   />
                   <span>
                     <strong>{b.title}</strong>

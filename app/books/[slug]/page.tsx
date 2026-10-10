@@ -23,6 +23,7 @@ import RelatedBooks from "@/app/components/details/RelatedBooks";
 import RecentlyViewed from "@/app/components/details/RecentlyViewed";
 import JsonLd from "@/app/lib/seo/JsonLd";
 import { absoluteUrl } from "@/app/lib/seo/siteUrl";
+import { COVER_QUALITY } from "@/app/lib/upload/coverQuality";
 
 // Reads live data from the DB — see the same note in app/admin/layout.tsx.
 export const dynamic = "force-dynamic";
@@ -161,6 +162,8 @@ export default async function BookDetailsPage({
             width={360}
             height={520}
             priority
+            quality={COVER_QUALITY}
+            sizes="300px"
           />
 
         </div>
