@@ -19,7 +19,7 @@ export function pageMetadata(
       description,
       url: path,
       siteName: SITE_NAME,
-      images: [{ url: "/images/logo-v2.png", width: 900, height: 900, alt: SITE_NAME }],
+      images: [{ url: "/images/logo-v3.png", width: 900, height: 900, alt: SITE_NAME }],
       locale: "en_IN",
       type: "website",
     },
@@ -27,7 +27,7 @@ export function pageMetadata(
       card: "summary",
       title: fullTitle,
       description,
-      images: ["/images/logo-v2.png"],
+      images: ["/images/logo-v3.png"],
     },
   };
 }

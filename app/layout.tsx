@@ -31,11 +31,11 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/icons/icon-192.png?v=2", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512.png?v=2", sizes: "512x512", type: "image/png" },
+      { url: "/icons/icon-192.png?v=3", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png?v=3", sizes: "512x512", type: "image/png" },
     ],
     apple: [
-      { url: "/icons/icon-180.png?v=2", sizes: "180x180", type: "image/png" },
+      { url: "/icons/icon-180.png?v=3", sizes: "180x180", type: "image/png" },
     ],
   },
   openGraph: {
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     siteName: "Bhakthi Bookshelf",
     images: [
       {
-        url: "/images/logo-v2.png",
+        url: "/images/logo-v3.png",
         width: 900,
         height: 900,
         alt: "Bhakthi Bookshelf",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     title: "Bhakthi Bookshelf | A Home for Devotional Reading",
     description:
       "Discover timeless wisdom through sacred scriptures, devotional books and spiritual literature.",
-    images: ["/images/logo-v2.png"],
+    images: ["/images/logo-v3.png"],
   },
 };
 

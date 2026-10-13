@@ -195,7 +195,7 @@ export default async function OurVisionPage() {
               }}
             >
               <Image
-                src="/images/logo-v2.png"
+                src="/images/logo-v3.png"
                 alt="Bhakthi Bookshelf"
                 width={164}
                 height={160}
