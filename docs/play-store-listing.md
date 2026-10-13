@@ -122,8 +122,8 @@ Remade **2026-09-29** with the new logo, from the live site in Android-app mode
 
 | Asset | Spec | File | Notes |
 | --- | --- | --- | --- |
-| App icon | 512×512 PNG | `app-icon-512.png` | Copy of `public/icons/icon-512.png` — the icon in the app (unchanged since APK 1.2), so the listing matches the installed app. |
-| Feature graphic | 1024×500 PNG (no alpha) | `feature-graphic.png` | Navy/gold, the new logo in a rounded-square gold frame (a circle crops "A Home for Devotional Reading"), wordmark + tagline. HTML source was a one-off; rebuild the same way if the logo changes. |
+| App icon | 512×512 PNG | `app-icon-512.png` | Copy of `public/icons/icon-512.png` — the icon in the app (round logo since APK 1.7, 2026-10-13), so the listing matches the installed app. |
+| Feature graphic | 1024×500 PNG (no alpha) | `feature-graphic.png` | Navy/gold, the round logo (2026-10-13) in a round gold frame, wordmark + tagline. Source: `feature-graphic.html` — render in headless Chrome at a window taller than 500px (e.g. 1024×700) and crop to 1024×500, since the headless window clips the bottom. |
 | Phone screenshots | 1000×1950 PNG (≤2:1) | `screenshot-1-home.png`, `screenshot-2-book-detail.png` (Lord Ganesha), `screenshot-3-festivals.png` (Festival Calendar), `screenshot-4-library.png` (category chips incl. Other) | Retaken **2026-09-29 (late)** in read-only mode (buying OFF): Downloads tab instead of Cart, no prices or buy buttons — the old Subscribe shot was dropped because the app no longer has that page. Live site at 500 CSS px ×2 with `window.Capacitor` faked as Android, so they show the app's bottom tab bar. The announcement bar was hidden for the capture (announcements change). Retake when the catalogue grows so the Library shows more than one book. |
 | 7" / 10" tablet screenshots | Same rules, optional | — | Not made; only if you expect tablet installs. |
 | Promo video | Optional, YouTube URL | — | Skip for v1. |
