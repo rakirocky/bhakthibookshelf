@@ -100,6 +100,9 @@ export class SubscriptionRepository {
       FROM subscriptions s
       JOIN subscription_plans p ON p.id = s.plan_id
       WHERE s.customer_id = $1
+        -- An attempt the admin marked unpaid is closed: it must not be
+        -- resumed or reported as "expired" — the customer starts fresh.
+        AND s.payment_status <> 'FAILED'
       ORDER BY s.created_at DESC
       LIMIT 1
       `,
@@ -180,6 +183,28 @@ export class SubscriptionRepository {
         paymentDetails?.paymentMethod ?? null,
         paymentDetails?.razorpayOrderId ?? null,
       ]
+    );
+
+    return rows[0] ?? null;
+  }
+
+  // Admin "Mark Unpaid": closes a stuck attempt (or undoes a manual
+  // Mark Paid) so the customer's next Subscribe creates a fresh row and
+  // Razorpay order. If the old order is somehow paid later, the webhook
+  // still finds this row by razorpay_order_id and activates it.
+  static async markUnpaid(id: number) {
+    const { rows } = await db.query(
+      `
+      UPDATE subscriptions
+      SET
+        payment_status = 'FAILED',
+        starts_at = NULL,
+        ends_at = NULL,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = $1
+      RETURNING id, payment_status
+      `,
+      [id]
     );
 
     return rows[0] ?? null;

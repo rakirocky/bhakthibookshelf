@@ -164,6 +164,16 @@ export class SubscriptionService {
     return updated;
   }
 
+  static async markUnpaid(id: number) {
+    const updated = await SubscriptionRepository.markUnpaid(id);
+
+    if (!updated) {
+      throw new Error("Subscription not found.");
+    }
+
+    return updated;
+  }
+
   static async setRazorpayOrderId(
     id: number,
     razorpayOrderId: string

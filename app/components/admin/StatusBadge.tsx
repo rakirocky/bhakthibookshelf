@@ -10,6 +10,7 @@ const COLORS: Record<
   PENDING: { bg: "var(--color-warning-bg)", color: "var(--color-warning-text)" },
   PAID: { bg: "var(--color-success-bg)", color: "var(--color-success-text)" },
   FAILED: { bg: "var(--color-danger-bg)", color: "var(--color-danger-text)" },
+  UNPAID: { bg: "var(--color-danger-bg)", color: "var(--color-danger-text)" },
   REFUNDED: { bg: "#f3e8ff", color: "#6b21a8" },
   ACTIVE: { bg: "var(--color-success-bg)", color: "var(--color-success-text)" },
   INACTIVE: { bg: "#f3f4f6", color: "#6b7280" },

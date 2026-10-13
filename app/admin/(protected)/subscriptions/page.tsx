@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import StatusBadge from "@/app/components/admin/StatusBadge";
 import MarkSubscriptionPaidButton from "@/app/components/admin/MarkSubscriptionPaidButton";
+import MarkSubscriptionUnpaidButton from "@/app/components/admin/MarkSubscriptionUnpaidButton";
 import { SubscriptionService } from "@/app/lib/services/subscriptionService";
 
 export default async function AdminSubscriptionsPage({
@@ -141,7 +142,13 @@ export default async function AdminSubscriptionsPage({
               </td>
 
               <td align="center">
-                <StatusBadge status={sub.payment_status} />
+                <StatusBadge
+                  status={
+                    sub.payment_status === "FAILED"
+                      ? "UNPAID"
+                      : sub.payment_status
+                  }
+                />
               </td>
 
               <td>
@@ -159,11 +166,28 @@ export default async function AdminSubscriptionsPage({
               </td>
 
               <td align="center">
-                {sub.payment_status === "PENDING" && (
-                  <MarkSubscriptionPaidButton
-                    subscriptionId={sub.id}
-                  />
-                )}
+                <div
+                  style={{
+                    display: "inline-flex",
+                    gap: 8,
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                  }}
+                >
+                  {sub.payment_status === "PENDING" && (
+                    <MarkSubscriptionPaidButton
+                      subscriptionId={sub.id}
+                    />
+                  )}
+
+                  {(sub.payment_status === "PENDING" ||
+                    sub.payment_status === "PAID") && (
+                    <MarkSubscriptionUnpaidButton
+                      subscriptionId={sub.id}
+                      wasPaid={sub.payment_status === "PAID"}
+                    />
+                  )}
+                </div>
               </td>
             </tr>
           ))}
