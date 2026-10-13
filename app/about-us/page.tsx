@@ -58,7 +58,6 @@ export default async function AboutUsPage() {
         {/* ===== Hero — same navy band as Our Vision / Contact ===== */}
         <section className="about-us-hero">
           <HeroLogo glow />
-          <p className="about-us-hero__eyebrow">{t("about.teamEyebrow")}</p>
           <h1 style={{ color: "var(--color-white)" }}>{t("about.us")}</h1>
           <p>{t("about.teamIntro")}</p>
         </section>

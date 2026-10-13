@@ -479,15 +479,6 @@
   color: rgba(255, 255, 255, 0.78);
 }
 
-.about-us-hero .about-us-hero__eyebrow {
-  margin-bottom: 8px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-accent-gold);
-}
-
 .about-team {
   position: relative;
   max-width: 780px;
