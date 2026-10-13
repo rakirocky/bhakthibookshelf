@@ -127,9 +127,22 @@ export async function POST(request: Request) {
       }
     }
 
+    // Passed to Razorpay so its window opens straight on the payment
+    // options — without it Razorpay first asks for a mobile number.
+    const customer = razorpayOrder
+      ? await CustomerRepository.getById(session.customerId)
+      : null;
+
     return NextResponse.json({
       success: true,
       subscription,
+      prefill: customer
+        ? {
+            name: customer.name ?? "",
+            email: customer.email ?? "",
+            contact: customer.phone,
+          }
+        : null,
       razorpayOrderId: razorpayOrder?.id ?? null,
       razorpayKeyId: razorpayOrder
         ? RazorpayService.getPublicKeyId()

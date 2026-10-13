@@ -33,6 +33,7 @@ export default function SubscribeButton({
     razorpayKeyId: string;
     amount: number;
     currency: string;
+    prefill?: { name: string; email: string; contact: string };
   } | null>(null);
 
   async function verifyPayment(
@@ -81,6 +82,7 @@ export default function SubscribeButton({
     razorpayKeyId: string;
     amount: number;
     currency: string;
+    prefill?: { name: string; email: string; contact: string };
   }) {
     try {
       const result = await openRazorpayCheckout({
@@ -90,6 +92,7 @@ export default function SubscribeButton({
         currency: payment.currency,
         name: "Bhakthi Bookshelf",
         description: "Lifetime Subscription",
+        prefill: payment.prefill,
       });
 
       if (!result) {
@@ -150,6 +153,7 @@ export default function SubscribeButton({
         razorpayKeyId: data.razorpayKeyId,
         amount: data.amount,
         currency: data.currency,
+        prefill: data.prefill ?? undefined,
       };
 
       setPendingPayment(payment);
