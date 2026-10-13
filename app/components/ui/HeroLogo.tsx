@@ -30,7 +30,7 @@ export default function HeroLogo({
       <div className="hero-logo__frame">
         <div className="hero-logo__inner">
           <Image
-            src="/images/logo-v3.png"
+            src="/images/logo-v4.png"
             alt="Bhakthi Bookshelf"
             width={size}
             height={size}

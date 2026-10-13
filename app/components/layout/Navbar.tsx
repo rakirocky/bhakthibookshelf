@@ -52,7 +52,7 @@ export default function Navbar() {
           onClick={() => setMenuOpen(false)}
         >
           <Image
-            src="/images/logo-v3.png"
+            src="/images/logo-v4.png"
             alt="Bhakthi Bookshelf"
             width={60}
             height={60}
