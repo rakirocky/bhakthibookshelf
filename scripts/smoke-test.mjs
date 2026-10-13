@@ -154,7 +154,7 @@ const isSignIn = (u) => u.startsWith("/account/login") || u.startsWith("/account
   await t.go("/cart");
   const c = await t.ev(`({ alert: document.querySelector('[role=alert]')?.innerText ?? null,
     empty: document.body.innerText.includes('currently empty'),
-    title: document.body.innerText.includes(${JSON.stringify(book.title)}) })`);
+    title: document.body.innerText.includes(${JSON.stringify(book.title.trim())}) })`);
   check("cart keeps an available book (no 'no longer available')", !c.alert && !c.empty && c.title, JSON.stringify(c));
   await t.click("/proceed to checkout/i");
   await sleep(3500);
