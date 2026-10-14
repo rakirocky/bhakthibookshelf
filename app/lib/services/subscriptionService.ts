@@ -1,5 +1,6 @@
 import { SubscriptionRepository } from "../repositories/subscriptionRepository";
 import { RazorpayService } from "./razorpayService";
+import { sendSubscriptionInvoiceEmail } from "./orderEmailService";
 
 export class SubscriptionService {
   static async getActivePlans() {
@@ -113,10 +114,14 @@ export class SubscriptionService {
       const paymentId = await RazorpayService.getCapturedPaymentId(orderId);
       if (!paymentId) return null;
 
-      await SubscriptionRepository.markPaid(subscription.id, {
-        paymentId,
-        paymentMethod: "razorpay",
-      });
+      const updated = await SubscriptionRepository.markPaid(
+        subscription.id,
+        { paymentId, paymentMethod: "razorpay" }
+      );
+
+      if (updated?.newly_invoiced) {
+        void this.sendInvoiceEmail(subscription.id);
+      }
 
       console.log(
         `[subscription-reconcile] subscription ${subscription.id} marked PAID — Razorpay reports order ${orderId} paid (payment ${paymentId}); the verify call and webhook had not arrived`
@@ -161,7 +166,37 @@ export class SubscriptionService {
       throw new Error("Subscription not found.");
     }
 
+    if (updated.newly_invoiced) {
+      // Fire-and-forget, same as orders: a mail hiccup must never turn
+      // a recorded payment into an error for the customer.
+      void this.sendInvoiceEmail(id);
+    }
+
     return updated;
+  }
+
+  private static async sendInvoiceEmail(id: number) {
+    try {
+      const sub = await SubscriptionRepository.getInvoiceData(id);
+      if (!sub) return;
+
+      const sent = await sendSubscriptionInvoiceEmail(sub);
+
+      console.log(
+        sent
+          ? `[subscription-paid] invoice email sent to ${sub.customer_email} for subscription ${id}`
+          : `[subscription-paid] no email on file for subscription ${id} — invoice not emailed`
+      );
+    } catch (error) {
+      console.error(
+        `[subscription-paid] invoice email FAILED for subscription ${id}:`,
+        error
+      );
+    }
+  }
+
+  static async getInvoiceData(id: number) {
+    return SubscriptionRepository.getInvoiceData(id);
   }
 
   static async markUnpaid(id: number) {

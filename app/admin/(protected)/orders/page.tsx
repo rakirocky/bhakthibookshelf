@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import StatusBadge from "@/app/components/admin/StatusBadge";
 import { OrderService } from "@/app/lib/services/orderService";
+import { formatInvoiceNumber } from "@/app/lib/invoiceNumber";
 
 export default async function AdminOrdersPage({
   searchParams,
@@ -114,6 +115,24 @@ export default async function AdminOrdersPage({
             >
               <td style={{ padding: 14 }}>
                 {order.order_number}
+                {order.invoice_no != null && (
+                  <>
+                    <br />
+                    <span
+                      style={{
+                        fontSize: 12,
+                        color: "var(--color-text-muted)",
+                      }}
+                    >
+                      Invoice{" "}
+                      {formatInvoiceNumber(
+                        "EB",
+                        order.invoice_no,
+                        order.invoiced_at
+                      )}
+                    </span>
+                  </>
+                )}
               </td>
 
               <td>

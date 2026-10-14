@@ -172,6 +172,8 @@ export class OrderRepository {
         o.order_status,
         o.payment_status,
         o.created_at,
+        o.invoice_no,
+        o.invoiced_at,
         p.name AS promoter_name,
         p.code AS promoter_code
       FROM orders o
@@ -208,6 +210,8 @@ export class OrderRepository {
         o.razorpay_order_id,
         o.payment_id,
         o.created_at,
+        o.invoice_no,
+        o.invoiced_at,
         p.name AS promoter_name,
         p.code AS promoter_code
       FROM orders o

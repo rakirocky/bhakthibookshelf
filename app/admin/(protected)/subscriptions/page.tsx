@@ -4,6 +4,7 @@ import StatusBadge from "@/app/components/admin/StatusBadge";
 import MarkSubscriptionPaidButton from "@/app/components/admin/MarkSubscriptionPaidButton";
 import MarkSubscriptionUnpaidButton from "@/app/components/admin/MarkSubscriptionUnpaidButton";
 import { SubscriptionService } from "@/app/lib/services/subscriptionService";
+import { formatInvoiceNumber } from "@/app/lib/invoiceNumber";
 
 export default async function AdminSubscriptionsPage({
   searchParams,
@@ -120,7 +121,27 @@ export default async function AdminSubscriptionsPage({
                 </span>
               </td>
 
-              <td>{sub.plan_name}</td>
+              <td>
+                {sub.plan_name}
+                {sub.invoice_no != null && (
+                  <>
+                    <br />
+                    <span
+                      style={{
+                        fontSize: 12,
+                        color: "var(--color-text-muted)",
+                      }}
+                    >
+                      Invoice{" "}
+                      {formatInvoiceNumber(
+                        "LT",
+                        sub.invoice_no,
+                        sub.invoiced_at
+                      )}
+                    </span>
+                  </>
+                )}
+              </td>
 
               <td align="right">₹{sub.amount}</td>
 
@@ -186,6 +207,14 @@ export default async function AdminSubscriptionsPage({
                       subscriptionId={sub.id}
                       wasPaid={sub.payment_status === "PAID"}
                     />
+                  )}
+
+                  {sub.invoice_no != null && (
+                    <a
+                      href={`/api/admin/subscriptions/${sub.id}/invoice`}
+                    >
+                      Invoice
+                    </a>
                   )}
                 </div>
               </td>

@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 
 import { OrderService } from "@/app/lib/services/orderService";
 import { SettingsService } from "@/app/lib/services/settingsService";
-import { generateInvoicePdf } from "@/app/lib/services/invoiceService";
+import {
+  formatInvoiceNumber,
+  generateInvoicePdf,
+} from "@/app/lib/services/invoiceService";
 
 export async function GET(
   request: Request,
@@ -40,7 +43,9 @@ export async function GET(
     return new NextResponse(new Uint8Array(pdfBuffer), {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="invoice-${order.order_number}.pdf"`,
+        "Content-Disposition": `attachment; filename="invoice-${
+          formatInvoiceNumber("EB", order.invoice_no, order.invoiced_at) ?? order.order_number
+        }.pdf"`,
       },
     });
   } catch (error) {

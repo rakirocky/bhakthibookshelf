@@ -128,6 +128,7 @@ export class SubscriptionRepository {
       SELECT
         s.id, s.customer_id, s.plan_id, s.amount,
         s.payment_status, s.starts_at, s.ends_at, s.created_at,
+        s.invoice_no, s.invoiced_at,
         p.name AS plan_name,
         c.name AS customer_name,
         c.phone AS customer_phone,
@@ -175,7 +176,12 @@ export class SubscriptionRepository {
         razorpay_order_id = COALESCE($4, razorpay_order_id),
         updated_at = CURRENT_TIMESTAMP
       WHERE s.id = $1
-      RETURNING id, payment_status, starts_at, ends_at
+      -- The invoice trigger (migration 036) stamps invoiced_at with this
+      -- same transaction timestamp only when it assigns the number, so
+      -- equality means this call is the one that first made it PAID —
+      -- verify, webhook and reconcile can race; only one sends the email.
+      RETURNING id, payment_status, starts_at, ends_at, invoice_no,
+        (invoiced_at = updated_at) AS newly_invoiced
       `,
       [
         id,
@@ -229,6 +235,36 @@ export class SubscriptionRepository {
         p.name AS plan_name
       FROM subscriptions s
       JOIN subscription_plans p ON p.id = s.plan_id
+      WHERE s.id = $1
+      `,
+      [id]
+    );
+
+    return rows[0] ?? null;
+  }
+
+  // Everything the subscription invoice needs. Subscribe collects no
+  // address, so the place of supply comes from the customer's latest
+  // order if they have one.
+  static async getInvoiceData(id: number) {
+    const { rows } = await db.query(
+      `
+      SELECT
+        s.id, s.amount, s.payment_status, s.created_at,
+        s.invoice_no, s.invoiced_at,
+        p.name AS plan_name,
+        c.name AS customer_name,
+        c.phone AS customer_phone,
+        c.email AS customer_email,
+        (
+          SELECT o.state FROM orders o
+          WHERE o.customer_id = s.customer_id
+          ORDER BY o.created_at DESC
+          LIMIT 1
+        ) AS customer_state
+      FROM subscriptions s
+      JOIN subscription_plans p ON p.id = s.plan_id
+      JOIN customers c ON c.id = s.customer_id
       WHERE s.id = $1
       `,
       [id]

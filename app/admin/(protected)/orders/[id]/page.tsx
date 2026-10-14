@@ -4,6 +4,7 @@ import OrderStatusForm from "@/app/components/admin/OrderStatusForm";
 import StatusBadge from "@/app/components/admin/StatusBadge";
 import EmailInvoiceButton from "@/app/components/admin/EmailInvoiceButton";
 import { OrderService } from "@/app/lib/services/orderService";
+import { formatInvoiceNumber } from "@/app/lib/invoiceNumber";
 
 export default async function AdminOrderDetailPage({
   params,
@@ -31,9 +32,25 @@ export default async function AdminOrderDetailPage({
           gap: 12,
         }}
       >
-        <h1 style={{ marginBottom: 6 }}>
-          Order {order.order_number}
-        </h1>
+        <div>
+          <h1 style={{ marginBottom: 6 }}>
+            Order {order.order_number}
+          </h1>
+
+          <div
+            style={{
+              fontWeight: 600,
+              color: "var(--color-text-secondary)",
+            }}
+          >
+            Invoice #:{" "}
+            {formatInvoiceNumber(
+              "EB",
+              order.invoice_no,
+              order.invoiced_at
+            ) ?? "not issued yet (payment pending)"}
+          </div>
+        </div>
 
         <div
           style={{
