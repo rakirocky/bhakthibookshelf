@@ -302,6 +302,42 @@ html[data-native] .temple-frame {
   color: #fde68a;
 }
 
+/* Library + Featured Books: book-language chips (All / English / ಕನ್ನಡ) */
+.language-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.language-chips-label {
+  font-weight: 700;
+  font-size: 14px;
+  color: #7c2d12;
+  margin-right: 2px;
+}
+
+.language-chips .category-chip {
+  padding: 6px 14px;
+}
+
+.featured-books .language-chips {
+  justify-content: center;
+  margin-bottom: 22px;
+}
+
+/* phones: label on its own line so the three chips stay in one row */
+@media (max-width: 600px) {
+  .language-chips-label {
+    flex-basis: 100%;
+  }
+
+  .featured-books .language-chips-label {
+    text-align: center;
+  }
+}
+
 /* Library search: clear (✕) button inside the field */
 .book-search {
   position: relative;

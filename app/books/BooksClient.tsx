@@ -13,11 +13,13 @@ import type { Book } from "@/app/lib/types/book";
 import { useT } from "@/app/lib/i18n/I18nProvider";
 import { BOOK_CATEGORIES, BookCategory, CATEGORY_LABEL } from "@/app/lib/categories";
 import { matchesQuery } from "@/app/lib/bookSearch";
+import { BOOK_LANGUAGES, BookLanguage, bookMatchesLanguage } from "@/app/lib/bookLanguage";
 
 type Props = {
   books: Book[];
   initialCategory?: BookCategory | null;
   initialQuery?: string;
+  initialLanguage?: BookLanguage;
 };
 
 type SortOption = "featured" | "title";
@@ -26,18 +28,31 @@ export default function BooksClient({
   books,
   initialCategory = null,
   initialQuery = "",
+  initialLanguage = "all",
 }: Props) {
   const { t } = useT();
   const router = useRouter();
   const pathname = usePathname();
   const [search, setSearch] = useState(initialQuery);
   const [category, setCategory] = useState<BookCategory | null>(initialCategory);
+  const [language, setLanguage] = useState<BookLanguage>(initialLanguage);
 
-  // Keep ?category= in the URL (shareable; footer links land here) without
-  // a navigation/re-render round trip.
+  // Keep ?category= / ?lang= in the URL (shareable; footer links land here)
+  // without a navigation/re-render round trip.
+  function syncUrl(nextCategory: BookCategory | null, nextLanguage: BookLanguage) {
+    const params = new URLSearchParams();
+    if (nextCategory) params.set("category", nextCategory);
+    if (nextLanguage !== "all") params.set("lang", nextLanguage);
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  }
   function chooseCategory(next: BookCategory | null) {
     setCategory(next);
-    router.replace(next ? `${pathname}?category=${next}` : pathname, { scroll: false });
+    syncUrl(next, language);
+  }
+  function chooseLanguage(next: BookLanguage) {
+    setLanguage(next);
+    syncUrl(category, next);
   }
   const [sortBy, setSortBy] =
     useState<SortOption>("featured");
@@ -45,7 +60,9 @@ export default function BooksClient({
   const filteredBooks = useMemo(() => {
     const result = books.filter(
       (book) =>
-        (!category || book.category === category) && matchesQuery(book, search)
+        (!category || book.category === category) &&
+        bookMatchesLanguage(book.language, language) &&
+        matchesQuery(book, search)
     );
 
     switch (sortBy) {
@@ -63,7 +80,7 @@ export default function BooksClient({
     }
 
     return result;
-  }, [books, search, sortBy, category]);
+  }, [books, search, sortBy, category, language]);
 
   return (
     <>
@@ -71,6 +88,22 @@ export default function BooksClient({
 
       <section className="books-page">
         <Container>
+
+          <div className="language-chips" role="tablist" aria-label={t("library.bookLanguage")}>
+            <span className="language-chips-label">{t("library.bookLanguage")}:</span>
+            {BOOK_LANGUAGES.map((l) => (
+              <button
+                key={l}
+                type="button"
+                role="tab"
+                aria-selected={language === l}
+                className={language === l ? "category-chip is-on" : "category-chip"}
+                onClick={() => chooseLanguage(l)}
+              >
+                {l === "all" ? t("library.all") : l === "Kannada" ? "ಕನ್ನಡ" : "English"}
+              </button>
+            ))}
+          </div>
 
           <div className="category-chips" role="tablist" aria-label={t("library.categories")}>
             {[null, ...BOOK_CATEGORIES].map((c) => (

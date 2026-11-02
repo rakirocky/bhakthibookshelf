@@ -235,10 +235,34 @@ const isSignIn = (u) => u.startsWith("/account/login") || u.startsWith("/account
   const wrong = [];
   for (const l of links) {
     await t.go(l.href, 2500);
-    const on = await t.ev(`document.querySelector('.category-chip.is-on')?.innerText.trim()`);
+    const on = await t.ev(`document.querySelector('.category-chips .category-chip.is-on')?.innerText.trim()`);
     if (on !== l.text) wrong.push(`${l.text}→${on}`);
   }
   check("each footer category link opens that category", wrong.length === 0, wrong.join("; "));
+  await t.close();
+}
+
+// 2e2b. Book-language chips (Library + Featured Books) filter books but keep the English interface
+{
+  const t = await openTab();
+  const shown = `({ lang: document.documentElement.lang, on: document.querySelector('.language-chips .is-on')?.innerText.trim(),
+    url: location.pathname + location.search,
+    grid: [...document.querySelectorAll('.books-grid h3')].map(h => h.innerText.trim()) })`;
+  const pick = (label) => t.ev(`[...document.querySelectorAll('.language-chips button')].find(b => b.innerText.trim() === ${JSON.stringify(label)})?.click() ?? 'missing'`);
+  await t.go("/books");
+  const all = await t.ev(shown);
+  await pick("ಕನ್ನಡ");
+  await sleep(800);
+  const kn = await t.ev(shown);
+  check("Library ಕನ್ನಡ chip: English interface, ?lang=Kannada, subset of books",
+    all?.on === "All" && kn?.on === "ಕನ್ನಡ" && kn.lang === "en" && kn.url.includes("lang=Kannada") &&
+      kn.grid.every((x) => all.grid.includes(x)) && t.errors.length === 0,
+    `all=${all?.grid.length} kn=${kn?.grid.length} lang=${kn?.lang} url=${kn?.url} ${t.errors[0] ?? ""}`);
+  await t.go("/");
+  await pick("ಕನ್ನಡ");
+  await sleep(500);
+  const home = await t.ev(`({ lang: document.documentElement.lang, on: document.querySelector('.featured-books .language-chips .is-on')?.innerText.trim(), all: document.querySelector('.view-all-books a')?.getAttribute('href') })`);
+  check("Featured Books ಕನ್ನಡ tab keeps English interface", home?.on === "ಕನ್ನಡ" && home.lang === "en" && home.all === "/books?lang=Kannada", JSON.stringify(home));
   await t.close();
 }
 

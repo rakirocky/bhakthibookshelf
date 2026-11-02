@@ -1,16 +1,7 @@
 import "server-only";
 
 import { db } from "../db/db";
-
-// Match a language however it was typed ("English", "en", "ENGLISH ")
-// so a stray value can't silently drop a book from the language filter
-// (migration 026 normalized the existing rows).
-function languageAliases(language: string): string[] {
-  const l = language.trim().toLowerCase();
-  if (l === "english" || l === "en") return ["english", "en", "eng"];
-  if (l === "kannada" || l === "kn") return ["kannada", "kn", "kan"];
-  return [l];
-}
+import { languageAliases } from "../bookLanguage";
 
 export async function findAllBooks(language?: string) {
   const params: string[][] = [];
