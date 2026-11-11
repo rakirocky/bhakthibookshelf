@@ -18,17 +18,46 @@ export { formatInvoiceNumber };
 // pdfkit's built-in Helvetica has no ₹ glyph (it printed as "¹"), so the
 // invoice embeds Noto Sans (OFL, /assets/fonts), which has it and
 // matches the website's body font. Read once, on first use.
-let fonts: { regular: Buffer; bold: Buffer } | null = null;
+// Noto Sans has no Kannada glyphs, so Kannada book titles (and
+// customer names/addresses) printed as empty boxes. Kannada runs are
+// drawn with Noto Sans Kannada instead — see writeMixed().
+let fonts: {
+  regular: Buffer;
+  bold: Buffer;
+  knRegular: Buffer;
+  knBold: Buffer;
+} | null = null;
 
 function invoiceFonts() {
   if (!fonts) {
     const dir = path.join(/*turbopackIgnore: true*/ process.cwd(), "assets", "fonts");
+    const read = (file: string) =>
+      readFileSync(path.join(/*turbopackIgnore: true*/ dir, file));
     fonts = {
-      regular: readFileSync(path.join(/*turbopackIgnore: true*/ dir, "NotoSans-Regular.ttf")),
-      bold: readFileSync(path.join(/*turbopackIgnore: true*/ dir, "NotoSans-Bold.ttf")),
+      regular: read("NotoSans-Regular.ttf"),
+      bold: read("NotoSans-Bold.ttf"),
+      knRegular: read("NotoSansKannada-Regular.ttf"),
+      knBold: read("NotoSansKannada-Bold.ttf"),
     };
   }
   return fonts;
+}
+
+// A Kannada run: Kannada letters/marks (plus ZWJ/ZWNJ), and the spaces
+// between consecutive Kannada words, so a title stays one shaped run.
+const KANNADA_RUN = /[ಀ-೿‌‍]+(?:\s+[ಀ-೿‌‍]+)*/g;
+
+function scriptRuns(text: string): { text: string; kannada: boolean }[] {
+  const runs: { text: string; kannada: boolean }[] = [];
+  let last = 0;
+  for (const m of text.matchAll(KANNADA_RUN)) {
+    const start = m.index ?? 0;
+    if (start > last) runs.push({ text: text.slice(last, start), kannada: false });
+    runs.push({ text: m[0], kannada: true });
+    last = start + m[0].length;
+  }
+  if (last < text.length) runs.push({ text: text.slice(last), kannada: false });
+  return runs;
 }
 
 // GST as per the client's reference invoices (2026-10-14): one SAC for
@@ -275,10 +304,52 @@ function renderInvoice(
     doc.on("end", () => resolve(Buffer.concat(chunks)));
     doc.on("error", reject);
 
-    const { regular, bold } = invoiceFonts();
+    const { regular, bold, knRegular, knBold } = invoiceFonts();
     doc.registerFont("Body", regular);
     doc.registerFont("Bold", bold);
+    doc.registerFont("KnBody", knRegular);
+    doc.registerFont("KnBold", knBold);
     doc.font("Body");
+
+    // Writes text that may mix Latin and Kannada, switching font per run
+    // (pdfkit has no font fallback). Same signature as doc.text().
+    const writeMixed = (
+      text: string,
+      isBold: boolean,
+      x?: number,
+      y?: number,
+      options: PDFKit.Mixins.TextOptions = {}
+    ) => {
+      const runs = scriptRuns(text);
+      if (runs.length === 0) runs.push({ text: "", kannada: false });
+      // pdfkit places each run by its own font's ascender, and Noto Sans
+      // Kannada's is shorter, so Kannada floated above the line. Put
+      // Kannada runs on the Latin font's baseline instead.
+      doc.font(isBold ? "Bold" : "Body");
+      // A numeric baseline is in points (pdfkit: dy = -baseline).
+      const internal = doc as unknown as {
+        _font: { ascender: number };
+        _fontSize: number;
+      };
+      const latinAscender = (internal._font.ascender / 1000) * internal._fontSize;
+      runs.forEach((run, i) => {
+        const continued = i < runs.length - 1;
+        doc.font(
+          run.kannada ? (isBold ? "KnBold" : "KnBody") : isBold ? "Bold" : "Body"
+        );
+        const runOpts: PDFKit.Mixins.TextOptions = {
+          continued,
+          baseline: run.kannada ? -latinAscender : "top",
+        };
+        if (i === 0) {
+          if (x === undefined) doc.text(run.text, { ...options, ...runOpts });
+          else doc.text(run.text, x, y, { ...options, ...runOpts });
+        } else {
+          doc.text(run.text, runOpts);
+        }
+      });
+      doc.font(isBold ? "Bold" : "Body");
+    };
 
     const left = 50;
     const width = 495;
@@ -368,9 +439,10 @@ function renderInvoice(
     // ===== Bill to =====
     doc.font("Bold").fontSize(10).fillColor("#111").text("Bill To:", left);
 
-    doc.font("Body").fontSize(9).fillColor("#333").text(data.billTo.name);
+    doc.fontSize(9).fillColor("#333");
+    writeMixed(data.billTo.name, false);
     for (const line of data.billTo.lines) {
-      doc.text(line);
+      writeMixed(line, false);
     }
     if (data.billTo.gstin) {
       doc.text(`Customer GSTIN: ${data.billTo.gstin}`);
@@ -392,7 +464,7 @@ function renderInvoice(
         .font(opts.bold ? "Bold" : "Body")
         .fontSize(opts.size ?? 10)
         .fillColor(opts.color ?? "#222");
-      doc.text(description, left, y, { width: amountX - left - 10 });
+      writeMixed(description, !!opts.bold, left, y, { width: amountX - left - 10 });
       const end = doc.y;
       doc.text(amount, amountX, y, { width: 120, align: "right" });
       doc.y = Math.max(end, doc.y) + 6;
