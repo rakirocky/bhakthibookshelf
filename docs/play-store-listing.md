@@ -1,18 +1,22 @@
 # Play Console — Store Listing
 
-Content to paste into Play Console → **Grow → Store presence → Main store listing**.
-Contact details below match Admin → Settings on prod (`support@bhakthibookshelf.in` —
-migration 034 switched it from the old Gmail address on 2026-09-29 — and
-`+91 78921 19482`). **Confirm them in `/admin/settings`** before you submit; Play
-cross-checks the listing against the app's own privacy policy page.
+Content to paste into Play Console → **Grow → Store presence → Main store listing**,
+plus the App content answers that depend on what the app does.
 
-Last reviewed **2026-09-29 (late)**: **the Android app is read-only** (owner decision,
-option A — Admin → Settings → "Android app: allow buying" is OFF; verified on prod by the
-smoke test). The app sells nothing and has **no link or text pointing to the website for
-buying** (Play/Apple anti-steering), so this listing must not either: no prices, no "buy",
-no "subscribe on our website". Customers buy on the website on their own; the app reads
-what their account already owns. The reader no longer watermarks pages, and customers can
-delete their own account.
+Last reviewed **2026-11-24**: the Play Store app (**1.9, versionCode 11**) **sells books and
+the lifetime plan through Google Play Billing** (deployed to prod `73f7fc8`). Inside that app:
+
+- each book page has one **Buy** button priced from the website (₹29 today), product ID
+  `book_<id>`; **Subscribe** sells **Lifetime Access ₹999**, product ID `plan_1`;
+- the website's cart, checkout and Razorpay are **hidden** and `/cart`, `/checkout`,
+  `/order-success` redirect away (`AppModeGuard`) — Google Play is the only way to pay;
+- there's still **no link or text sending users to the website to pay** (anti-steering).
+
+The website and older sideloaded APKs (≤1.8, no PlayBilling plugin) keep Razorpay — they
+aren't distributed through Play, so that's allowed.
+
+Contact details match Admin → Settings on prod (`support@bhakthibookshelf.in`,
+`+91 78921 19482`). Play cross-checks them against the privacy policy page.
 
 ---
 
@@ -20,25 +24,18 @@ delete their own account.
 
 | Item | Value |
 | --- | --- |
-| File | `android/app/build/outputs/bundle/release/app-release.aab` (rebuild with the recipe in memory/`android-capacitor-build-env` if missing) |
-| Version | **1.5**, versionCode **7** — target SDK **36** (Android 16; Play has required it for new apps since 2026-08-31), min SDK 24 |
+| File | `android/app/build/outputs/bundle/release/app-release.aab` (built 2026-11-16; rebuild recipe in memory `android-capacitor-build-env`) |
+| Version | **1.9**, versionCode **11** — target SDK **36**, min SDK 24, Play Billing Library 8.3.0, `com.android.vending.BILLING` permission |
 | Upload key | `~/keystores/bhakthibookshelf-release.jks`, alias `bhakthibookshelf`, cert SHA-256 `25:FE:74:34:84:D2:C4:40:CB:BC:9B:CC:AF:C1:60:5F:AC:AC:32:EC:08:6B:2B:B6:D6:0E:A6:DC:0A:60:0A:28` |
-| Verified | Owner's vivo I2304 (Android 16): read-only mode, Back button, download + reader, screenshots blocked **only** in the reader |
+| First track | **Internal testing** — a real purchase only works for an app installed from a Play track |
 
 **Play App Signing (asked on the first upload):** choose *"Use a different key → Export and
-upload a key from Java keystore"* and upload **our** key as the app signing key. Then phones
-that installed the APK from `bhakthibookshelf.in/downloads/` can update from Play without
-uninstalling. With a Google-generated key those installs must be uninstalled first (their
-downloads re-download after sign-in). Play gives a `pepk.jar` + encryption key on that
-screen — the export is done on this laptop, where the keystore lives.
+upload a key from Java keystore"* and upload **our** key. Then phones that installed the APK
+from `bhakthibookshelf.in/downloads/` can update from Play without uninstalling. Play shows a
+`pepk.jar` + an **encryption key** on that screen — send the encryption key; the export runs
+on this laptop, where the keystore lives.
 
-**Organisation account prerequisites:** D-U-N-S number whose legal name and address match
-what's entered in Play Console exactly; organisation phone + email; website
-`https://bhakthibookshelf.in`; $25 fee. The same D-U-N-S number is needed for the Apple
-Developer Program (Organisation), so request it once for both.
-
-**Reviewer account (App content → App access):** a customer account that already owns a
-book (buy Lord Ganesha once on the website with it), phone + password in the form.
+**Reviewer account (App content → App access):** see "App access" below.
 
 ---
 
@@ -46,155 +43,150 @@ book (buy Lord Ganesha once on the website with it), phone + password in the for
 
 | Field | Value |
 | --- | --- |
-| App name (30 char max) | `Bhakthi Bookshelf` (17 chars) |
+| App name (30 char max) | `Bhakthi Bookshelf` |
 | Package name | `com.bhakthibookshelf.app` |
-| Default language | English (India) — add Kannada (kn-IN) as an additional listing language once you have Kannada copy; the app itself already serves Kannada content via `LanguageSwitcher`. |
+| Play Store link (fixed by the package name; works once published) | `https://play.google.com/store/apps/details?id=com.bhakthibookshelf.app` |
+| Default language | English (India) — Kannada (kn-IN) listing optional, later |
+| App or game / Free or paid | App / **Free** (with in-app purchases) |
 | Category | **Books & Reference** |
-| Tags (pick up to 5 in Console) | Religion & Spirituality, Reading, Ebooks |
+| Tags (up to 5) | Religion & Spirituality, Reading, Ebooks |
 | Contact email | `support@bhakthibookshelf.in` |
 | Contact phone | `+91 78921 19482` |
 | Website | `https://bhakthibookshelf.in` |
 | Privacy policy URL | `https://bhakthibookshelf.in/privacy-policy` |
+| Terms (trader / ToS link) | `https://bhakthibookshelf.in/terms-conditions` |
 | Delete account URL (Data safety) | `https://bhakthibookshelf.in/account/delete-account` |
 
 ## Short description (80 characters max)
 
-Pick one (both fit):
+> Devotional e-books in English & Kannada. Read online or download for offline.
 
-> Devotional e-books & sacred texts. Read online or download for offline.
-*(74 chars)*
-
-> Your devotional library in English & Kannada — read online or offline.
-*(71 chars)*
-
-Don't name specific titles (Bhagavad Gita, Ramayana…) until they're actually in the
-catalogue — Play treats listing content the app doesn't have as misleading.
+*(77 characters)*
 
 ## Full description (4000 characters max)
 
 ```
-Bhakthi Bookshelf is a home for devotional reading — sacred texts, scriptures,
-and spiritual books, with your Bhakthi Bookshelf library in your pocket.
+Bhakthi Bookshelf is a home for devotional reading — epics, scriptures, prayers,
+divine stories and the glory of sacred places, in English and Kannada.
 
 WHAT YOU CAN DO
-• Browse a growing library of devotional and religious e-books in English and
-  Kannada
-• Sign in with your Bhakthi Bookshelf account and read the books in your
-  library in the in-app reader
-• Save books for offline reading — once downloaded, they stay readable even
-  without an internet connection
+• Browse more than 180 devotional e-books in English and Kannada, by category:
+  Epics, Scriptures, Prayers, Divine Stories, Glory of Places and more
+• Filter the library by book language — All, English or Kannada
+• Buy a book once and keep it in your library, or choose Lifetime Access to
+  read every book
+• Read in the built-in reader, made for comfortable reading on your phone
+• Download books for offline reading — once saved, they open without internet
 • See upcoming Hindu festivals, each with a shloka, in the Festival Calendar
 
-BUILT FOR DEVOTED READERS
-Every book download is protected: encrypted on your device and tied to your
-account and that device, so your books stay yours.
-You can register up to 3 devices and manage them at any time from
-Account → Manage Devices.
+SAFE AND SIMPLE
+• Purchases are made securely through Google Play
+• A GST tax invoice is created for every purchase
+• Downloads are encrypted on your device and tied to your account, so your
+  books stay yours. Use up to 3 devices and manage them any time from
+  Account → Manage Devices
+• Delete your account any time from My Account
 
 Whether you're starting your day with a prayer, preparing for a festival, or
-exploring something new, Bhakthi Bookshelf keeps your library with you —
-online or off.
-
-Your account, your choice: you can delete your account at any time from
-My Account.
+exploring something new, Bhakthi Bookshelf keeps your devotional library with
+you — online or off.
 
 Questions or support: support@bhakthibookshelf.in
 ```
 
-*(~900 characters — well under the 4000 limit; expand with real catalogue highlights
-once you decide what to feature.)*
+*(About 1,200 characters.)*
 
-## What's new (release notes, first release 1.5)
+## What's new (release notes, 1.9)
 
 ```
-• Read your Bhakthi Bookshelf books in English and Kannada.
-• Save books for offline reading — readable without internet.
-• Festival Calendar with a shloka for each festival.
-• Manage your devices and delete your account any time from My Account.
+• Buy books and Lifetime Access securely with Google Play.
+• More than 180 devotional books in English and Kannada.
+• Library filter by book language: All, English, Kannada.
+• Read offline, Festival Calendar with shlokas, manage devices and delete your
+  account any time from My Account.
 ```
+
+---
+
+## In-app products (Monetize → Products → In-app products)
+
+Needs the **India merchant account verified** (Payments profile without "Issue with
+account") before Play lets you set prices.
+
+| Product ID | Name | Price | Count |
+| --- | --- | --- | --- |
+| `book_<id>` (website book id, e.g. `book_12`) | the book's title | ₹29 (must equal the website price — the app shows the website price and the server checks Google's) | one per published book — **184** on 2026-11-24 (132 English + 52 Kannada) |
+| `plan_1` | Lifetime Access | ₹999 | 1 |
+
+All are **one-time, consumable = No** (managed products; the server acknowledges each
+purchase). I'll create them in bulk (CSV import or the Play Developer API) once the merchant
+account is ready. **A book added later on the website needs its `book_<id>` product too**,
+otherwise its Buy button in the app shows "not available".
 
 ---
 
 ## Graphic assets — in `docs/play-store-assets/`
 
-Remade **2026-09-29** with the new logo, from the live site in Android-app mode
-(screenshots retaken the same evening in read-only mode).
-
 | Asset | Spec | File | Notes |
 | --- | --- | --- | --- |
-| App icon | 512×512 PNG | `app-icon-512.png` | Copy of `public/icons/icon-512.png` — the icon in the app (round logo since APK 1.7, 2026-10-13), so the listing matches the installed app. |
-| Feature graphic | 1024×500 PNG (no alpha) | `feature-graphic.png` | Navy/gold, the round logo (2026-10-13) in a round gold frame, wordmark + tagline. Source: `feature-graphic.html` — render in headless Chrome at a window taller than 500px (e.g. 1024×700) and crop to 1024×500, since the headless window clips the bottom. |
-| Phone screenshots | 1000×1950 PNG (≤2:1) | `screenshot-1-home.png`, `screenshot-2-book-detail.png` (Lord Ganesha), `screenshot-3-festivals.png` (Festival Calendar), `screenshot-4-library.png` (category chips incl. Other) | Retaken **2026-09-29 (late)** in read-only mode (buying OFF): Downloads tab instead of Cart, no prices or buy buttons — the old Subscribe shot was dropped because the app no longer has that page. Live site at 500 CSS px ×2 with `window.Capacitor` faked as Android, so they show the app's bottom tab bar. The announcement bar was hidden for the capture (announcements change). Retake when the catalogue grows so the Library shows more than one book. |
-| 7" / 10" tablet screenshots | Same rules, optional | — | Not made; only if you expect tablet installs. |
-| Promo video | Optional, YouTube URL | — | Skip for v1. |
+| App icon | 512×512 PNG | `app-icon-512.png` | Same as the installed app's icon (round logo since 1.7). |
+| Feature graphic | 1024×500 PNG (no alpha) | `feature-graphic.png` | Source `feature-graphic.html` — render at e.g. 1024×700 and crop to 1024×500. |
+| Phone screenshots | 1000×1950 PNG | `screenshot-1-home.png`, `screenshot-2-book-detail.png`, `screenshot-3-festivals.png`, `screenshot-4-library.png` | Taken 2026-09-29 in the old read-only mode (no prices / Buy buttons). They're still accurate enough to submit (nothing shown is missing from the app), but **should be retaken** to show the 180+ book library, the language chips and the Google Play Buy button. |
+| Tablet screenshots, promo video | optional | — | Skip for v1. |
 
-**Note on the screenshot method**: headless Chrome's `--window-size` below ~500px
-CSS width isn't honored reliably in this environment (clamps to 500 and produces
-garbled stale-layout renders) — don't reuse a sub-500 width if regenerating these.
-500 CSS width + `--force-device-scale-factor=2` (1000px physical output) works
-cleanly and was verified against a real production build, not just dev.
+**Screenshot method:** headless Chrome at 500 CSS px wide with
+`--force-device-scale-factor=2` (below ~500 px the window size isn't honoured — see
+memory `headless-chrome-screenshot-gotcha`).
 
 ---
 
-## Content rating questionnaire (Play Console → App content → Content rating)
-
-Answering as a devotional reading app:
+## Content rating questionnaire (App content → Content rating)
 
 - Violence, sexual content, profanity, controlled substances: **None**.
-- User-generated content / social features: **None** (no comments, chat, or public
-  profiles — the contact form only reaches you, not other users).
+- User-generated content / users interact: **No** (the contact form only reaches us).
 - Shares user location: **No**.
-- Digital purchases: **No** — nothing is sold in the app (read-only; see the Play
-  Billing note below).
+- **Digital purchases: Yes** — e-books and Lifetime Access via Google Play Billing.
 - Gambling / simulated gambling: **No**.
 
-This should land the app at the lowest rating tier in every region (e.g. **PEGI 3 /
-Everyone**). Answer live in Console — the questionnaire changes slightly by region — but
-nothing here should push it higher.
+Expected result: the lowest tier everywhere (e.g. PEGI 3 / Everyone).
 
-## App access (Play Console → App content → App access)
+## App access (App content → App access)
 
-Reading a book needs a login and a book the account already owns, so provide a **test
-account** so Play's reviewers can sign in:
+Select **"All or some functionality is restricted"** and add login instructions:
 
-- Use a seeded, non-production customer (not a real customer's data) that **already owns
-  at least one book** (there's no admin "grant" button — do one real ₹20 test
-  purchase on the website with that account) — otherwise the reviewer only sees "This book isn't in your library yet."
-- Include phone + password, and a note that OTP-based password reset needs a real inbox
-  if the reviewer might hit that flow — reviewers generally won't unless asked to.
+- A **test customer account** (phone + password) — not a real customer. Have it **own one
+  book** (one ₹29 purchase on the website) so the reviewer can open the reader and download
+  offline straight away.
+- Note for the reviewer: *"Sign in with the phone number and password above. Books in My
+  Library open in the reader; other books can be bought with Google Play."*
+- Add the same Gmail as a **licence tester** (Setup → Licence testing) only for our own
+  testing; reviewers buy with Google's own test setup.
 
-## Target audience & content (Play Console → App content)
+## Target audience & ads (App content)
 
-- Target age group: **18 and over**, or **13 and over** if you don't want the stricter
-  "designed for families" requirements — this app isn't aimed at children, so 18+ is
-  the simpler, safer choice.
-- Ads: **No ads** (confirm — nothing in the codebase serves ads).
+- Target age group: **18 and over** (not aimed at children; avoids the Families rules).
+- Ads: **No ads**.
+
+## Other App content items
+
+- **Financial features:** none (selling digital content is not a financial feature).
+- **Government app:** No. **News app:** No. **Health:** none.
+- **Trader status (per app):** Trader — the same details as the developer account.
 
 ---
 
-## Before you can actually submit
+## Before you submit — checklist
 
-1. **Play Billing** — **Decision 2026-09-29 (late): option A, read-only app.** Admin →
-   Settings → "Android app: allow buying" is **OFF**, so the Android app hides every
-   Buy/Subscribe/Cart/Checkout entry point, redirects `/cart`, `/checkout`, `/subscribe`,
-   `/order-success` to `/downloads` (`app/components/native/AppModeGuard.tsx`), and
-   (`12e8021`) has **no link out to the website** anywhere. Owned books and the lifetime
-   subscription still work through `AccessService`. The app sells nothing, so Play Billing
-   doesn't apply. The prod smoke test checks all of this ("android app is read-only",
-   "no link out to the website").
-   - **Keep it that way:** never switch buying ON for Android while the app is in the
-     store, and never flip it OFF just for review and back ON afterwards — Google treats
-     that as evasion and can ban the developer account.
-   - Don't add "buy on our website" text or links to the app, the listing, screenshots or
-     release notes (anti-steering).
-   - Options costed if the owner wants in-app buying later: **Play Billing** (~2–4 weeks;
-     a Play product per book + one for the lifetime plan, server-side token verification,
-     Google takes 15%) or **User Choice Billing, India** (Play Billing *plus* Razorpay side
-     by side, ~11% to Google on Razorpay sales). Both need a Capacitor Play Billing plugin
-     (none installed today).
-2. **Data Safety form** — see `docs/play-store-data-safety.md`, drafted from what the
-   code actually collects and sends.
-3. **Data deletion URL** — Play Console → App content → Data safety → "Delete account
-   URL": `https://bhakthibookshelf.in/account/delete-account` (sign in → delete form).
-   The in-app route is My Account → Delete my account.
-4. A **Play Console developer account** (one-time $25 fee) if you don't already have one.
+1. India merchant account verified (Google test deposit entered).
+2. In-app products created (184 books + `plan_1`), all **Active**.
+3. Service account with Play Console access → JSON key on prod
+   (`GOOGLE_PLAY_SERVICE_ACCOUNT_FILE`) so the server can verify purchases; Pub/Sub topic for
+   real-time notifications → `GOOGLE_PLAY_RTDN_AUDIENCE` on prod.
+4. Internal testing upload → one licence-tester purchase + one real ₹29 purchase on a phone
+   (book appears in the library, invoice created, order shows in Play → Order management).
+5. Data safety form from `docs/play-store-data-safety.md`.
+6. Then Production → countries: **India** first (the cross-border/BillDesk merchant account
+   only matters for buyers outside India).
+
+**Never** show Razorpay, a "buy on our website" link, or website prices as an alternative
+in the Play app, its listing, screenshots or release notes.
