@@ -6,20 +6,25 @@ import { useState } from "react";
 import Spinner from "@/app/components/ui/Spinner";
 import { useToast } from "@/app/context/ToastContext";
 import { openRazorpayCheckout } from "@/app/lib/razorpayClient";
-import { useIsReadOnlyApp } from "@/app/lib/offline/appMode";
+import { useIsReadOnlyApp, useIsStoreApp } from "@/app/lib/offline/appMode";
+import PlayBuyButton from "@/app/components/store/PlayBuyButton";
 import { useT } from "@/app/lib/i18n/I18nProvider";
 
 export default function SubscribeButton({
   planId,
+  price,
   resume = false,
 }: {
   planId: number;
+  /** Shown on the Google Play button in the Play Store app. */
+  price?: string | number;
   /** An earlier attempt is unpaid — same flow, "Complete Payment" label. */
   resume?: boolean;
 }) {
   const router = useRouter();
   const { showToast } = useToast();
   const readOnlyApp = useIsReadOnlyApp();
+  const storeApp = useIsStoreApp();
 
   const [loading, setLoading] = useState(false);
   const { t } = useT();
@@ -169,6 +174,19 @@ export default function SubscribeButton({
     } finally {
       setLoading(false);
     }
+  }
+
+  if (storeApp) {
+    return (
+      <PlayBuyButton
+        productId={`plan_${planId}`}
+        price={price ?? ""}
+        signedIn
+        returnTo="/subscribe"
+        kind="plan"
+        className="btn btn-primary btn-block"
+      />
+    );
   }
 
   if (readOnlyApp) {

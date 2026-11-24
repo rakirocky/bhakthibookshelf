@@ -1,6 +1,7 @@
 package com.bhakthibookshelf.app;
 
 import android.graphics.PixelFormat;
+import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -15,6 +16,13 @@ public class MainActivity extends BridgeActivity {
     // born secure; it keeps screenshots of the reader blank everywhere,
     // and every other screen stays screenshot-friendly.
     private View secureOverlay;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        // Local (in-app) plugins must be registered before super.onCreate.
+        registerPlugin(PlayBillingPlugin.class);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void onWindowAttributesChanged(WindowManager.LayoutParams params) {

@@ -136,9 +136,15 @@ export function generateInvoicePdf(
         name: order.customer_name,
         lines: [
           order.address,
-          `${order.city}, ${order.state} - ${order.pincode}, ${order.country}`,
-          `Phone: ${order.mobile}`,
-          `Email: ${order.email}`,
+          // In-app (Play) orders have no postal address — skip the line
+          // instead of printing ",  - , ".
+          [
+            [order.city, order.state].filter(Boolean).join(", "),
+            order.pincode,
+          ].filter(Boolean).join(" - ") +
+            (order.country ? `${order.city || order.state ? ", " : ""}${order.country}` : ""),
+          order.mobile ? `Phone: ${order.mobile}` : "",
+          order.email ? `Email: ${order.email}` : "",
         ].filter(Boolean),
         state: order.state,
         country: order.country,

@@ -131,7 +131,7 @@ export default async function SubscribePage() {
                   {t("sub.unpaid")}
                 </div>
                 <div style={{ marginTop: 14 }}>
-                  <SubscribeButton planId={plan.id} resume />
+                  <SubscribeButton planId={plan.id} price={plan.price} resume />
                 </div>
               </>
             )}
@@ -139,7 +139,7 @@ export default async function SubscribePage() {
             {session &&
               (status?.status === "NONE" ||
                 status?.status === "EXPIRED") && (
-                <SubscribeButton planId={plan.id} />
+                <SubscribeButton planId={plan.id} price={plan.price} />
               )}
           </div>
         ))}

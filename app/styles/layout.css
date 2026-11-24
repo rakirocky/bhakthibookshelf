@@ -385,7 +385,17 @@ main {
   border: 0;
 }
 
-html[data-app] [data-web-only] {
+html[data-app] [data-web-only]:not([data-store-show]) {
+  display: none !important;
+}
+
+/* web-only UI that the Play Billing app shows too (prices, plans) */
+html[data-app]:not([data-store]) [data-store-show] {
+  display: none !important;
+}
+
+/* Play Billing app only (e.g. PlayBuyButton wrappers) */
+html:not([data-store]) [data-store-only] {
   display: none !important;
 }
 

@@ -140,6 +140,7 @@ export default function Navbar() {
             href="/subscribe"
             onClick={() => setMenuOpen(false)}
             data-web-only
+            data-store-show
           >
             {t("nav.subscribe")}
           </Link>

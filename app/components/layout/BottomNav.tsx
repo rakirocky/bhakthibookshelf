@@ -65,10 +65,11 @@ const TABS: Tab[] = [
   },
 ];
 
-const MORE_LINKS: { href: string; label: I18nKey; webOnly?: boolean }[] = [
+// storeShow: also shown in the Play Billing app (it sells there).
+const MORE_LINKS: { href: string; label: I18nKey; webOnly?: boolean; storeShow?: boolean }[] = [
   { href: "/downloads", label: "nav.downloads" },
   { href: "/wishlist", label: "wishlist.title", webOnly: true },
-  { href: "/subscribe", label: "nav.subscribe", webOnly: true },
+  { href: "/subscribe", label: "nav.subscribe", webOnly: true, storeShow: true },
   { href: "/about", label: "nav.about" },
   { href: "/about-us", label: "nav.aboutUs" },
   { href: "/contact", label: "nav.contact" },
@@ -258,6 +259,7 @@ export default function BottomNav() {
                   href={link.href}
                   className="more-sheet__link"
                   data-web-only={link.webOnly || undefined}
+                  data-store-show={link.storeShow || undefined}
                   onClick={() => setMoreOpen(false)}
                 >
                   {t(link.label)}

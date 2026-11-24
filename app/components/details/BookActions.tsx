@@ -10,7 +10,8 @@ import OfflineSaveButton from "../books/OfflineSaveButton";
 import LookInside from "./LookInside";
 import { fileUrl } from "@/app/lib/upload/fileUrl";
 import { useCart } from "@/app/hooks/useCart";
-import { useIsReadOnlyApp } from "@/app/lib/offline/appMode";
+import { useIsReadOnlyApp, useIsStoreApp } from "@/app/lib/offline/appMode";
+import PlayBuyButton from "../store/PlayBuyButton";
 import { useT } from "@/app/lib/i18n/I18nProvider";
 
 type Props = {
@@ -27,6 +28,7 @@ export default function BookActions({
   const router = useRouter();
   const { addItem } = useCart();
   const readOnlyApp = useIsReadOnlyApp();
+  const storeApp = useIsStoreApp();
   const { t } = useT();
 
   // "Download Full Book — ₹x" is a buy-now shortcut for a book you don't
@@ -57,6 +59,14 @@ export default function BookActions({
     >
       {hasAccess ? (
         <OfflineSaveButton bookId={book.id} />
+      ) : storeApp ? (
+        // Play Store app: one book per purchase through Google Play.
+        <PlayBuyButton
+          productId={`book_${book.id}`}
+          price={book.discount_price ?? book.price}
+          signedIn={signedIn}
+          returnTo={`/books/${book.slug}`}
+        />
       ) : readOnlyApp && !signedIn ? (
         // Signed out (e.g. the one-device rule ended this session): the
         // book may well be owned, so ask for a sign-in, not "not owned".

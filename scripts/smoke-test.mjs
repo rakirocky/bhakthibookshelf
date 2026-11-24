@@ -90,7 +90,12 @@ async function openTab({ platform, width = 1280, height = 900, cookies = [] } = 
   await send("Page.enable"); await send("Runtime.enable"); await send("Network.enable");
   await send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: width < 600 });
   for (const c of cookies) await send("Network.setCookie", { ...c, url: BASE });
-  if (platform) await send("Page.addScriptToEvaluateOnNewDocument", { source: `window.Capacitor={isNativePlatform:()=>true,getPlatform:()=>"${platform}"};` });
+  // "android-play" = an APK 1.9+ Play build (has the PlayBilling plugin)
+  if (platform) {
+    const os = platform === "android-play" ? "android" : platform;
+    const plugins = platform === "android-play" ? `["PlayBilling"]` : "[]";
+    await send("Page.addScriptToEvaluateOnNewDocument", { source: `window.Capacitor={isNativePlatform:()=>true,getPlatform:()=>"${os}",isPluginAvailable:(n)=>${plugins}.includes(n)};` });
+  }
   const ev = async (expr) => (await send("Runtime.evaluate", { expression: expr, returnByValue: true, awaitPromise: true })).result?.value;
   // Fixed wait for client code to settle, then keep waiting (up to 15 s) until
   // the new document has fully loaded — on a slow network 3.5 s wasn't always
@@ -341,6 +346,39 @@ for (const platform of ["android", "ios"]) {
   } else {
     check(`${platform} app is read-only (/cart → /downloads)`, where === "/downloads", where);
   }
+  await t.close();
+}
+
+// The headless "Play app" has only a stub bridge, so Capacitor reports the
+// native plugin missing — expected here, the real APK has it.
+const realErrors = (t) => t.errors.filter((e) => !/plugin is not implemented on web/.test(e));
+
+// 2g2. Play Store build (Google Play Billing): prices + a Google Play "Buy"
+// per book, no cart/Razorpay, Subscribe sells the plan — whatever the
+// admin's "allow buying" switch says.
+{
+  const t = await openTab({ platform: "android-play", width: 520 });
+  await t.go("/books");
+  // an earlier check may have left the ಕನ್ನಡ book-language chip on
+  await t.ev(`[...document.querySelectorAll('.language-chips button')][0]?.click()`);
+  await sleep(800);
+  const lib = await t.ev(`({ store: document.documentElement.hasAttribute('data-store'), app: document.documentElement.hasAttribute('data-app'),
+    prices: [...document.querySelectorAll('.books-grid .price')].filter(e => e.getClientRects().length).length,
+    cards: document.querySelectorAll('.books-grid .price').length,
+    cart: [...document.querySelectorAll('a[href="/cart"]')].some(a => a.getClientRects().length > 0),
+    links: ${WEBSITE_LINKS} })`);
+  check("Play app: store mode, prices shown, no cart, no website links", lib.store && lib.app && lib.cards > 0 && lib.prices === lib.cards && !lib.cart && lib.links.length === 0, JSON.stringify(lib));
+  await t.go(`/books/${book.slug}`);
+  const bp = await t.ev(`({ price: !!document.querySelector('.book-price')?.getClientRects().length,
+    buttons: [...document.querySelectorAll('.book-actions a, .book-actions button')].filter(b => b.getClientRects().length).map(b => b.innerText.trim()) })`);
+  check("Play app book page (signed out): price + 'Sign in to buy', no Add to Cart / Razorpay buy",
+    bp.price && bp.buttons.some((b) => /sign in to buy|ಖರೀದಿಸಲು ಲಾಗಿನ್/i.test(b)) && !bp.buttons.some((b) => /add to cart|download full book/i.test(b)) && realErrors(t).length === 0,
+    JSON.stringify(bp) + (realErrors(t)[0] ?? ""));
+  await t.go("/cart", 4500);
+  check("Play app: /cart → /downloads", (await t.ev("location.pathname")) === "/downloads");
+  await t.go("/subscribe", 4500);
+  const sub = await t.ev(`({ path: location.pathname, signIn: [...document.querySelectorAll('a[href^="/account/login"]')].some(a => a.getClientRects().length > 0) })`);
+  check("Play app: Subscribe page stays open (plan sold via Play)", sub.path === "/subscribe" && sub.signIn, JSON.stringify(sub));
   await t.close();
 }
 

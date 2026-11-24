@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import { isReadOnlyApp } from "@/app/lib/offline/appMode";
+import { isReadOnlyApp, isStoreApp } from "@/app/lib/offline/appMode";
 import { isIOSApp, isNativeApp } from "@/app/lib/offline/native";
 
 // Purchase pages have nothing to offer in the read-only app (see
@@ -54,8 +54,13 @@ export default function AppModeGuard() {
 
     document.documentElement.setAttribute("data-app", "");
 
+    // The Play Billing app sells the lifetime plan on /subscribe.
+    const blocked = isStoreApp()
+      ? WEB_ONLY_ROUTES.filter((r) => r !== "/subscribe")
+      : WEB_ONLY_ROUTES;
+
     if (
-      WEB_ONLY_ROUTES.some(
+      blocked.some(
         (r) => pathname === r || pathname?.startsWith(`${r}/`)
       )
     ) {

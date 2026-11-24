@@ -77,7 +77,7 @@ export default function BookCard({
           </p>
         )}
 
-        <div className="price" data-web-only>
+        <div className="price" data-web-only data-store-show>
 
           ₹{price}
 

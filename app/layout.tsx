@@ -10,6 +10,7 @@ import AnnouncementBar from "./components/layout/AnnouncementBar";
 import ServiceWorkerRegister from "./components/layout/ServiceWorkerRegister";
 import ReconcileOnResume from "./components/offline/ReconcileOnResume";
 import AppModeGuard from "./components/native/AppModeGuard";
+import PlayPurchaseSync from "./components/store/PlayPurchaseSync";
 import TempleFrame from "./components/layout/TempleFrame";
 import { AnnouncementService } from "./lib/services/announcementService";
 import { SettingsService } from "./lib/services/settingsService";
@@ -96,7 +97,12 @@ export const dynamic = "force-dynamic";
 // for digital books. Neither app links out to the website: Apple (3.1.1 /
 // 3.1.3) and Google Play (Payments policy) both count that as steering
 // buyers past their in-app billing.
-const APP_MODE_SCRIPT = `try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform()){var d=document.documentElement;d.setAttribute("data-native","");var ios=c.getPlatform&&c.getPlatform()==="ios";if(ios)d.setAttribute("data-ios","");if(ios||!d.hasAttribute("data-app-commerce"))d.setAttribute("data-app","")}}catch(e){}`;
+// Play Billing builds (APK 1.9+, PlayBilling plugin): <html data-store>
+// as well as data-app — the website's cart/Razorpay stay hidden, but
+// prices ([data-store-show]) and a Google Play "Buy" button appear. The
+// admin's "allow buying" switch is ignored there: a Play build must
+// never offer Razorpay.
+const APP_MODE_SCRIPT = `try{var c=window.Capacitor;if(c&&c.isNativePlatform&&c.isNativePlatform()){var d=document.documentElement;d.setAttribute("data-native","");var ios=c.getPlatform&&c.getPlatform()==="ios";if(ios)d.setAttribute("data-ios","");var st=!ios&&c.isPluginAvailable&&c.isPluginAvailable("PlayBilling");if(st)d.setAttribute("data-store","");if(st||ios||!d.hasAttribute("data-app-commerce"))d.setAttribute("data-app","")}}catch(e){}`;
 
 // Site typography (self-hosted by next/font): Marcellus headings, Noto
 // Sans body; the Kannada Noto faces are listed after them in each stack
@@ -149,6 +155,7 @@ export default async function RootLayout({
           <ServiceWorkerRegister />
           <ReconcileOnResume />
           <AppModeGuard />
+          <PlayPurchaseSync />
           {process.env.GA_MEASUREMENT_ID && (
             <Analytics gaId={process.env.GA_MEASUREMENT_ID} />
           )}

@@ -58,6 +58,7 @@ export default async function AccountPage() {
         // Read-only app: only show the card when there's a subscription
         // to report — "you don't have one" is an upsell.
         data-web-only={status?.status === "ACTIVE" ? undefined : true}
+        data-store-show
         style={{
           background: "var(--color-white)",
           border: "1px solid var(--color-border)",
@@ -91,6 +92,7 @@ export default async function AccountPage() {
             <Link
               href="/subscribe"
               data-web-only
+              data-store-show
               className="btn btn-primary"
               style={{ textDecoration: "none" }}
             >
@@ -116,6 +118,7 @@ export default async function AccountPage() {
             <Link
               href="/subscribe"
               data-web-only
+              data-store-show
               className="btn btn-primary"
               style={{ textDecoration: "none" }}
             >

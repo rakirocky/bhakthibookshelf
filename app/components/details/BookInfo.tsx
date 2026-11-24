@@ -68,7 +68,7 @@ export default async function BookInfo({
 
       </div>
 
-      <div className="book-price" data-web-only>
+      <div className="book-price" data-web-only data-store-show>
 
         {book.discount_price && (
           <span
