@@ -131,7 +131,7 @@ otherwise its Buy button in the app shows "not available".
 | --- | --- | --- | --- |
 | App icon | 512×512 PNG | `app-icon-512.png` | Same as the installed app's icon (round logo since 1.7). |
 | Feature graphic | 1024×500 PNG (no alpha) | `feature-graphic.png` | Source `feature-graphic.html` — render at e.g. 1024×700 and crop to 1024×500. |
-| Phone screenshots | 1000×1950 PNG | `screenshot-1-home.png`, `screenshot-2-book-detail.png`, `screenshot-3-festivals.png`, `screenshot-4-library.png` | Taken 2026-09-29 in the old read-only mode (no prices / Buy buttons). They're still accurate enough to submit (nothing shown is missing from the app), but **should be retaken** to show the 180+ book library, the language chips and the Google Play Buy button. |
+| Phone screenshots | 1000×1950 PNG | `screenshot-1-home.png`, `screenshot-2-library.png` (language + category chips, 184 books), `screenshot-3-book-detail.png` (Sri Vishnu Dasha Avatar, **Buy — ₹29.00**), `screenshot-4-kannada-books.png` (ಕನ್ನಡ filter, 52 books), `screenshot-5-lifetime-access.png` (**Buy — ₹999.00**), `screenshot-6-festivals.png` | Retaken **2026-11-24** in Play Billing app mode (Capacitor + PlayBilling plugin faked, signed-in throwaway customer) against a local copy of the live catalogue (books/plans/settings/festival dates + covers only). Upload in this order. No Razorpay, cart or website link anywhere. |
 | Tablet screenshots, promo video | optional | — | Skip for v1. |
 
 **Screenshot method:** headless Chrome at 500 CSS px wide with
